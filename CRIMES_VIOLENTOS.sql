@@ -47,7 +47,6 @@ SELECT
     db_bisp_reds_reporting.tb_ocorrencia.data_hora_final,  -- DATA E HORA FINAL DA OCORRÊNCIA
     db_bisp_reds_reporting.tb_ocorrencia.numero_atividade_cad,  -- NÚMERO DA ATIVIDADE CADASTRADA NO SISTEMA
     db_bisp_reds_reporting.tb_ocorrencia.numero_chamada_cad,  -- NÚMERO DA CHAMADA CADASTRADA NO SISTEMA
-    db_bisp_reds_reporting.tb_ocorrencia.numero_chamada_principal_cad,  -- NÚMERO DA CHAMADA PRINCIPAL CADASTRADA NO SISTEMA
     db_bisp_reds_reporting.tb_ocorrencia.digitador_cargo_efetivo,  -- CARGO EFETIVO DO DIGITADOR DA OCORRÊNCIA
     db_bisp_reds_reporting.tb_ocorrencia.digitador_nome  -- NOME DO DIGITADOR QUE REGISTROU A OCORRÊNCIA
 FROM db_bisp_reds_reporting.tb_ocorrencia
