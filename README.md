@@ -62,16 +62,18 @@ Exemplo: COUNT(DISTINCT OCO.numero_ocorrencia) as REINCIDENCIA
 ---------------------------------------------------------------------------------------------------------
 GROUP_CONCAT
 
-GROUP_CONCAT: Concatena valores de uma coluna para cada grupo de linhas.
+Concatena valores de uma coluna para cada grupo de linhas.
 
 Exemplo: GROUP_CONCAT(DISTINCT OCO.natureza_codigo) as Naturezas_codigo
 
 ---------------------------------------------------------------------------------------------------------
 JOIN
 
-INNER JOIN: Combina dados de duas tabelas com base em uma condição específica.
-LEFT JOIN: Retorna todos os registros da tabela à esquerda e os registros correspondentes da tabela à direita, se houver.
-RIGHT JOIN: Retorna todos os registros da tabela à direita e os registros correspondentes da tabela à esquerda, se houve
+1. INNER JOIN: Combina dados de duas tabelas com base em uma condição específica.
+
+2. LEFT JOIN: Retorna todos os registros da tabela à esquerda e os registros correspondentes da tabela à direita, se houver.
+
+3. RIGHT JOIN: Retorna todos os registros da tabela à direita e os registros correspondentes da tabela à esquerda, se houve
 
 Exemplo: INNER JOIN tb_envolvido_ocorrencia ENV ON (ENV.numero_ocorrencia = OCO.numero_ocorrencia)
 
@@ -79,6 +81,7 @@ Exemplo: INNER JOIN tb_envolvido_ocorrencia ENV ON (ENV.numero_ocorrencia = OCO.
 WHERE
 
 WHERE: Filtra os dados da consulta com base em condições específicas.
+
 Exemplo: WHERE OCO.natureza_codigo IN (...) AND YEAR(OCO.data_hora_fato) BETWEEN 2023 AND 2024
 Os operadores `WHERE` em SQL são usados para filtrar registros com base em condições específicas. 
 Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
@@ -86,40 +89,39 @@ Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
 1. **Operador de Igualdade (=)**:
    - Usado para comparar se dois valores são iguais.
      
-   - Exemplo: SELECT * FROM tabela WHERE coluna = 'valor';
+    Exemplo: SELECT * FROM tabela WHERE coluna = 'valor';
  
 2. **Operador de Diferença (<>, !=)**:
    - Usado para comparar se dois valores são diferentes.
      
-   - Exemplo: SELECT * FROM tabela WHERE coluna <> 'valor';
+    Exemplo: SELECT * FROM tabela WHERE coluna <> 'valor';
 
 3. **Operadores de Comparação (<, >, <=, >=)**:
    - Usados para comparar valores numericamente.
      
-   - Exemplo: SELECT * FROM tabela WHERE coluna > 10;
+    Exemplo: SELECT * FROM tabela WHERE coluna > 10;
 
 4. **Operador IN**:
    - Usado para verificar se um valor está em uma lista de valores.
      
-   - Exemplo: SELECT * FROM tabela WHERE coluna IN ('valor1', 'valor2', 'valor3');
+    Exemplo: SELECT * FROM tabela WHERE coluna IN ('valor1', 'valor2', 'valor3');
 
 
 5. **Operador LIKE**:
    - Usado para fazer correspondência parcial em strings usando curingas (% para zero ou mais caracteres, _ para um caractere).
-   - 
-   - Exemplo: SELECT * FROM tabela WHERE coluna LIKE 'valor%';
+    Exemplo: SELECT * FROM tabela WHERE coluna LIKE 'valor%';
   
 
 6. **Operador BETWEEN**:
    - Usado para verificar se um valor está dentro de um intervalo.
      
-   - Exemplo: SELECT * FROM tabela WHERE coluna BETWEEN 10 AND 20;
+    Exemplo: SELECT * FROM tabela WHERE coluna BETWEEN 10 AND 20;
 
 
 7. **Operador NOT**:
    - Usado para negar uma condição.
      
-   - Exemplo: SELECT * FROM tabela WHERE NOT coluna = 'valor';
+    Exemplo: SELECT * FROM tabela WHERE NOT coluna = 'valor';
 
 Estes são alguns dos operadores mais comuns utilizados com a cláusula `WHERE` em SQL. Eles permitem realizar 
 filtragens mais precisas e específicas nos dados de uma tabela.
@@ -127,7 +129,7 @@ filtragens mais precisas e específicas nos dados de uma tabela.
 ---------------------------------------------------------------------------------------------------------
 GROUP BY
 
-GROUP BY: Agrupa os resultados da consulta com base em uma ou mais colunas.
+Agrupa os resultados da consulta com base em uma ou mais colunas.
 
 Exemplo: GROUP BY ENV.nome_completo_envolvido, ENV.nome_mae, ENV.data_nascimento
 
@@ -135,6 +137,7 @@ Exemplo: GROUP BY ENV.nome_completo_envolvido, ENV.nome_mae, ENV.data_nascimento
 HAVING
 
 Filtra grupos de linhas após a agregação de dados.
+ 
 Exemplo: HAVING COUNT(DISTINCT OCO.numero_ocorrencia) > 1
 
 
