@@ -32,6 +32,6 @@ WHERE
     AND tb_ocorrencia.relator_sigla_orgao = 'PM'  -- OCORRÊNCIAS REGISTRADAS PELA POLÍCIA MILITAR
     AND tb_ocorrencia.ocorrencia_uf = 'MG'  -- OCORRÊNCIAS NO ESTADO DE MINAS GERAIS
     AND tb_ocorrencia.descricao_estado = 'FECHADO'  -- SOMENTE OCORRÊNCIAS QUE ESTÃO FECHADAS
-   -- AND tb_ocorrencia.unidade_area_militar_nome LIKE '%1 BPM/1 RPM%' -- FILTRE SUA BPM/RPM
+   -- AND tb_ocorrencia.unidade_area_militar_nome LIKE '%X BPM/X RPM%' -- FILTRE SUA BPM/RPM
 -- (OPCIONAL) ORDENAMENTO DOS RESULTADOS POR ANO, MUNICÍPIO OU OUTRO CAMPO RELEVANTE
  ORDER BY ANO DESC, nome_municipio;
