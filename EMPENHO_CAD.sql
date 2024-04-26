@@ -49,4 +49,4 @@ WHERE
     tb_chamada_atendimento.orgao_sigla = 'PM' -- FILTRA PELA SIGLA DA POLÍCIA MILITAR
     AND YEAR(tb_atendimento.data_hora_inicio_n) = 2024 -- FILTRA PELO ANO DE 2024
     AND MONTH(tb_atendimento.data_hora_inicio_n) BETWEEN 1 AND 3 -- FILTRA PELOS MESES DE JANEIRO A MARÇO
-    AND (tb_chamada_atendimento.unidade_servico_nome LIKE '%/16 BPM%' OR tb_chamada_atendimento.unidade_servico_nome LIKE '%/14 BPM%' OR tb_chamada_atendimento.unidade_servico_nome LIKE '%/42 BPM%' ) -- FILTRA PELAS UNIDADES ESPECÍFICAS DA PM
+    AND (tb_chamada_atendimento.unidade_servico_nome LIKE '%/X BPM%' OR tb_chamada_atendimento.unidade_servico_nome LIKE '%/X BPM%' ) -- FILTRA PELAS UNIDADES ESPECÍFICAS DA PM
