@@ -24,7 +24,7 @@ ON
 WHERE 
     YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) >= 2018 -- Filtra ocorrências entre 2018 e 2022
     AND YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) <= 2022
-    AND (db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%CPRV%'  -- Ocorrências registradas por unidades de polícia rodoviária
-    OR db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%BPMRV%')
+    AND (db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXXX%'  -- Ocorrências registradas por unidades de polícia rodoviária
+    OR db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXXXX%')
  -- AND db_bisp_reds_reporting.tb_ocorrencia.nome_municipio  LIKE '%BELO HOR%'-- FILTRE O MUNICIPIO
 ;
