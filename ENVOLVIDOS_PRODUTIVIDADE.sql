@@ -26,6 +26,6 @@ LEFT JOIN
 WHERE 
     YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) BETWEEN 2018 AND 2022  -- Filtra ocorrências entre os anos de 2018 e 2022
     AND (
-        db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%CPRV%' OR  -- Filtra ocorrências onde a unidade responsável contém 'CPRV'
-        db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%BPMRV%'  -- Ou filtra ocorrências onde a unidade responsável contém 'BPMRV'
+        db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXX%' OR  -- Filtra ocorrências onde a unidade responsável contém 'XXXX'
+        db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXX%'  -- Ou filtra ocorrências onde a unidade responsável contém 'XXXX'
     );
