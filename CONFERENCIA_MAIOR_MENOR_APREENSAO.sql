@@ -21,7 +21,7 @@ WHERE
     AND OCO.ocorrencia_uf = 'MG'
     AND OCO.descricao_estado = 'FECHADO'
     AND tipo_prisao_apreensao_codigo IN ('9900', '0400', '0100', '0300', '0600', '0200')
-    --AND OCO.unidade_area_militar_nome LIKE '%1 CIA PM IND/3 RPM%'-- FILTRE SUA CIA/BM/RPM
+  --AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%'-- FILTRE SUA CIA/BM/RPM
 -- ORDENAÇÃO DOS RESULTADOS PELA IDADE DOS ENVOLVIDOS PARA FACILITAR ANÁLISES DEMOGRÁFICAS
 ORDER BY IDADE;
 ORDER BY 4
