@@ -25,7 +25,7 @@ ORDER BY CA.local_municipio_nome, CA.local_municipio_id;
 
 
 /*----------------------------------------------------------------------------------------------------------
- * Contagem de chamadas realizadas no CAD em 2023 e 2024 atendidas pela Patrulha Rural 
+ * Contagem de chamadas realizadas no CAD em 2023 e 2024 atendidas pela unidade específica
  ---------------------------------------------------------------------------------------------------------*/
 SELECT 
     CA.local_municipio_id, 
@@ -43,8 +43,8 @@ WHERE
     (CA.chamada_data_hora_inclusao) BETWEEN '2023-01-01' AND '2024-03-31'
     -- Filtra as chamadas atendidas pela Polícia Militar
     AND CA.orgao_sigla = 'PM'
-    -- Filtra por empenhos que usam o tipo de recurso com código 'PR'
-    AND EMP.tipo_recurso_codigo = 'PR'
+    -- Filtra por empenhos que usam o tipo de recurso com código 'XX'
+    AND EMP.tipo_recurso_codigo = 'XX'
 -- Agrupa os resultados pelo ID e nome do município para contagem
 GROUP BY CA.local_municipio_id, CA.local_municipio_nome
 -- Ordena os resultados pelo nome do município e pelo ID do município para facilitar a visualização
