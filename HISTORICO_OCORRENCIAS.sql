@@ -20,16 +20,11 @@ WHERE
     AND relator_sigla_orgao = 'PM'  -- OCORRÊNCIAS REGISTRADAS PELA POLÍCIA MILITAR
     AND ocorrencia_uf = 'MG'  -- OCORRÊNCIAS NO ESTADO DE MINAS GERAIS
     AND descricao_estado = 'FECHADO'  -- SOMENTE OCORRÊNCIAS QUE JÁ FORAM FINALIZADAS (FECHADAS)
-    AND natureza_codigo = 'A99000'  -- CÓDIGO ESPECÍFICO PARA TIPOS DE RESGATE OU SALVAMENTO
+    AND natureza_codigo = 'X99000'  -- CÓDIGO ESPECÍFICO PARA NATUREZA
     AND (
-        historico_ocorrencia LIKE '%SALVAMENTO%'  -- FILTRA TEXTOS QUE MENCIONAM SALVAMENTO
-        OR historico_ocorrencia LIKE '%RESGATE%'  -- FILTRA TEXTOS QUE MENCIONAM RESGATE
-        OR historico_ocorrencia LIKE '%SOCORRO%'  -- FILTRA TEXTOS QUE MENCIONAM SOCORRO
-        OR historico_ocorrencia LIKE '%ALAGAMENTO%'  -- FILTRA TEXTOS QUE MENCIONAM ALAGAMENTO
-        OR historico_ocorrencia LIKE '%ENCHENTE%'  -- FILTRA TEXTOS QUE MENCIONAM ENCHENTE
-        OR historico_ocorrencia LIKE '%DESLIZAMENTO%'  -- FILTRA TEXTOS QUE MENCIONAM DESLIZAMENTO
-        OR historico_ocorrencia LIKE '%DESABAMENTO%'  -- FILTRA TEXTOS QUE MENCIONAM DESABAMENTO
-    )
-   -- AND unidade_area_militar_nome LIKE '%1 BPM/1 RPM%' -- FILTRE SUA BPM/ RPM 
+        historico_ocorrencia LIKE '%xxxxxxxxxx%'  -- FILTRA TEXTOS QUE MENCIONAM X
+        OR historico_ocorrencia LIKE '%xxxxxxxxxx%'  -- FILTRA TEXTOS QUE MENCIONAM X
+         )
+   -- AND unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- FILTRE SUA BPM/ RPM 
    -- AND nome_municipio  LIKE '%BELO HOR%'-- FILTRE O MUNICIPIO
     ;
