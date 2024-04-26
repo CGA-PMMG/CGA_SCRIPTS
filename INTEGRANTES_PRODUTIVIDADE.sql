@@ -22,6 +22,6 @@ WHERE
     YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) >= 2018 -- Filtragem de dados desde 2018
     AND YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) <= 2022 -- até 2022
     AND db_bisp_reds_reporting.tb_ocorrencia.ocorrencia_uf = 'MG' -- Somente ocorrências no estado de MG
-    AND (db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%CPRV%' -- Unidades de polícia rodoviária
-    OR db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%BPMRV%') -- Unidades de polícia rodoviária militar
+    AND (db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXX%'
+    OR db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXXX%')  -- Unidades de polícia 
  -- AND db_bisp_reds_reporting.tb_ocorrencia.nome_municipio  LIKE '%BELO HOR%'-- FILTRE O MUNICIPIO
