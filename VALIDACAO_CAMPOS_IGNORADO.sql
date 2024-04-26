@@ -27,4 +27,4 @@ WHERE
     AND OCO.descricao_estado = 'FECHADO'  -- Apenas ocorrências que estão com o estado fechado
     AND OCO.nome_tipo_relatorio NOT IN ('RAT', 'BOS', 'BOS AMPLO')  -- Exclui tipos de relatório específicos
     AND ENV.envolvimento_codigo IN ('1300','1301','1302','1303','1304','1305','1399') -- Filtra por códigos de envolvimento específicos
-    AND ENV.condicao_fisica_codigo NOT IN ('0300', '0100')  -- Exclui códigos de condição física que indicam morte ou lesão grave
+    AND ENV.condicao_fisica_codigo NOT IN ('0300', '0100')  -- Exclui códigos de condição física 
