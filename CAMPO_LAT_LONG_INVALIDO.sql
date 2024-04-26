@@ -19,6 +19,8 @@ WHERE YEAR(OCO.data_hora_fato) = 2024 -- Considera apenas ocorrências do ano de
     AND OCO.relator_sigla_orgao = 'PM' -- Foca apenas nos registros inseridos pela Polícia Militar.
     AND OCO.descricao_estado = 'FECHADO' -- Restringe a análise para casos já finalizados.
     AND OCO.ocorrencia_uf = 'MG' -- Limita a consulta a ocorrências no estado de Minas Gerais.
+    -- AND OCO.unidade_responsavel_registro_nome LIKE '%/X BPM%' -- FILTRA OCORRÊNCIAS RELACIONADAS A UNIDADE DE REGISTRO.
+
 -- Agrupa os resultados pelas colunas selecionadas para permitir uma análise detalhada por unidade e digitador.
 GROUP BY
     OCO.digitador_matricula, RPM, BPM, CIA
