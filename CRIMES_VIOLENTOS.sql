@@ -62,6 +62,6 @@ WHERE YEAR (db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) >= 2020
         OR db_bisp_reds_reporting.tb_ocorrencia.natureza_secundaria2_codigo IN ('C01157', 'C01158', 'C01159', 'B01148', 'D01213', 'D01217', 'B01121')
         OR db_bisp_reds_reporting.tb_ocorrencia.natureza_secundaria3_codigo IN ('C01157', 'C01158', 'C01159', 'B01148', 'D01213', 'D01217', 'B01121') -- FILTRO POR CÓDIGOS ESPECÍFICOS DAS NATUREZAS DA OCORRÊNCIA, INCLUINDO PRIMÁRIAS E SECUNDÁRIAS
     )
-    -- AND db_bisp_reds_reporting.tb_ocorrencia.unidade_area_militar_nome LIKE '%1 BPM/1 RPM%' -- FILTRE SUA BPM/ RPM 
+    -- AND db_bisp_reds_reporting.tb_ocorrencia.unidade_area_militar_nome LIKE '%X BPM/X RPM%' -- FILTRE SUA BPM/ RPM 
     -- AND db_bisp_reds_reporting.tb_ocorrencia.nome_municipio  LIKE '%BELO HOR%'-- FILTRE O MUNICIPIO 
     ;
