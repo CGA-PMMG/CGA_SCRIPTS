@@ -29,7 +29,7 @@ WHERE
     AND (tb_ocorrencia.nome_tipo_relatorio IN ('POLICIAL', 'REFAP', 'TRANSITO'))  -- FILTRA TIPOS ESPECÍFICOS DE RELATÓRIOS
     AND (SUBSTRING(tb_ocorrencia.natureza_codigo, 1, 1) IN ('B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'T'))  -- FILTRA OCORRÊNCIAS POR CÓDIGOS DE NATUREZA ESPECÍFICOS
     AND tb_ocorrencia.natureza_codigo NOT IN ('T00007', 'T00008', 'T00009', 'T10161', 'T99000')  -- EXCLUI CÓDIGOS DE NATUREZA ESPECÍFICOS
- -- AND db_bisp_reds_reporting.tb_ocorrencia.unidade_area_militar_nome LIKE '%1 BPM/1 RPM%' -- FILTRE SUA BPM/ RPM 
+ -- AND db_bisp_reds_reporting.tb_ocorrencia.unidade_area_militar_nome LIKE '%X BPM/X RPM%' -- FILTRE SUA BPM/ RPM 
  -- AND db_bisp_reds_reporting.tb_ocorrencia.nome_municipio  LIKE '%BELO HOR%'-- FILTRE O MUNICIPIO 
     -- AGRUPAMENTO DOS RESULTADOS PELO CÓDIGO E NOME DO MUNICÍPIO PARA CONSOLIDAR OS DADOS
 GROUP BY tb_ocorrencia.codigo_municipio, tb_ocorrencia.nome_municipio;
