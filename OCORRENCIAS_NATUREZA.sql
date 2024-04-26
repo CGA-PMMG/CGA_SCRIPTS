@@ -150,6 +150,6 @@ WHERE
     AND OCO.ocorrencia_uf = 'MG'  -- ESTADO DA OCORRÊNCIA
     AND OCO.descricao_estado = 'FECHADO'  -- ESTADO DA DESCRIÇÃO DA OCORRÊNCIA
     AND OCO.natureza_codigo IN ('C01157', 'C01158', 'C01159', 'B01148', 'D01213', 'D01217', 'B01121')  -- CÓDIGOS ESPECÍFICOS DE NATUREZA
-    -- AND OCO.unidade_area_militar_nome LIKE '%1 BPM/1 RPM%' -- FILTRE SUA BPM/ RPM 
+    -- AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%' -- FILTRE SUA BPM/ RPM 
     -- ORDENA OS RESULTADOS POR NÚMERO E DATA DA OCORRÊNCIA
 ORDER BY numero_ocorrencia, data_hora_fato;
