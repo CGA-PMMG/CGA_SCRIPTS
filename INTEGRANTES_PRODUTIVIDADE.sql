@@ -1,5 +1,4 @@
 ﻿/*------------------------------------------------------------------------------------------------------------------
-
  * Este código SQL tem o objetivo de fornecer uma visão clara sobre os membros da equipe que atendem a 
  * ocorrências, identificando suas respectivas funções e unidades durante as ocorrências.
 ------------------------------------------------------------------------------------------------------------------*/
@@ -19,8 +18,7 @@ LEFT JOIN
     db_bisp_reds_reporting.tb_ocorrencia -- Junção com a tabela de ocorrências
     ON db_bisp_reds_reporting.tb_ocorrencia.numero_ocorrencia = db_bisp_reds_reporting.tb_integrante_guarnicao_ocorrencia.numero_ocorrencia 
 WHERE 
-    YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) >= 2018 -- Filtragem de dados desde 2018
-    AND YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) <= 2022 -- até 2022
+    YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) BETWEEN 2018 AND 2022 -- FILTRA O PERIODO
     AND db_bisp_reds_reporting.tb_ocorrencia.ocorrencia_uf = 'MG' -- Somente ocorrências no estado de MG
     AND (db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXX%'
     OR db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXXX%')  -- Unidades de polícia 
