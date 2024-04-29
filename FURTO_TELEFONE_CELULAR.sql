@@ -1,3 +1,8 @@
+/*﻿----------------------------------------------------------------------------------------------------------------------------
+Este código SQL foi elaborado com o propósito de identificar e relatar informações sobre furtos de telefones celulares 
+em Minas Gerais, durante o ano de 2024, conforme registros da Polícia Militar. 
+Busca informações específicas sobre ocorrências relacionadas e materiais envolvidos.
+----------------------------------------------------------------------------------------------------------------------------*/
 SELECT OCO.numero_ocorrencia, -- NÚMERO DA OCORRÊNCIA
 OCO.data_hora_fato, -- DATA HORA DO FATO
 OCO.natureza_descricao, -- DESCRIÇÃO DA NATUREZA
@@ -23,7 +28,7 @@ WHERE YEAR(OCO.data_hora_fato) = 2024 -- FILTRA O ANO DO FATO
  AND OCO.relator_sigla_orgao = 'PM' -- FILTRA OCORRÊNCIAS RELATADAS PELA POLÍCIA MILITAR
  AND OCO.ocorrencia_uf = 'MG' -- FILTRA OCORRÊNCIAS NO ESTADO DE MINAS GERAIS
  AND OCO.descricao_estado = 'FECHADO'  -- FILTRA APENAS OCORRÊNCIAS FECHADAS
- AND OCO.natureza_codigo = 'C01155' -- FILTRA CÓDIGO ESPECÍFICO DE NATUREZA DA OCORRÊNCIA (FURTO)
+ AND OCO.natureza_codigo = 'X01155' -- FILTRA CÓDIGO ESPECÍFICO DE NATUREZA DA OCORRÊNCIA (FURTO)
  AND MAO.tipo_objeto_codigo = '0902' -- FILTRA CÓDIGO ESPCÍFICO DE TIPO DO OBJETO (TELEFONE CELULAR)
  AND MAO.situacao_codigo IN ('0500','0700')  -- FILTRA CÓDIGO ESPCÍFICO DE SITUAÇÃO (FURTADO / ROUBADO (NAO RECUPERADO) OU RECUPERADO)
 -- AND OCO.nome_municipio LIKE '%XXXXXX%' -- FILTRE A CIDADE
