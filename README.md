@@ -169,6 +169,13 @@ split_part(string, delimiter, part)
 Exemplo: SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM
 
 ---------------------------------------------------------------------------------------------------------
+NOW()
+
+Retorna data atual do sistema.
+
+Exemplo: Now() as data_atual
+
+---------------------------------------------------------------------------------------------------------
 TO_DATE 
 
 No caso para retornar apenas a data NÂO CONTENDO a hora.
