@@ -57,7 +57,7 @@ Exemplo: FROM tb_ocorrencia OCO
 	Isso pode ajudar a encurtar o seu código e torná-lo mais fácil de entender, especialmente quando você 
 	está trabalhando com nomes de tabelas ou colunas muito longos ou complexos. 
 
- Por exemplo, geralmente é utlizado 'OCO' para referenciar a tabela de ocorrências e 'ENV' para tabela de envolvidos.
+ Geralmente é utlizado 'OCO' para referenciar a tabela de ocorrências e 'ENV' para tabela de envolvidos.
 
  	> Por que usar Alias é importante?
 		1. Clareza: Alias tornam as consultas mais claras, especialmente em junções de múltiplas tabelas onde nomes podem se repetir ou ser confusos.
