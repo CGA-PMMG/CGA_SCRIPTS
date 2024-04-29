@@ -2,8 +2,9 @@
 Coleção de scripts SQL desenvolvidos pelo Centro de Gerenciamento e Análise de dados para otimizar a análise de dados e relatórios dentro da Polícia Militar de Minas Gerais. Esta sessão contém instruções/ dicas para utilização do Dbeaver e dos scripts.
 
 ---
-                                                  DBEAVER                                             
-                                                                                                     
+                                                          DBEAVER                                             
+
+												     
 
 
 Manipular o DBeaver envolve várias tarefas, desde conectar-se a um banco de dados até executar consultas 
@@ -36,8 +37,10 @@ Você pode executar todo o script ou apenas uma parte selecionada.
 
 
 ---
-                                               SQL                                                 
-                                                                                                     
+
+                                                                   SQL                                                 
+
+												     
 
 SELECT
 
