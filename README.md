@@ -52,20 +52,18 @@ Indica a tabela da qual os dados estão sendo selecionados.
 
 Exemplo: FROM tb_ocorrencia OCO
 
----------------------------------------------------------------------------------------------------------
-COUNT
+       > O que é um Alias?
+	Um alias é basicamente um apelido que você dá para uma tabela ou uma coluna em uma consulta SQL. 
+	Isso pode ajudar a encurtar o seu código e torná-lo mais fácil de entender, especialmente quando você 
+	está trabalhando com nomes de tabelas ou colunas muito longos ou complexos. 
 
-Conta o número de registros que atendem a uma condição específica.
+ Por exemplo, geralmente é utlizado 'OCO' para referenciar a tabela de ocorrências e 'ENV' para tabela de envolvidos.
 
-Exemplo: COUNT(DISTINCT OCO.numero_ocorrencia) as REINCIDENCIA
-
----------------------------------------------------------------------------------------------------------
-GROUP_CONCAT
-
-Concatena valores de uma coluna para cada grupo de linhas.
-
-Exemplo: GROUP_CONCAT(DISTINCT OCO.natureza_codigo) as Naturezas_codigo
-
+ 	> Por que usar Alias é importante?
+		1. Clareza: Alias tornam as consultas mais claras, especialmente em junções de múltiplas tabelas onde nomes podem se repetir ou ser confusos.
+		2. Eficiência: Digitar menos código, especialmente em consultas complexas, economiza tempo e reduz a chance de erros.
+		3. Flexibilidade: Você pode nomear os resultados de suas consultas da maneira que melhor se adeque ao contexto do seu trabalho ou do relatório que está preparando.
+ 
 ---------------------------------------------------------------------------------------------------------
 JOIN
 
@@ -127,19 +125,11 @@ Estes são alguns dos operadores mais comuns utilizados com a cláusula `WHERE` 
 filtragens mais precisas e específicas nos dados de uma tabela.
 
 ---------------------------------------------------------------------------------------------------------
-GROUP BY
+COUNT
 
-Agrupa os resultados da consulta com base em uma ou mais colunas.
+Conta o número de registros que atendem a uma condição específica.
 
-Exemplo: GROUP BY ENV.nome_completo_envolvido, ENV.nome_mae, ENV.data_nascimento
-
----------------------------------------------------------------------------------------------------------
-HAVING
-
-Filtra grupos de linhas após a agregação de dados.
- 
-Exemplo: HAVING COUNT(DISTINCT OCO.numero_ocorrencia) > 1
-
+Exemplo: COUNT(DISTINCT OCO.numero_ocorrencia) as REINCIDENCIA
 
 ---------------------------------------------------------------------------------------------------------
 SPLIT_PART
@@ -155,6 +145,27 @@ TO_DATE
 No caso para retornar apenas a data NÂO CONTENDO a hora.
 
 Exemplo: TO_DATE(OCO.data_hora_fato) as Data
+
+---------------------------------------------------------------------------------------------------------
+GROUP_CONCAT
+
+Concatena valores de uma coluna para cada grupo de linhas.
+
+Exemplo: GROUP_CONCAT(DISTINCT OCO.natureza_codigo) as Naturezas_codigo
+
+---------------------------------------------------------------------------------------------------------
+GROUP BY
+
+Agrupa os resultados da consulta com base em uma ou mais colunas.
+
+Exemplo: GROUP BY ENV.nome_completo_envolvido, ENV.nome_mae, ENV.data_nascimento
+
+---------------------------------------------------------------------------------------------------------
+HAVING
+
+Filtra grupos de linhas após a agregação de dados.
+ 
+Exemplo: HAVING COUNT(DISTINCT OCO.numero_ocorrencia) > 1
 
 ---------------------------------------------------------------------------------------------------------
 
