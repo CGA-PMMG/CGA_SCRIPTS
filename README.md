@@ -125,6 +125,21 @@ Estes são alguns dos operadores mais comuns utilizados com a cláusula `WHERE` 
 filtragens mais precisas e específicas nos dados de uma tabela.
 
 ---------------------------------------------------------------------------------------------------------
+ CASE WHEN
+ 
+ Estrutura condicional que permite verificar uma série de condições e retornar valores específicos 
+ com base nessas condições, dentro de uma consulta. Funciona de maneira similar a uma 
+ declaração "if-else" (se-senão).
+
+1. CASE: Inicia a expressão.
+2. WHEN: Seguido por uma condição que você quer testar.
+3. THEN: Define o que deve ser retornado se a condição WHEN for verdadeira.
+4. ELSE: Opcional, define o que deve ser retornado se nenhuma das condições WHEN for atendida.
+5. END: Finaliza a expressão.
+   
+A expressão CASE WHEN é frequentemente usada para criar novas categorias ou transformar dados de acordo com regras específicas, diretamente na consulta SQL, antes dos dados serem exibidos.
+
+---------------------------------------------------------------------------------------------------------
 COUNT
 
 Conta o número de registros que atendem a uma condição específica.
