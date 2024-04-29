@@ -1,7 +1,7 @@
 # CGA SCPRITS
 Coleção de scripts SQL desenvolvidos pelo Centro de Gerenciamento e Análise de dados para otimizar a análise de dados e relatórios dentro da Polícia Militar de Minas Gerais. Esta sessão contém instruções/ dicas para utilização do Dbeaver e dos scripts.
 
------------------------------------------------------------------------------------------------------
+---
                                                   DBEAVER                                             
                                                                                                      
 
@@ -35,7 +35,7 @@ Você pode executar todo o script ou apenas uma parte selecionada.
 	3 – Executar script: 'Crtl' + 'Enter'
 
 
-------------------------------------------------------------------------------------------------------
+---
                                                SQL                                                 
                                                                                                      
 
@@ -45,7 +45,7 @@ Seleciona campos específicos da tabela para serem exibidos na consulta.
 
 Exemplo: SELECT nome_completo_envolvido, nome_mae, data_nascimento
 
----------------------------------------------------------------------------------------------------------
+---
 FROM
 
 Indica a tabela da qual os dados estão sendo selecionados.
@@ -69,7 +69,7 @@ Exemplo: FROM tb_ocorrencia OCO
 		3. Flexibilidade: Você pode nomear os resultados de suas consultas da maneira que melhor se adeque ao contexto do seu 
   		trabalho ou do relatório que está preparando.
  
----------------------------------------------------------------------------------------------------------
+---
 JOIN
 
 1. INNER JOIN: Combina dados de duas tabelas com base em uma condição específica.
@@ -80,7 +80,7 @@ JOIN
 
 Exemplo: INNER JOIN tb_envolvido_ocorrencia ENV ON (ENV.numero_ocorrencia = OCO.numero_ocorrencia)
 
----------------------------------------------------------------------------------------------------------									
+---								
 WHERE
 
 Filtra os dados da consulta com base em condições específicas.
@@ -111,7 +111,8 @@ Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
 
 
 5. **Operador LIKE**:
-   - Usado para fazer correspondência parcial em strings usando curingas (% para zero ou mais caracteres, _ para um caractere).
+   - Usado para fazer correspondência parcial em strings usando curingas (% para zero ou mais caracteres).
+     
     Exemplo: SELECT * FROM tabela WHERE coluna LIKE 'valor%';
   
 
@@ -129,7 +130,7 @@ Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
 Estes são alguns dos operadores mais comuns utilizados com a cláusula `WHERE` em SQL. Eles permitem realizar 
 filtragens mais precisas e específicas nos dados de uma tabela.
 
----------------------------------------------------------------------------------------------------------
+---
  CASE WHEN
  
  Estrutura condicional que permite verificar uma série de condições e retornar valores específicos 
@@ -144,28 +145,28 @@ filtragens mais precisas e específicas nos dados de uma tabela.
    
 A expressão CASE WHEN é frequentemente usada para criar novas categorias ou transformar dados de acordo com regras específicas, diretamente na consulta SQL, antes dos dados serem exibidos.
 
----------------------------------------------------------------------------------------------------------
+---
 SUBSTRING 
 
 Extrai uma parte específica de uma string.
 
 Exemplo: SUBSTRING(OCO.unidade_responsavel_registro_nome, 1, 3)
 
----------------------------------------------------------------------------------------------------------
+---
 UPPER / LOWER
 
 Converte o texto para maísculo (UPPER) ou minúsculo (LOWER).
 
 Exemplo: UPPER(ENV.nome_completo_envolvido)
 
----------------------------------------------------------------------------------------------------------
+---
 COUNT
 
 Conta o número de registros que atendem a uma condição específica.
 
 Exemplo: COUNT(DISTINCT OCO.numero_ocorrencia) as REINCIDENCIA
 
----------------------------------------------------------------------------------------------------------
+---
 SPLIT_PART
 
 Divide uma string em substrings com base em um delimitador especificado e retorna a substring na posição indicada.
@@ -173,40 +174,40 @@ split_part(string, delimiter, part)
 
 Exemplo: SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM
 
----------------------------------------------------------------------------------------------------------
-NOW()
+---
+NOW
 
 Retorna data atual do sistema.
 
 Exemplo: Now() as data_atual
 
----------------------------------------------------------------------------------------------------------
+---
 TO_DATE 
 
 No caso para retornar apenas a data NÂO CONTENDO a hora.
 
 Exemplo: TO_DATE(OCO.data_hora_fato) as Data
 
----------------------------------------------------------------------------------------------------------
+---
 GROUP_CONCAT
 
 Concatena valores de uma coluna para cada grupo de linhas.
 
 Exemplo: GROUP_CONCAT(DISTINCT OCO.natureza_codigo) as Naturezas_codigo
 
----------------------------------------------------------------------------------------------------------
+---
 GROUP BY
 
 Agrupa os resultados da consulta com base em uma ou mais colunas.
 
 Exemplo: GROUP BY ENV.nome_completo_envolvido, ENV.nome_mae, ENV.data_nascimento
 
----------------------------------------------------------------------------------------------------------
+---
 HAVING
 
 Filtra grupos de linhas após a agregação de dados.
  
 Exemplo: HAVING COUNT(DISTINCT OCO.numero_ocorrencia) > 1
 
----------------------------------------------------------------------------------------------------------
+---
 
