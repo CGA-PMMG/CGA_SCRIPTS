@@ -2,9 +2,8 @@
  * Este código SQL foi desenvolvido para fornecer uma visão detalhada sobre a integridade dos dados relacionados aos motivos presumidos 
  * das ocorrências fechadas registradas pela Polícia Militar de Minas Gerais no ano de 2024. O foco principal está em identificar 
  * quantas dessas ocorrências não têm um motivo presumido registrado ou estão categorizadas com códigos específicos ('9800', '0133') 
- * que podem indicar categorias padrão ou dados genéricos. Ao contabilizar o total de ocorrências e avaliar a frequência desses códigos, 
- * o relatório ajuda a entender a qualidade da documentação das motivações nas ocorrências. A consulta organiza os resultados 
- * por hierarquia das unidades responsáveis para facilitar a análise e interpretação dos dados.
+ * que podem indicar categorias padrão ou dados genéricos. Ao contabilizar o total de ocorrências e avaliar a frequência ou a falta desses códigos, 
+ * o relatório ajuda a entender a qualidade da documentação das motivações nas ocorrências.
  ﻿----------------------------------------------------------------------------------------------------------------------------------------------*/
 -- SELEÇÃO DE COLUNAS ESPECÍFICAS PARA IDENTIFICAÇÃO DO DIGITADOR E A UNIDADE RESPONSÁVEL
 SELECT
