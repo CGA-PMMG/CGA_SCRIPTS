@@ -1,7 +1,8 @@
-/*-----------------------------------------------------------------------------------------------------------------------
- Consulta informações sobre o processamento de ocorrências pela polícia militar,
- especialmente focando na identificação das unidades envolvidas e na qualidade dos dados de geolocalização.
------------------------------------------------------------------------------------------------------------------------*/
+/*﻿-----------------------------------------------------------------------------------------------------------------------------------------
+ * Este código SQL foi projetado para fornecer uma visão geral das ocorrências fechadas registradas pela Polícia Militar de Minas Gerais
+ * no ano de 2024, focando em analisar o uso de instrumentos utilizados. O principal objetivo é contar o 
+ * total de ocorrências únicas e determinar quantas delas não possuem informações sobre logitude e latitude.
+ ﻿-----------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT
     OCO.digitador_matricula AS MATRICULA_DIGITADOR, -- Matrícula do digitador responsável pela entrada dos dados.
     SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- Extrai o último segmento da unidade responsável pelo registro 
