@@ -78,7 +78,7 @@ Exemplo: INNER JOIN tb_envolvido_ocorrencia ENV ON (ENV.numero_ocorrencia = OCO.
 ---------------------------------------------------------------------------------------------------------									
 WHERE
 
-WHERE: Filtra os dados da consulta com base em condições específicas.
+Filtra os dados da consulta com base em condições específicas.
 
 Exemplo: WHERE OCO.natureza_codigo IN (...) AND YEAR(OCO.data_hora_fato) BETWEEN 2023 AND 2024
 Os operadores `WHERE` em SQL são usados para filtrar registros com base em condições específicas. 
