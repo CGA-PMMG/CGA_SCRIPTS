@@ -140,6 +140,20 @@ filtragens mais precisas e específicas nos dados de uma tabela.
 A expressão CASE WHEN é frequentemente usada para criar novas categorias ou transformar dados de acordo com regras específicas, diretamente na consulta SQL, antes dos dados serem exibidos.
 
 ---------------------------------------------------------------------------------------------------------
+SUBSTRING 
+
+Extrai uma parte específica de uma string.
+
+Exemplo: SUBSTRING(OCO.unidade_responsavel_registro_nome, 1, 3)
+
+---------------------------------------------------------------------------------------------------------
+UPPER / LOWER
+
+Converte o texto para maísculo (UPPER) ou minúsculo (LOWER).
+
+Exemplo: UPPER(ENV.nome_completo_envolvido)
+
+---------------------------------------------------------------------------------------------------------
 COUNT
 
 Conta o número de registros que atendem a uma condição específica.
