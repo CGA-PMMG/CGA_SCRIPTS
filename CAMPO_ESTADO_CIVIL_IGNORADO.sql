@@ -15,12 +15,9 @@ Exclusão de determinados tipos de condições físicas dos envolvidos.
 Exclusão de certos tipos de relatórios.
 
 O resultado final é agrupado por matrícula do digitador e por unidade da PM, ordenado de forma hierárquica por RPM, BPM e CIA.
-Isso fornece uma visão clara e organizada sobre o volume e características das ocorrências em diferentes níveis da estrutura 
-organizacional da Polícia Militar, focando especialmente no 1º BPM.
 ﻿----------------------------------------------------------------------------------------------------------------------------------------*/
 -- SELEÇÃO DE COLUNAS ESPECÍFICAS DA TABELA DE OCORRÊNCIAS E ENVOLVIDOS
 SELECT
-   
     OCO.digitador_matricula AS MATRICULA_DIGITADOR,  -- EXTRAI A MATRÍCULA DO DIGITADOR DA OCORRÊNCIA
     SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- EXTRAI A UNIDADE RPM (ÚLTIMO ELEMENTO DO NOME DA UNIDADE SEPARADO POR '/') 
     SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- EXTRAI A UNIDADE BPM (PENÚLTIMO ELEMENTO DO NOME DA UNIDADE SEPARADO POR '/')
