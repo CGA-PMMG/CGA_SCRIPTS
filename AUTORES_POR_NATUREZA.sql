@@ -2,8 +2,7 @@
 Este código SQL foi elaborado com o propósito de identificar e relatar informações sobre indivíduos envolvidos em roubos 
 ou furtos de bicicletas em Minas Gerais, durante os anos de 2023 e 2024, conforme registros da Polícia Militar. 
 Ele busca informações específicas sobre os envolvidos, as ocorrências associadas, e os veículos (bicicletas) envolvidos.
- O foco está nos autores desses crimes, utilizando códigos específicos para natureza da ocorrência e tipos de veículos
-  para garantir que apenas os casos relevantes sejam considerados.
+ O foco está nos autores desses crimes, utilizando códigos específicos para natureza da ocorrência e tipos de veículos.
 
 Esta consulta é útil para análises detalhadas das circunstâncias e frequências de roubos e furtos de bicicletas, 
 ajudando na tomada de decisões para estratégias de prevenção, investigação e ações de segurança pública. Os resultados 
