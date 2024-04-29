@@ -1,5 +1,4 @@
  /*---------------------------------------------------------------------------------------------------------------------
-
   * Este código SQL tem como objetivo calcular e apresentar informações detalhadas sobre o total de envolvidos nas 
   * ocorrências registradas pela Polícia Militar de Minas Gerais no ano de 2024 e, mais especificamente, quantificar 
   * quantos desses registros estão sem CPF ou CNPJ informado. O foco é analisar ocorrências fechadas e filtrar por diversos 
