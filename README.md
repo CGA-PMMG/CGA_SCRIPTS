@@ -60,9 +60,14 @@ Exemplo: FROM tb_ocorrencia OCO
  Geralmente é utlizado 'OCO' para referenciar a tabela de ocorrências e 'ENV' para tabela de envolvidos.
 
  	> Por que usar Alias é importante?
-		1. Clareza: Alias tornam as consultas mais claras, especialmente em junções de múltiplas tabelas onde nomes podem se repetir ou ser confusos.
+  
+		1. Clareza: Alias tornam as consultas mais claras, especialmente em junções de múltiplas 
+  		tabelas onde nomes podem se repetir ou ser confusos.
+    
 		2. Eficiência: Digitar menos código, especialmente em consultas complexas, economiza tempo e reduz a chance de erros.
-		3. Flexibilidade: Você pode nomear os resultados de suas consultas da maneira que melhor se adeque ao contexto do seu trabalho ou do relatório que está preparando.
+  
+		3. Flexibilidade: Você pode nomear os resultados de suas consultas da maneira que melhor se adeque ao contexto do seu 
+  		trabalho ou do relatório que está preparando.
  
 ---------------------------------------------------------------------------------------------------------
 JOIN
@@ -89,7 +94,7 @@ Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
      
     Exemplo: SELECT * FROM tabela WHERE coluna = 'valor';
  
-2. **Operador de Diferença (<>, !=)**:
+2. **Operador de Diferença (!=)**:
    - Usado para comparar se dois valores são diferentes.
      
     Exemplo: SELECT * FROM tabela WHERE coluna <> 'valor';
