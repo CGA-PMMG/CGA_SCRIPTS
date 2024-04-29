@@ -1,5 +1,4 @@
 /*﻿-- ---------------------------------------------------------------------------------------------------------------------------------
-
  * Este código SQL é projetado para analisar e quantificar os envolvidos em ocorrências registradas pela 
  * Polícia Militar de Minas Gerais no ano de 2024, particularmente identificando quantos registros não possuem informação sobre 
  * a cor da pele ou têm a cor da pele listada como código '9800'(Ignorado). O foco está em analisar dados de ocorrências fechadas, 
