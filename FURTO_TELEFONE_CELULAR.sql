@@ -20,7 +20,8 @@ OCO.nome_bairro, -- BAIRRO DO FATO
 OCO.nome_municipio, -- MUNICÍPIO DO FATO
 OCO.numero_latitude, -- LATITUDE
 OCO.numero_longitude,  -- LONGITUDE
-MAO.numero_imei -- IMEI DO APARELHO
+OCO.unidade_responsavel_registro_nome,
+OCO.unidade_area_militar_nome 
 FROM tb_ocorrencia OCO
 INNER JOIN tb_material_apreendido_ocorrencia MAO
 ON OCO.numero_ocorrencia = MAO.numero_ocorrencia 
