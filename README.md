@@ -79,7 +79,7 @@ JOIN
 
 2. LEFT JOIN: Retorna todos os registros da tabela à esquerda e os registros correspondentes da tabela à direita, se houver.
 
-3. RIGHT JOIN: Retorna todos os registros da tabela à direita e os registros correspondentes da tabela à esquerda, se houve
+3. RIGHT JOIN: Retorna todos os registros da tabela à direita e os registros correspondentes da tabela à esquerda, se houver.
 
 Exemplo: INNER JOIN tb_envolvido_ocorrencia ENV ON (ENV.numero_ocorrencia = OCO.numero_ocorrencia)
 
