@@ -2,43 +2,43 @@
  * Esta consulta seleciona informações detalhadas sobre RAT, opeções LEI SECA.  Ela é útil para análises 
  * de eficiência e eficácia de operações, GDO 2023, gerando de relatórios detalhados para a administração. 
  ---------------------------------------------------------------------------------------------------------*/
-SELECT 				rat.numero_ocorrencia,  -- Seleciona o número da ocorrência 
-					rat.natureza_codigo,  -- Seleciona o código natureza da ocorrência
-					rat.natureza_descricao_longa, -- Seleciona a descrição natureza da ocorrência
-					rat.natureza_consumado, -- Seleciona o valor 'tentado'/'consumado'
-                    rat.natureza_secundaria1_codigo, -- Seleciona a primeira natureza secundária 
-                    rat.natureza_secundaria2_codigo, -- Seleciona a segunda natureza secundária 
-                    rat.natureza_secundaria3_codigo, -- Seleciona a terceira natureza secundária 
-                    rat.complemento_natureza_descricao_longa, -- Seleciona o complemento da natureza 
-                    rat.data_hora_fato, -- Seleciona a data hora do fato
-                    rat.data_hora_final, -- Seleciona a data hora final do fato
-                    rat.nome_tipo_relatorio, -- Seleciona o nome do relatório 
-                    rat.digitador_nome, -- Seleciona o nome do digitador 
-                    rat.digitador_cargo_efetivo, -- Seleciona o cargo do digitador
-                    rat.relator_matricula, -- Selciona a matrícula do relator
-                    rat.relator_cargo, -- Selciona o cargo do relator
-                    rat.relator_nome, -- Selciona o nome do relator
-                    rat.digitador_matricula, -- Selciona a matrícula do digitador
-                    rat.unidade_responsavel_registro_nome_orgao, -- Seleciona o orgão da unidade responsável pelo registro
+SELECT 		    rat.numero_ocorrencia,  -- Seleciona  número da ocorrência 
+		    rat.natureza_codigo,  -- Seleciona  código natureza da ocorrência
+		    rat.natureza_descricao_longa, -- Seleciona  descrição natureza da ocorrência
+		    rat.natureza_consumado, -- Seleciona  valor 'tentado'/'consumado'
+                    rat.natureza_secundaria1_codigo, -- Seleciona  primeira natureza secundária 
+                    rat.natureza_secundaria2_codigo, -- Seleciona  segunda natureza secundária 
+                    rat.natureza_secundaria3_codigo, -- Seleciona  terceira natureza secundária 
+                    rat.complemento_natureza_descricao_longa, -- Seleciona  complemento da natureza 
+                    rat.data_hora_fato, -- Seleciona  data hora do fato
+                    rat.data_hora_final, -- Seleciona  data hora final do fato
+                    rat.nome_tipo_relatorio, -- Seleciona  nome do relatório 
+                    rat.digitador_nome, -- Seleciona nome do digitador 
+                    rat.digitador_cargo_efetivo, -- Seleciona cargo do digitador
+                    rat.relator_matricula, -- Selciona  matrícula do relator
+                    rat.relator_cargo, -- Selciona  cargo do relator
+                    rat.relator_nome, -- Selciona  nome do relator
+                    rat.digitador_matricula, -- Selciona  matrícula do digitador
+                    rat.unidade_responsavel_registro_nome_orgao, -- Seleciona  orgão da unidade responsável pelo registro
                     rat.ocorrencia_uf, -- UF da ocorrência 
-                    (unix_timestamp(rat.data_hora_final) - unix_timestamp(rat.data_hora_fato)) / 60 AS diferenca_minutos, -- Calcula a diferença em minutos do final e inicio do fato 
-                    integ.EFETIVO, -- Seleciona a quantidade do efetivo
-                    viatu.VIATURA, -- Seleciona a quantidade de viatura 
-                    prod.PESS_ABORDADAS, -- Seleciona a quantidade de pessoas abordadas 
-                    prod.TESTE_ETILOMETRO, -- Seleciona a quantidade de testes de etilometro realizados 
-                    prod.VEIC_FISCALIZADOS, -- Seleciona a quantidade de veículos fiscalizados 
-                    rat.unidade_responsavel_registro_nome, -- Seleciona a unidade responsável pelo registro
-                    rat.unidade_area_militar_nome, -- Seleciona a área militar
-                    rat.tipo_logradouro_descricao, -- Seleciona a descrição do  logradouro do fato
-                    rat.logradouro_nome, -- Seleciona o logradouro do fato          
-                    rat.descricao_endereco, -- Seleciona a descrição do endereço 
-                    rat.numero_endereco, -- Seleciona o número do endereço 
-                    rat.descricao_complemento_endereco, -- Seleciona a descrição do endereço 
-                    rat.descricao_ponto_referencia, -- Seleciona o ponto de referência do endereço 
+                    (unix_timestamp(rat.data_hora_final) - unix_timestamp(rat.data_hora_fato)) / 60 AS diferenca_minutos, -- Calcula  diferença em minutos do final e inicio do fato 
+                    integ.EFETIVO, -- Seleciona  quantidade do efetivo
+                    viatu.VIATURA, -- Seleciona  quantidade de viatura 
+                    prod.PESS_ABORDADAS, -- Seleciona  quantidade de pessoas abordadas 
+                    prod.TESTE_ETILOMETRO, -- Seleciona  quantidade de testes de etilometro realizados 
+                    prod.VEIC_FISCALIZADOS, -- Seleciona  quantidade de veículos fiscalizados 
+                    rat.unidade_responsavel_registro_nome, -- Seleciona  unidade responsável pelo registro
+                    rat.unidade_area_militar_nome, -- Seleciona  área militar
+                    rat.tipo_logradouro_descricao, -- Seleciona  descrição do  logradouro do fato
+                    rat.logradouro_nome, -- Seleciona  logradouro do fato          
+                    rat.descricao_endereco, -- Seleciona  descrição do endereço 
+                    rat.numero_endereco, -- Seleciona  número do endereço 
+                    rat.descricao_complemento_endereco, -- Seleciona  descrição do endereço 
+                    rat.descricao_ponto_referencia, -- Seleciona  ponto de referência do endereço 
                     rat.nome_bairro, -- Seleciona o nome do bairro
-                    rat.numero_latitude, -- Seleciona a latitude
-                    rat.numero_longitude, -- Seleciona a longitude
-                    rat.nome_municipio, -- Seleciona o nome do município
+                    rat.numero_latitude, -- Seleciona  latitude
+                    rat.numero_longitude, -- Seleciona  longitude
+                    rat.nome_municipio, -- Seleciona  nome do município
                     rat.descricao_estado, -- Seleciona a estado da ocorrêcia 
                     case -- cálculo EFICIENCIA : Tempo de duração maior ou igual a 30 minutos, efetivo maior ou igual a 02 policiais militares e emprego de pelo menos 01 (uma) viatura
                         when efetivo >= 2
@@ -89,8 +89,8 @@ SELECT 				rat.numero_ocorrencia,  -- Seleciona o número da ocorrência
                               GROUP BY numero_ocorrencia
                               )prod
                   ON prod.numero_ocorrencia=rat.numero_ocorrencia
-                  WHERE YEAR(data_hora_fato) = 2023 -- Filtra o ano da data hora fato
+                  WHERE YEAR(data_hora_fato) = 2023 -- Filtra  ano da data hora fato
                   and nome_tipo_relatorio = 'RAT' -- Filtra tipo específico de relatório
-                  and nome_municipio like '%BELO HORIZONTE%' -- Filtra município 
+                  and nome_municipio like '%xxxxx%' -- Filtra município 
 				  and natureza_codigo = 'Y04012'  -- Filtra naturza específica
                  
