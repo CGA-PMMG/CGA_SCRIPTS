@@ -35,6 +35,19 @@ Você pode executar todo o script ou apenas uma parte selecionada.
 	2 – Descomentar linha:'Crtl' + '/'
 	3 – Executar script: 'Crtl' + 'Enter'
 
+--
+	Erros Dbeaver:
+
+ 
+ 1- Erro de conexão:
+
+ 
+ Erro ocorrido durante a execução de consulta SQL.
+ 
+		PT: [Erro SQL [500051] [HY000]: ... Erro XXXXXX ao processar a consulta/declarativa. Código de Erro: 0, Estado SQL: TStatus(statusCode:ERROR_STATUS, sqlState:HY000, errorMessage:AuthorizationException: O usuário 'XXXX' não possui privilégios para executar 'SELECT' em: default.tb_XXX.]
+  		EN: [Erro SQL [500051] [HY000]: ... ERROR processing query/statement. Error Code: 0, SQL state: TStatus(statusCode:ERROR_STATUS, sqlState:HY000, errorMessage:AuthorizationException: User 'xxx' does not have privileges to execute 'SELECT' on: default.xxx]
+    
+Este erro ocorre devido a uma falha na conexão do Sistema de Gerenciamento de Banco de Dados (SGBD) ao banco de dados. Ocasionalmente apenas uma aba do DBeaver se desconecta do banco de dados. Para resolver, vá ao canto superior direito da tela, ao lado de 'Cloudera Impala'. No botão atualmente selecionado 'default', selecione o banco de dados desejado para a execução da consulta.
 
 ---
 
