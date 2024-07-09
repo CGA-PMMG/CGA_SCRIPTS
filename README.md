@@ -1,8 +1,8 @@
 # Banco de Dados <img src="https://github.com/CGA-PMMG/images/raw/main/SQL_ICON.png" width="10%" height="10%" align="right" valign="center"/>
-![SQL](https://img.shields.io/badge/SQL-blue?style=flat-square)
-![Dbeaver](https://img.shields.io/badge/DBEAVER-blue?style=flat-square)
-![Scripts](https://img.shields.io/badge/Scripts-blue?style=flat-square)
-![Recomendacoes](https://img.shields.io/badge/Recomenda%C3%A7%C3%B5es-red?style=flat-square)
+![SQL](https://img.shields.io/badge/SQL-blue?style=plastic)
+![Dbeaver](https://img.shields.io/badge/DBEAVER-blue?style=plastic)
+![Scripts](https://img.shields.io/badge/SCRIPT-blue?style=plastic)
+![Recomendacoes](https://img.shields.io/badge/Recomenda%C3%A7%C3%B5es-red?style=plastic)
 
 Coleção de scripts SQL desenvolvidos pelo Centro de Gerenciamento e Análise de dados para otimizar a análise de dados e relatórios dentro da Polícia Militar de Minas Gerais. Esta sessão contém instruções/ dicas para utilização do Dbeaver e dos scripts.
 
@@ -53,8 +53,8 @@ Este erro ocorre devido a uma falha na conexão do Sistema de Gerenciamento de B
 
 
  ### Comandos SQL - Linguagem de Consulta de Dados                                                
-
-![DQL](https://img.shields.io/badge/DQL-RED)												     
+![Alerta](https://img.shields.io/badge/IMPORTANTE-red?style=plastic)
+![DQL](https://img.shields.io/badge/DQL-green?style=plastic)												     
 
 ##### SELECT
 
@@ -229,7 +229,7 @@ Exemplo: HAVING COUNT(DISTINCT OCO.numero_ocorrencia) > 1
 ---
 
 # Recomendações Importantes para o Uso de Funções SQL
-![Alerta](https://img.shields.io/badge/Importante-red?style=flat)
+![Alerta](https://img.shields.io/badge/IMPORTANTE-red?style=plastic)
 #### 1. Evitar `SELECT *`
 O uso da cláusula `SELECT *` nas consultas SQL **não é recomendado** em ambientes de produção, especialmente em bancos de dados de grande porte. A prática de selecionar todas as colunas de uma tabela pode levar a vários problemas como:
 
