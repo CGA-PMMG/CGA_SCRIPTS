@@ -136,7 +136,7 @@ Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
 6. **Operador BETWEEN**:
    - Usado para verificar se um valor está dentro de um intervalo.
      
-    Exemplo: SELECT <coluna> FROM tabela WHERE coluna BETWEEN 10 AND 20;
+    Exemplo: SELECT coluna FROM tabela WHERE coluna BETWEEN 10 AND 20;
 
 
 7. **Operador NOT**:
