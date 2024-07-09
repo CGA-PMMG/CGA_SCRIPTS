@@ -229,7 +229,7 @@ Exemplo: HAVING COUNT(DISTINCT OCO.numero_ocorrencia) > 1
 ---
 
 # Recomendações Importantes para o Uso de Funções SQL
-![Alerta](https://img.shields.io/badge/Importante-red?style=for-the-badge)
+![Alerta](https://img.shields.io/badge/Importante-red?style=flat)
 #### 1. Evitar `SELECT *`
 O uso da cláusula `SELECT *` nas consultas SQL **não é recomendado** em ambientes de produção, especialmente em bancos de dados de grande porte. A prática de selecionar todas as colunas de uma tabela pode levar a vários problemas como:
 
