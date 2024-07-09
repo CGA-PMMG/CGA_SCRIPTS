@@ -109,28 +109,28 @@ Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
 1. **Operador de Igualdade (=)**:
    - Usado para comparar se dois valores são iguais.
      
-    Exemplo: SELECT <coluna> FROM tabela WHERE coluna = 'valor';
+    Exemplo: SELECT coluna FROM tabela WHERE coluna = 'valor';
  
 2. **Operador de Diferença (!=)**:
    - Usado para comparar se dois valores são diferentes.
      
-    Exemplo: SELECT <coluna> FROM tabela WHERE coluna <> 'valor';
+    Exemplo: SELECT coluna FROM tabela WHERE coluna <> 'valor';
 
 3. **Operadores de Comparação (<, >, <=, >=)**:
    - Usados para comparar valores numericamente.
      
-    Exemplo: SELECT <coluna> FROM tabela WHERE coluna > 10;
+    Exemplo: SELECT coluna FROM tabela WHERE coluna > 10;
 
 4. **Operador IN**:
    - Usado para verificar se um valor está em uma lista de valores.
      
-    Exemplo: SELECT <coluna> FROM tabela WHERE coluna IN ('valor1', 'valor2', 'valor3');
+    Exemplo: SELECT coluna FROM tabela WHERE coluna IN ('valor1', 'valor2', 'valor3');
 
 
 5. **Operador LIKE**:
    - Usado para fazer correspondência parcial em strings usando curingas (% para zero ou mais caracteres).
      
-    Exemplo: SELECT <coluna> FROM tabela WHERE coluna LIKE 'valor%';
+    Exemplo: SELECT coluna FROM tabela WHERE coluna LIKE 'valor%';
   
 
 6. **Operador BETWEEN**:
@@ -142,7 +142,7 @@ Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
 7. **Operador NOT**:
    - Usado para negar uma condição.
      
-    Exemplo: SELECT <coluna> FROM tabela WHERE NOT coluna = 'valor';
+    Exemplo: SELECT coluna FROM tabela WHERE NOT coluna = 'valor';
 
 Estes são alguns dos operadores mais comuns utilizados com a cláusula `WHERE` em SQL. Eles permitem realizar 
 filtragens mais precisas e específicas nos dados de uma tabela.
