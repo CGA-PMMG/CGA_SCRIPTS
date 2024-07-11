@@ -9,10 +9,10 @@ SELECT
                 PROD.indicador_descricao AS DESCRICAO, -- SELECIONA A DESCRIÇÃO DO INDICADOR
                 PROD.quantidade AS QUANTIDADE, -- SELECIONA A QUANTIDADE INDICADOR
                 PROD.data_hora_fato AS DATA_FATO, -- SELECIONA A DATA/HORA DO RAT
- 			           	SPLIT_PART(PROD.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- EXTRAI O ÚLTIMO SEGMENTO PARA IDENTIFICAR A RPM
-    		         	SPLIT_PART(PROD.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- EXTRAI O PENÚLTIMO SEGMENTO PARA IDENTIFICAR O BPM
-    			         SPLIT_PART(PROD.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- EXTRAI O ANTEPENÚLTIMO SEGMENTO PARA IDENTIFICAR A CIA
-    			         SPLIT_PART(PROD.unidade_responsavel_registro_nome, '/', -4) AS PELOTAO -- EXTRAI O ANTEPENÚLTIMO SEGMENTO PARA IDENTIFICAR O PELOTAO
+	SPLIT_PART(PROD.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- EXTRAI O ÚLTIMO SEGMENTO PARA IDENTIFICAR A RPM
+SPLIT_PART(PROD.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- EXTRAI O PENÚLTIMO SEGMENTO PARA IDENTIFICAR O BPM
+SPLIT_PART(PROD.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- EXTRAI O ANTEPENÚLTIMO SEGMENTO PARA IDENTIFICAR A CIA
+ SPLIT_PART(PROD.unidade_responsavel_registro_nome, '/', -4) AS PELOTAO -- EXTRAI O ANTEPENÚLTIMO SEGMENTO PARA IDENTIFICAR O PELOTAO
 FROM
                 db_bisp_reds_reporting.tb_rat_produtividade_ocorrencia PROD
 WHERE 1=1 -- FILTRA SEMPRE VERDADEIRO
