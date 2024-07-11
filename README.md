@@ -3,7 +3,6 @@
 ![Dbeaver](https://img.shields.io/badge/DBEAVER-blue?style=plastic)
 ![Scripts](https://img.shields.io/badge/SCRIPT-blue?style=plastic)
 ![Recomendacoes](https://img.shields.io/badge/Recomenda%C3%A7%C3%B5es-red?style=plastic)
-[![ueop](https://img.shields.io/badge/UEOP-purple)](https://github.com/CGA-PMMG/CGA_SCRIPTS/blob/main/00%20FORMULA%20UEOP%20-%202024%20-%202.txt)
 
 Coleção de scripts SQL desenvolvidos pelo Centro de Gerenciamento e Análise de dados para otimizar a análise de dados e relatórios dentro da Polícia Militar de Minas Gerais. Esta sessão contém instruções/ dicas para utilização do Dbeaver e dos scripts.
 
