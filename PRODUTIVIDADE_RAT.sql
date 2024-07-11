@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------------------------
  * Este script foi elaborado com o propósito de identificar produtividade do RAT. O código 
  * seleciona o número do RAT, a descrição do indicador, a quantidade relacionada, a data e hora do fato,
- *  além de identificar a unidade responsável pelo registro, decomposta em seus diferentes 
+ * além de identificar a unidade responsável pelo registro, decomposta em seus diferentes 
  * níveis hierárquicos (RPM, BPM, Companhia, e Pelotão).
  -----------------------------------------------------------------------------------------------------------------*/
 SELECT        
