@@ -16,7 +16,7 @@ SELECT
 FROM
                 db_bisp_reds_reporting.tb_rat_produtividade_ocorrencia PROD
 WHERE 1=1 -- FILTRA SEMPRE VERDADEIRO
-            AND PROD.quantidade != 0 -- QUANTIDADE DIFENTE DE 0 (ZERO)
+            AND PROD.quantidade != 0 -- FILTRA QUANTIDADE DIFERENTE DE 0 (ZERO)
             AND PROD.data_hora_fato BETWEEN '2023-01-01' AND '2024-05-01' -- FILTRA DATA/HORA DO RAT ENTRE 'DATAX' E 'DATAY' 
             AND PROD.unidade_responsavel_registro_nome LIKE '%/X RPM' -- FILTRE PELA RPM/BPM/CIA/PEL
             ORDER BY RPM, BPM, CIA, PELOTAO, PROD.data_hora_fato -- ORDENA PELA UNIDADE RESPONSAVEL PELO REGISTRO E A DATA/HORA 
