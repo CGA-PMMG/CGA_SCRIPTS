@@ -4,7 +4,7 @@ a natureza, local, datas e horas dos eventos, e unidades responsáveis, útil em
 ---------------------------------------------------------------------------------------------------------------*/
 
 SELECT	
-                OCO.numero_ocorrencia AS 'RAT.NUM_ATIVIDADE',  -- Seleciona o número da ocorrência 
+                OCO.numero_ocorrencia AS 'NUM_OCORRENCIA',  -- Seleciona o número da ocorrência 
                 OCO.natureza_codigo AS 'NAT.CODIGO',  -- Seleciona o código da natureza 
                 OCO.natureza_descricao AS 'NAT.DESCRICAO',  -- Seleciona a descrição da natureza 
                 FROM_TIMESTAMP(OCO.data_hora_inclusao, 'dd/MM/yyyy') AS DTA_INCLUSAO,  -- Converte e formata a data de inclusão da ocorrência para dd/MM/yyyy
