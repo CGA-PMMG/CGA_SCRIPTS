@@ -3,7 +3,7 @@ O objetivo deste script  é extrair informações sobre viaturas empenhadas em o
 incluindo número da ocorrência, número sequencial da viatura, placa, número de registro e unidade responsável.
 ------------------------------------------------------------------------------------------------------------*/
             SELECT	
-                OCO.numero_ocorrencia,  -- SELECIONA O NÚMERO DA OCORRÊNCIA 
+                OCO.numero_ocorrencia AS 'NUM_OCORRENCIA',  -- SELECIONA O NÚMERO DA OCORRÊNCIA 
                 VTR.numero_sequencial_viatura AS 'NUM_SEQ_RECURSO',  -- SELECIONA O NÚMERO SEQUENCIAL DA VIATURA
                 VTR.placa AS 'NUM_PLACA',  -- SELECIONA A PLACA DA VIATURA 
                 VTR.numero_reg AS 'NUM_PREFIXO' , -- SELECIONA O NÚMERO DE REGISTRO DA VIATURA 
