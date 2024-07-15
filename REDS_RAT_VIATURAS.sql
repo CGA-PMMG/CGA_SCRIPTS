@@ -16,7 +16,7 @@ O objetivo deste scriot é extrair informações sobre viaturas empenhadas no RA
             AND OCO.ind_estado IN ('R', 'F')  -- FILTRA OCORRÊNCIAS ONDE O ESTADO É RECEBIDO OU FECHADO
             AND OCO.data_hora_fato IS NOT NULL  -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DO FATO NÃO SÃO NULAS
             AND VTR.data_hora_fato BETWEEN '2024-01-02' AND '2024-05-01'  -- FILTRA OCORRÊNCIAS ONDE A DATA E HORA DO FATO ESTÃO NO INTERVALO ESPECIFICADO
---            AND OCO.unidade_responsavel_registro_nome LIKE '%/1 RPM' -- FILTRE A UEOP   
---            AND OCO.numero_ocorrencia = 'X1XXX'   -- FILTRE PELO NÚMERO DA OCORRÊNCIA
+--            AND OCO.unidade_responsavel_registro_nome LIKE '%/X RPM' -- FILTRE A UEOP   
+--            AND OCO.numero_ocorrencia = 'XXXX'   -- FILTRE PELO NÚMERO DA OCORRÊNCIA
 --	      AND VTR.placa = 'XXX'-- FILTRE PELA PLACA DA VIATURA
  ORDER BY VTR.data_hora_fato;  -- ORDENA OS RESULTADOS PELA DATA E HORA DO FATO
