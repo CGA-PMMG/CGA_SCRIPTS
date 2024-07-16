@@ -1,7 +1,7 @@
-﻿/*-----------------------------------------------------------------------------------------------------------------
-O objetivo deste script é extrair informações sobre os efetivos que registraram ocorrências, incluindo o número 
-da ocorrência, matrícula, nome, cargo do digitador, e detalhes da unidade responsável, dentro de um período específico, 
-forncento uma análise sobre o efetivo empenhado em um BOS ou BOS AMPLO.
+/*---------------------------------------------------------------------------------------------------------------------
+ * O objetivo deste script é extrair informações sobre os efetivos que registraram ocorrências, incluindo o 
+ * número da ocorrência, matrícula, nome, cargo do digitador, e detalhes da unidade responsável, 
+ * dentro de um período específico, forncento uma análise sobre o efetivo empenhado em um BOS ou BOS AMPLO.
 ------------------------------------------------------------------------------------------------------------------*/
  SELECT	
                 OCO.numero_ocorrencia AS NUM_REDS,  -- SELECIONA O NÚMERO DA OCORRÊNCIA 
@@ -19,4 +19,4 @@ WHERE 1=1  -- CONDIÇÃO SEMPRE VERDADEIRA GERALMENTE UTILIZAMOS PARA FACILITAR 
             AND OCO.data_hora_alteracao  BETWEEN '2024-01-01' AND '2024-05-01'  -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DA ALTERAÇÃO  ESTÃO NO INTERVALO ESPECIFICADO
             -- AND OCO.unidade_responsavel_registro_nome LIKE '%/X RPM' -- FILTRE A UEOP - GP/PL/CIA/BPM/RPM
             -- AND OCO.digitador_matricula = 'XXX' -- FILTRE PELA MATRÍCULA DO DIGITADOR
-            ORDER BY OCO.data_hora_fato;  -- ORDENA OS RESULTADOS PELA DATA/HORA DO FATO
+            ORDER BY OCO.data_hora_fato  -- ORDENA OS RESULTADOS PELA DATA/HORA DO FATO
