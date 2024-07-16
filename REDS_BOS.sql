@@ -46,6 +46,6 @@ SELECT
             AND OCO.data_hora_fato IS NOT NULL -- Filtra ocorrências onde a data/hora do fato não são nulas
             AND OCO.data_hora_alteracao  BETWEEN '2024-01-01' AND '2024-03-01'  -- Filtra ocorrências onde a data/hora da alteração estão no intervalo especificado
 --            AND OCO.unidade_responsavel_registro_nome LIKE '%/X RPM' -- Filtre a UEOp - GP/PL/CIA/BPM/RPM
-            ORDER BY OCO.data_hora_fato;  -- Ordena os resultados pela data/hora do fato
+            ORDER BY OCO.data_hora_fato  -- Ordena os resultados pela data/hora do fato
 
             
