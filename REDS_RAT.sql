@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------------------------------------------------
+﻿/*-----------------------------------------------------------------------------------------------------------------------
 O objetivo deste script é extrair informações sobre RAT registrados. Incluindo dados sobre a natureza da ocorrência, local, datas e horas dos eventos, unidades responsáveis e geolocalização.
 -------------------------------------------------------------------------------------------------------------------------*/
         SELECT	
@@ -43,7 +43,8 @@ O objetivo deste script é extrair informações sobre RAT registrados. Incluind
         	AND OCO.digitador_sigla_orgao = 'PM'
             AND OCO.nome_tipo_relatorio = 'RAT'  -- FILTRA OCORRÊNCIAS ONDE O TIPO DE RELATÓRIO É 'RAT'
             AND OCO.ind_estado IN ('R', 'F')  -- FILTRA OCORRÊNCIAS ONDE O ESTADO É 'RECEBIDO' OU 'FECHADO'
-            AND OCO.data_hora_fato BETWEEN '2024-01-01' AND '2024-05-01'  -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DO FATO ESTÃO NO INTERVALO ESPECIFICADO
+            AND OCO.data_hora_fato IS NOT NULL -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DO FATO NÃO SÃO NULAS
+            AND OCO.data_hora_alteracao  BETWEEN '2024-01-01' AND '2024-05-01'  -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DA ALTERAÇÃO ESTÃO NO INTERVALO ESPECIFICADO
 --            AND OCO.unidade_responsavel_registro_nome LIKE '%/X RPM' -- FILTRE A UEOP - GP/PL/CIA/BPM/RPM
             ORDER BY OCO.data_hora_fato;  -- ORDENA OS RESULTADOS PELA DATA/HORA DO FATO
         

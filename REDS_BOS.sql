@@ -1,4 +1,4 @@
-/*--------------------------------------------------------------------------------------------------------------
+﻿/*--------------------------------------------------------------------------------------------------------------
 O objetivo deste script é extrair informações detalhadas de BOS E BOS AMPLO registrados, incluindo dados sobre
 a natureza, local, datas e horas dos eventos, e unidades responsáveis, útil em análises e relatórios.
 ---------------------------------------------------------------------------------------------------------------*/
@@ -43,7 +43,8 @@ SELECT
             WHERE 1=1  -- Condição sempre verdadeira 
             AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')  -- Filtra ocorrências onde o tipo de relatório está na lista especificada
             AND OCO.ind_estado IN ('R', 'F')  -- Filtra ocorrências onde o estado é Recebido ou Fechado
-            AND OCO.data_hora_fato BETWEEN '2024-01-01' AND '2024-03-01'  -- Filtra ocorrências onde a data/hora do fato estão no intervalo especificado
+            AND OCO.data_hora_fato IS NOT NULL -- Filtra ocorrências onde a data/hora do fato não são nulas
+            AND OCO.data_hora_alteracao  BETWEEN '2024-01-01' AND '2024-03-01'  -- Filtra ocorrências onde a data/hora da alteração estão no intervalo especificado
 --            AND OCO.unidade_responsavel_registro_nome LIKE '%/X RPM' -- Filtre a UEOp - GP/PL/CIA/BPM/RPM
             ORDER BY OCO.data_hora_fato;  -- Ordena os resultados pela data/hora do fato
 

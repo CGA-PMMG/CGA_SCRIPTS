@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------------------------------------------
+﻿/*-----------------------------------------------------------------------------------------------------------------
 O objetivo deste script é extrair informações sobre os efetivos que registraram ocorrências, incluindo o número 
 da ocorrência, matrícula, nome, cargo do digitador, e detalhes da unidade responsável, dentro de um período específico, 
 forncento uma análise sobre o efetivo empenhado em um BOS ou BOS AMPLO.
@@ -15,6 +15,8 @@ FROM
 WHERE 1=1  -- CONDIÇÃO SEMPRE VERDADEIRA GERALMENTE UTILIZAMOS PARA FACILITAR A ADIÇÃO DE OUTRAS CONDIÇÕES
             AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')  -- FILTRA OCORRÊNCIAS ONDE O TIPO DE RELATÓRIO BOS E BOS AMPLO
             AND OCO.ind_estado IN ('R', 'F')  -- FILTRA OCORRÊNCIAS ONDE O ESTADO RECEBIDO E FECHADO
-            AND OCO.data_hora_fato BETWEEN '2024-01-01' AND '2024-05-01'  -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DO FATO ESTÃO NO INTERVALO ESPECIFICADO
+			AND OCO.data_hora_fato IS NOT NULL -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DO FATO NÃO SÃO NULAS
+            AND OCO.data_hora_alteracao  BETWEEN '2024-01-01' AND '2024-05-01'  -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DA ALTERAÇÃO  ESTÃO NO INTERVALO ESPECIFICADO
             -- AND OCO.unidade_responsavel_registro_nome LIKE '%/X RPM' -- FILTRE A UEOP - GP/PL/CIA/BPM/RPM
+            -- AND OCO.digitador_matricula = 'XXX' -- FILTRE PELA MATRÍCULA DO DIGITADOR
             ORDER BY OCO.data_hora_fato;  -- ORDENA OS RESULTADOS PELA DATA/HORA DO FATO
