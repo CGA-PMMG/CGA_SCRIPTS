@@ -1,6 +1,6 @@
-﻿/*--------------------------------------------------------------------------------------------------------------
-O objetivo deste script é extrair informações detalhadas de BOS E BOS AMPLO registrados, incluindo dados sobre
-a natureza, local, datas e horas dos eventos, e unidades responsáveis, útil em análises e relatórios.
+/*--------------------------------------------------------------------------------------------------------------
+ * O objetivo deste script é extrair informações detalhadas de BOS E BOS AMPLO registrados, incluindo dados sobre
+ * a natureza, local, datas e horas dos eventos, e unidades responsáveis, útil em análises e relatórios.
 ---------------------------------------------------------------------------------------------------------------*/
 
 SELECT	
