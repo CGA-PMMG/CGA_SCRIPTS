@@ -1,7 +1,7 @@
-﻿/*-------------------------------------------------------------------------------------------------------------
-O objetivo deste script  é extrair informações sobre viaturas empenhadas em ocorrências registradas, 
-incluindo número da ocorrência, número sequencial da viatura, placa, número de registro e unidade responsável.
-------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------------
+ * O objetivo deste script  é extrair informações sobre viaturas empenhadas em ocorrências registradas, 
+ * incluindo número da ocorrência, número sequencial da viatura, placa, número de registro e unidade responsável.
+----------------------------------------------------------------------------------------------------------------*/
             SELECT	
                 OCO.numero_ocorrencia AS 'NUM_OCORRENCIA',  -- SELECIONA O NÚMERO DA OCORRÊNCIA 
                 VTR.numero_sequencial_viatura AS 'NUM_SEQ_RECURSO',  -- SELECIONA O NÚMERO SEQUENCIAL DA VIATURA
@@ -21,4 +21,4 @@ incluindo número da ocorrência, número sequencial da viatura, placa, número 
 --          AND OCO.unidade_responsavel_registro_nome LIKE '%/X RPM' -- FILTRE A UEOP - GP/PL/CIA/BPM/RPM
 -- 	        AND VTR.placa = 'XXX' -- FILTRE PELA PLACA DA VIATURA
 -- 	        AND OCO.numero_ocorrencia = 'XXX'--FILTRE PELO NÚMERO DO BOS/BOS AMPLO
-            ORDER BY VTR.data_hora_fato;  -- ORDENA OS RESULTADOS PELA DATA E HORA DO FATO
+            ORDER BY VTR.data_hora_fato  -- ORDENA OS RESULTADOS PELA DATA E HORA DO FATO
