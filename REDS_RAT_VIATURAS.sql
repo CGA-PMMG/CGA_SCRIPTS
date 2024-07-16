@@ -20,4 +20,4 @@
 --            AND OCO.unidade_responsavel_registro_nome LIKE '%/X RPM' -- FILTRE A UEOP   
 --            AND OCO.numero_ocorrencia = 'XXXX'   -- FILTRE PELO NÚMERO DA OCORRÊNCIA
 --	      AND VTR.placa = 'XXX'-- FILTRE PELA PLACA DA VIATURA
- ORDER BY VTR.data_hora_fato;  -- ORDENA OS RESULTADOS PELA DATA E HORA DO FATO
+ ORDER BY VTR.data_hora_fato  -- ORDENA OS RESULTADOS PELA DATA E HORA DO FATO
