@@ -1,6 +1,6 @@
-﻿/*-------------------------------------------------------------------------------------------------------------
-O objetivo deste código SQL é extrair informações detalhadas sobre BOS E BOS AMPLO e os envolvidos, 
-incluindo dados pessoais dos envolvidos, endereços e informações da ocorrência, para análises e relatórios.
+/*------------------------------------------------------------------------------------------------------------
+ * O objetivo deste código SQL é extrair informações detalhadas sobre BOS E BOS AMPLO e os envolvidos, 
+ * incluindo dados pessoais dos envolvidos, endereços e informações da ocorrência, para análises e relatórios.
 ------------------------------------------------------------------------------------------------------------*/
             SELECT	
                 OCO.numero_ocorrencia AS NUM_OCORRENCIA,  -- SELECIONA O NÚMERO DA OCORRÊNCIA
@@ -34,4 +34,4 @@ incluindo dados pessoais dos envolvidos, endereços e informações da ocorrênc
 --          AND UPPER(ENV.nome_completo_envolvido) = 'XXX' -- FILTRA NOME COMPLETO DO ENVOLVIDO EM LETRAS MAIÚSCULAS
 --	    AND UPPER (ENV.nome_mae) = 'YYYY' -- FILTRE PELO NOME DA MÃE EM LETRAS MAÍUSCULAS 
 --	    AND ENV.data_nascimento = '1899-01-01' -- FILTRE A DATA DE NASCIMENTO DO ENVOLVIDO
-            ORDER BY OCO.data_hora_fato;  -- ORDENA OS RESULTADOS PELA DATA/HORA DO FATO
+            ORDER BY OCO.data_hora_fato  -- ORDENA OS RESULTADOS PELA DATA/HORA DO FATO
