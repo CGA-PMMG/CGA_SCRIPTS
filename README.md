@@ -19,11 +19,11 @@ SQL e visualizar resultados. Vamos detalhar algumas das funcionalidades principa
 -- Criar Conexão: No menu principal, selecione Database e depois Nova Conexão. Escolha o tipo de banco de dados e 
 preencha os detalhes necessários como host, porta, nome do usuário e senha.
 
--- Editor SQL: Abra um novo editor SQL clicando no ícone de SQL ou pressionando 'CTRL' + ']'.
+-- Editor SQL: Abra um novo editor SQL clicando no ícone de SQL ou pressionando `'CTRL' + ']'`
 
 -- Escrever Consultas: Use o editor para digitar suas consultas SQL. O DBeaver oferece recursos como autocompletar e destaque de sintaxe para ajudar.
 
--- Executar Consultas: Execute suas consultas usando o botão Execute (ou pressionando 'CTRL' + 'Enter'). 
+-- Executar Consultas: Execute suas consultas usando o botão Execute (ou pressionando `'CTRL' + 'Enter'`). 
 Você pode executar todo o script ou apenas uma parte selecionada.
 
 -- Configurações: Personalize o comportamento e a aparência do DBeaver em Janela> Preferências, onde você pode ajustar temas,
@@ -60,14 +60,14 @@ Este erro ocorre devido a uma falha na conexão do Sistema de Gerenciamento de B
 ![Alerta](https://img.shields.io/badge/IMPORTANTE-red?style=plastic)
 ![DQL](https://img.shields.io/badge/DQL-green?style=plastic)												     
 
-##### SELECT
+#### SELECT
 
 Seleciona campos específicos da tabela para serem exibidos na consulta.
 
-Exemplo: SELECT nome_completo_envolvido, nome_mae, data_nascimento
+Exemplo: `SELECT nome_completo_envolvido, nome_mae, data_nascimento`
 
 ---
-##### FROM
+#### FROM
 
 Indica a tabela da qual os dados estão sendo selecionados.
 
@@ -91,62 +91,62 @@ Exemplo: FROM tb_ocorrencia OCO
   		trabalho ou do relatório que está preparando.
  
 ---
-##### JOIN
+#### JOIN
 
-1. INNER JOIN: Combina dados de duas tabelas com base em uma condição específica.
+1. `INNER JOIN`: Combina dados de duas tabelas com base em uma condição específica.
 
-2. LEFT JOIN: Retorna todos os registros da tabela à esquerda e os registros correspondentes da tabela à direita, se houver.
+2. `LEFT JOIN`: Retorna todos os registros da tabela à esquerda e os registros correspondentes da tabela à direita, se houver.
 
-3. RIGHT JOIN: Retorna todos os registros da tabela à direita e os registros correspondentes da tabela à esquerda, se houver.
+3. `RIGHT JOIN`: Retorna todos os registros da tabela à direita e os registros correspondentes da tabela à esquerda, se houver.
 
-Exemplo: INNER JOIN tb_envolvido_ocorrencia ENV ON (ENV.numero_ocorrencia = OCO.numero_ocorrencia)
+Exemplo: `INNER JOIN tb_envolvido_ocorrencia ENV ON (ENV.numero_ocorrencia = OCO.numero_ocorrencia)`
 
 ---								
-##### WHERE
+#### WHERE
 
 Filtra os dados da consulta com base em condições específicas.
 
-Exemplo: WHERE OCO.natureza_codigo IN (...) AND YEAR(OCO.data_hora_fato) BETWEEN 2023 AND 2024
+Exemplo: `WHERE OCO.natureza_codigo IN (...) AND YEAR(OCO.data_hora_fato) BETWEEN 2023 AND 2024`
 Os operadores `WHERE` em SQL são usados para filtrar registros com base em condições específicas. 
 Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
 
 1. **Operador de Igualdade (=)**:
    - Usado para comparar se dois valores são iguais.
      
-    Exemplo: SELECT coluna FROM tabela WHERE coluna = 'valor';
+    Exemplo: `SELECT` coluna FROM tabela WHERE coluna = 'valor';`
  
 2. **Operador de Diferença (!=)**:
    - Usado para comparar se dois valores são diferentes.
      
-    Exemplo: SELECT coluna FROM tabela WHERE coluna <> 'valor';
+    Exemplo: `SELECT coluna FROM tabela WHERE coluna <> 'valor';`
 
 3. **Operadores de Comparação (<, >, <=, >=)**:
    - Usados para comparar valores numericamente.
      
-    Exemplo: SELECT coluna FROM tabela WHERE coluna > 10;
+    Exemplo: `SELECT coluna FROM tabela WHERE coluna > 10;`
 
 4. **Operador IN**:
    - Usado para verificar se um valor está em uma lista de valores.
      
-    Exemplo: SELECT coluna FROM tabela WHERE coluna IN ('valor1', 'valor2', 'valor3');
+    Exemplo: `SELECT coluna FROM tabela WHERE coluna IN ('valor1', 'valor2', 'valor3');`
 
 
 5. **Operador LIKE**:
    - Usado para fazer correspondência parcial em strings usando curingas (% para zero ou mais caracteres).
      
-    Exemplo: SELECT coluna FROM tabela WHERE coluna LIKE 'valor%';
+    Exemplo: `SELECT coluna FROM tabela WHERE coluna LIKE 'valor%';`
   
 
 6. **Operador BETWEEN**:
    - Usado para verificar se um valor está dentro de um intervalo.
      
-    Exemplo: SELECT coluna FROM tabela WHERE coluna BETWEEN 10 AND 20;
+    Exemplo: `SELECT coluna FROM tabela WHERE coluna BETWEEN 10 AND 20;`
 
 
 7. **Operador NOT**:
    - Usado para negar uma condição.
      
-    Exemplo: SELECT coluna FROM tabela WHERE NOT coluna = 'valor';
+    Exemplo: `SELECT coluna FROM tabela WHERE NOT coluna = 'valor';`
 
 Estes são alguns dos operadores mais comuns utilizados com a cláusula `WHERE` em SQL. Eles permitem realizar 
 filtragens mais precisas e específicas nos dados de uma tabela.
@@ -158,34 +158,34 @@ filtragens mais precisas e específicas nos dados de uma tabela.
  com base nessas condições, dentro de uma consulta. Funciona de maneira similar a uma 
  declaração "if-else" (se-senão).
 
-1. CASE: Inicia a expressão.
-2. WHEN: Seguido por uma condição que você quer testar.
-3. THEN: Define o que deve ser retornado se a condição WHEN for verdadeira.
-4. ELSE: Opcional, define o que deve ser retornado se nenhuma das condições WHEN for atendida.
-5. END: Finaliza a expressão.
+1. `CASE`: Inicia a expressão.
+2. `WHEN`: Seguido por uma condição que você quer testar.
+3. `THEN`: Define o que deve ser retornado se a condição WHEN for verdadeira.
+4. `ELSE`: Opcional, define o que deve ser retornado se nenhuma das condições WHEN for atendida.
+5. `END`: Finaliza a expressão.
    
-A expressão CASE WHEN é frequentemente usada para criar novas categorias ou transformar dados de acordo com regras específicas, diretamente na consulta SQL, antes dos dados serem exibidos.
+A expressão `CASE WHEN` é frequentemente usada para criar novas categorias ou transformar dados de acordo com regras específicas, diretamente na consulta SQL, antes dos dados serem exibidos.
 
 ---
 ##### SUBSTRING 
 
 Extrai uma parte específica de uma string.
 
-Exemplo: SUBSTRING(OCO.unidade_responsavel_registro_nome, 1, 3)
+Exemplo: `SUBSTRING(OCO.unidade_responsavel_registro_nome, 1, 3)`
 
 ---
 ##### UPPER / LOWER
 
-Converte o texto para maísculo (UPPER) ou minúsculo (LOWER).
+Converte o texto para maísculo (`UPPER`) ou minúsculo (`LOWER`).
 
-Exemplo: UPPER(ENV.nome_completo_envolvido)
+Exemplo: `UPPER(ENV.nome_completo_envolvido)`
 
 ---
 ##### COUNT
 
 Conta o número de registros que atendem a uma condição específica.
 
-Exemplo: COUNT(DISTINCT OCO.numero_ocorrencia) as REINCIDENCIA
+Exemplo: `COUNT(DISTINCT OCO.numero_ocorrencia) as REINCIDENCIA`
 
 ---
 ##### SPLIT_PART
@@ -193,42 +193,42 @@ Exemplo: COUNT(DISTINCT OCO.numero_ocorrencia) as REINCIDENCIA
 Divide uma string em substrings com base em um delimitador especificado e retorna a substring na posição indicada.
 split_part(string, delimiter, part)
 
-Exemplo: SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM
+Exemplo: `SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM`
 
 ---
 ##### NOW
 
 Retorna data atual do sistema.
 
-Exemplo: Now() as data_atual
+Exemplo:`Now() as data_atual`
 
 ---
 ##### TO_DATE 
 
-No caso para retornar apenas a data NÂO CONTENDO a hora.
+No caso para retornar apenas a data NÃO CONTENDO a hora.
 
-Exemplo: TO_DATE(OCO.data_hora_fato) as Data
+Exemplo: `TO_DATE(OCO.data_hora_fato) as Data`
 
 ---
 ##### GROUP_CONCAT
 
 Concatena valores de uma coluna para cada grupo de linhas.
 
-Exemplo: GROUP_CONCAT(DISTINCT OCO.natureza_codigo) as Naturezas_codigo
+Exemplo: `GROUP_CONCAT(DISTINCT OCO.natureza_codigo) as Naturezas_codigo`
 
 ---
 ##### GROUP BY
 
 Agrupa os resultados da consulta com base em uma ou mais colunas.
 
-Exemplo: GROUP BY ENV.nome_completo_envolvido, ENV.nome_mae, ENV.data_nascimento
+Exemplo: `GROUP BY ENV.nome_completo_envolvido, ENV.nome_mae, ENV.data_nascimento`
 
 ---
 ##### HAVING
 
 Filtra grupos de linhas após a agregação de dados.
  
-Exemplo: HAVING COUNT(DISTINCT OCO.numero_ocorrencia) > 1
+Exemplo: `HAVING COUNT(DISTINCT OCO.numero_ocorrencia) > 1`
 
 ---
 
