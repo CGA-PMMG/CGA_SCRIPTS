@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------------------
- *   Este script foi desenvolvido para análise do indicador da GDO, IPQ (Indicador de resposta qualificada)
+ *   Este script foi desenvolvido para análise do indicador da GDO, IPQ (Indicador de Resposta Qualificada)
  * das unidades. Versão 06/06/2024
  -------------------------------------------------------------------------------------------------------------------------*/
 WITH
