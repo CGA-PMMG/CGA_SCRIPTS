@@ -54,12 +54,12 @@ SELECT 		    rat.numero_ocorrencia,  -- Seleciona  número da ocorrência
                         then 1
                         else 0
                         end as EFICACIA
-                  FROM tb_ocorrencia AS rat
-                  LEFT JOIN (SELECT numero_ocorrencia, count(*) as EFETIVO FROM tb_integrante_guarnicao_ocorrencia
+                  FROM db_bisp_reds_reporting.tb_ocorrencia AS rat
+                  LEFT JOIN (SELECT numero_ocorrencia, count(*) as EFETIVO FROM db_bisp_reds_reporting.tb_integrante_guarnicao_ocorrencia
                               GROUP BY numero_ocorrencia
                               )integ -- Seleciona campo 'numero_ocorrencia' e conta a quantidade de efetivo empenhado na ocorrência para retornar no join 
                   ON integ.numero_ocorrencia=rat.numero_ocorrencia
-                  LEFT JOIN (SELECT numero_ocorrencia, count(*) as VIATURA FROM tb_viatura_ocorrencia
+                  LEFT JOIN (SELECT numero_ocorrencia, count(*) as VIATURA FROM db_bisp_reds_reporting.tb_viatura_ocorrencia
                               GROUP BY numero_ocorrencia
                               )viatu -- Seleciona campo 'numero_ocorrencia' e conta a quantidade de viaturas empenhadas na ocorrência para retornar no join 
                   ON viatu.numero_ocorrencia=rat.numero_ocorrencia
@@ -85,12 +85,12 @@ SELECT 		    rat.numero_ocorrencia,  -- Seleciona  número da ocorrência
                                         ELSE 0
                                     	END
                                  	) AS VEIC_FISCALIZADOS   -- Seleciona campo 'numero_ocorrencia', conta a quantidade de veículos fiscalizados na ocorrência, soma o contador e retorna ao join 
-                              FROM tb_rat_produtividade_ocorrencia
+                              FROM db_bisp_reds_reporting.tb_rat_produtividade_ocorrencia
                               GROUP BY numero_ocorrencia
                               )prod
                   ON prod.numero_ocorrencia=rat.numero_ocorrencia
                   WHERE YEAR(data_hora_fato) = 2023 -- Filtra  ano da data hora fato
                   and nome_tipo_relatorio = 'RAT' -- Filtra tipo específico de relatório
                   and nome_municipio like '%xxxxx%' -- Filtra município 
-				  and natureza_codigo = 'Y04012'  -- Filtra naturza específica
+		  and natureza_codigo = 'Y04012'  -- Filtra naturza específica
                  
