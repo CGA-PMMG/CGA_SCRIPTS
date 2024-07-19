@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------------------------------
-* O objetivo deste scriot é extrair informações sobre viaturas empenhadas no RAT. Incluindo o número da ocorrência, 
+* O objetivo deste script é extrair informações sobre viaturas empenhadas no RAT. Incluindo o número da ocorrência, 
 * número sequencial da viatura, placa, e número de registro, para análises e relatórios.
 ---------------------------------------------------------------------------------------------------------------------*/
     SELECT	
