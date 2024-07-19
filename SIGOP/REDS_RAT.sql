@@ -46,7 +46,7 @@
             AND OCO.ind_estado IN ('R', 'F')  -- FILTRA OCORRÊNCIAS ONDE O ESTADO É 'RECEBIDO' OU 'FECHADO'
             AND OCO.data_hora_fato IS NOT NULL -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DO FATO NÃO SÃO NULAS
             AND OCO.data_hora_alteracao  BETWEEN '2024-01-01' AND '2024-05-01'  -- FILTRA OCORRÊNCIAS ONDE A DATA/HORA DA ALTERAÇÃO ESTÃO NO INTERVALO ESPECIFICADO
---            AND OCO.unidade_responsavel_registro_nome LIKE '%/X RPM' -- FILTRE A UEOP - GP/PL/CIA/BPM/RPM
+            -- AND MASTER.unidade_area_militar_nome  LIKE '%/1 RPM' -- FILTRE A UEOP - GP/PL/CIA/BPM/RPM
             ORDER BY OCO.data_hora_fato  -- ORDENA OS RESULTADOS PELA DATA/HORA DO FATO
         
 
