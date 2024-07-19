@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------------------------------------------------------
- * Este script foi desenvolvido para análise do indicador da GDO, IMT (Indicador de mortes no trânsito)
+ * Este script foi desenvolvido para análise do indicador da GDO, IMT (Indicador de Mortes no Trânsito)
  * das unidades. Versão 19/04/2024.
  ---------------------------------------------------------------------------------------------------------------------------*/
 -- ESTA SELEÇÃO RETORNA DADOS DE OCORRÊNCIA QUE CONTABILIZAM PARA MT (GDO)
