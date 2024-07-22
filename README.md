@@ -1,4 +1,4 @@
-# Banco de Dados <img src="https://github.com/CGA-PMMG/images/raw/main/SQL_ICON.png" width="10%" height="10%" align="right" valign="center"/>
+# Banco de Dados <img src="https://www.flaticon.com/free-icon/sql_9544010" width="10%" height="10%" align="right" valign="center"/>
 ![SQL](https://img.shields.io/badge/SQL-blue?style=plastic)
 ![Dbeaver](https://img.shields.io/badge/DBEAVER-blue?style=plastic)
 ![Scripts](https://img.shields.io/badge/SCRIPT-blue?style=plastic)
