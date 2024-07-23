@@ -1,4 +1,4 @@
-# Banco de Dados <img src="https://github.com/CGA-PMMG/CGA_SCRIPTS/blob/main/image_readme_sql.png" width="10%" height="10%" align="right" valign="center"/>
+# Banco de Dados <img src="https://github.com/CGA-PMMG/CGA_SCRIPTS/blob/main/Configura%C3%A7%C3%A3o%20GitHub/image_readme_sql.png" width="10%" height="10%" align="right" valign="center"/>
 ![SQL](https://img.shields.io/badge/SQL-blue?style=plastic)
 ![Dbeaver](https://img.shields.io/badge/DBEAVER-blue?style=plastic)
 ![Scripts](https://img.shields.io/badge/SCRIPT-blue?style=plastic)
