@@ -13,7 +13,7 @@ SELECT
         WHEN OCO.numero_longitude IS NULL OR OCO.numero_latitude IS NULL THEN 1 ELSE 0
         END) AS Qtd_Null_BSC -- Calcula a quantidade de registros que não possuem dados de longitude ou latitude, indicando possíveis falhas na geolocalização.
 -- A fonte de dados vem da tabela de ocorrências.
-FROM tb_ocorrencia OCO
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 -- Aplica filtros para restringir os dados:
 WHERE YEAR(OCO.data_hora_fato) = 2024 -- Considera apenas ocorrências do ano de 2024.
     AND OCO.nome_tipo_relatorio NOT IN('RAT', 'BOS', 'BOS AMPLO') -- Exclui tipos de relatórios que não são de interesse, como Relatório de Atendimento Tático (RAT) e Boletim de Ocorrência Simplificado (BOS).
