@@ -17,7 +17,7 @@ PRESOS_MV AS (
         ENV.data_hora_fato,  -- Seleciona data e hora do fato ocorrido
         ENV.data_nascimento  -- Seleciona data de nascimento do envolvido
     FROM
-        tb_envolvido_ocorrencia ENV  -- Da tabela de envolvidos em ocorrências
+        db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  -- Da tabela de envolvidos em ocorrências
     WHERE
         YEAR(ENV.data_hora_fato) >= 2019  -- Considera apenas fatos a partir de 2019
         AND ENV.tipo_prisao_apreensao_descricao IN 
@@ -33,7 +33,7 @@ PRESOS_MV AS (
             SELECT
                 ENV2.numero_ocorrencia
             FROM
-                tb_envolvido_ocorrencia ENV2
+                db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV2
             WHERE
                 YEAR(ENV2.data_hora_fato) >= 2019
                 AND ENV2.natureza_ocorrencia_codigo IN 
@@ -54,7 +54,7 @@ PRESOS_ROUBO_FURTO AS (
         ENV.data_hora_fato,  -- Seleciona data e hora do fato ocorrido
         ENV.data_nascimento  -- Seleciona data de nascimento do envolvido
     FROM
-        tb_envolvido_ocorrencia ENV
+        db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
     WHERE
         1 = 1
         AND YEAR (ENV.data_hora_fato) >=2019
@@ -85,7 +85,7 @@ PRESOS_VDOM AS (
         ENV.data_hora_fato,  -- Seleciona data e hora do fato ocorrido
         ENV.data_nascimento  -- Seleciona data de nascimento do envolvido
     FROM
-       tb_envolvido_ocorrencia ENV
+       db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
     WHERE
         1 = 1
         AND ENV.tipo_prisao_apreensao_descricao IN 
@@ -101,7 +101,7 @@ PRESOS_VDOM AS (
             SELECT
                 ENV2.numero_ocorrencia
             FROM
-                tb_envolvido_ocorrencia ENV2
+                db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV2
             WHERE
                 1 = 1
                 AND YEAR (ENV2.data_hora_fato) >=2019
@@ -129,7 +129,7 @@ PRISAO_APREENSAO AS (
         ENV.data_nascimento,  -- Data de nascimento do envolvido
         ENV.tipo_prisao_apreensao_descricao  -- Descrição do tipo de prisão/apreensão      
     FROM
-        tb_envolvido_ocorrencia ENV
+        db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
         INNER JOIN tb_ocorrencia OCO ON OCO.numero_ocorrencia = ENV.numero_ocorrencia  -- Junção das tabelas de ocorrência e envolvidos
     WHERE
         ENV.tipo_prisao_apreensao_descricao IN 
