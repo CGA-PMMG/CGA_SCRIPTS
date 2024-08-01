@@ -28,8 +28,8 @@ SELECT
         THEN 1 ELSE 0 
         END) AS Qtd_Null_9800_9700 -- CALCULA A QUANTIDADE DE REGISTROS COM CÓDIGO DE ESTADO CIVIL NULO, '9800' OU '9700'
 -- TABELAS DE ONDE OS DADOS SERÃO EXTRAÍDOS
-FROM tb_ocorrencia OCO
-JOIN tb_envolvido_ocorrencia ENV
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
    ON ENV.numero_ocorrencia = OCO.numero_ocorrencia -- JUNÇÃO DAS TABELAS POR NÚMERO DA OCORRÊNCIA
 -- CONDIÇÕES PARA A SELEÇÃO DOS DADOS
 WHERE YEAR(ENV.data_hora_fato) = 2024  -- APENAS OCORRÊNCIAS DO ANO DE 2024
