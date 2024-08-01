@@ -19,8 +19,8 @@ SELECT
         THEN 1 ELSE 0 
         END) AS Qtd_Null
 -- TABELAS E JUNÇÕES UTILIZADAS PARA A CONSULTA
-FROM tb_ocorrencia OCO
-JOIN tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia -- JUNÇÃO DAS TABELAS DE OCORRÊNCIA E ENVOLVIDOS
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia -- JUNÇÃO DAS TABELAS DE OCORRÊNCIA E ENVOLVIDOS
 -- FILTROS APLICADOS PARA A SELEÇÃO DOS DADOS
 WHERE YEAR(ENV.data_hora_fato) = 2024  -- FILTRA OS DADOS PARA OCORRÊNCIAS DO ANO 2024
   AND OCO.relator_sigla_orgao = 'PM' -- APENAS OCORRÊNCIAS RELATADAS PELA POLÍCIA MILITAR
