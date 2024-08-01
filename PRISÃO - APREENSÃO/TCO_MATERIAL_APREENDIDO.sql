@@ -24,8 +24,8 @@ SELECT OCO.ind_tco,                              -- INDICADOR TCO
        OCO.unidade_responsavel_registro_nome,    -- NOME DA UNIDADE RESPONSAVEL PELO REGISTRO
        TCO.codigo_comarca,                       -- CODIGO DA COMACA TCO
        TCO.nome_comarca                          -- NOME DA COMARCA TCO
-FROM tb_ocorrencia OCO                           
-INNER JOIN tb_tco_ocorrencia TCO                 -- A NUM OCORRENCIA DEVE EXISTIR NAS DUAS TABELAS
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO                           
+INNER JOIN db_bisp_reds_reporting.tb_tco_ocorrencia TCO                 -- A NUM OCORRENCIA DEVE EXISTIR NAS DUAS TABELAS
 ON OCO.numero_ocorrencia = TCO.numero_ocorrencia 
 LEFT JOIN tb_material_apreendido_ocorrencia MAO  -- 
 ON OCO.numero_ocorrencia = MAO.numero_ocorrencia -- 
