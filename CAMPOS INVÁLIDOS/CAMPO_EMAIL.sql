@@ -26,8 +26,8 @@ SELECT
         THEN 'NÃO PREENCHIDO' ELSE 'PREENCHIDO'   -- Retorna 'NÃO PREENCHIDO' se email for NULL, senão 'PREENCHIDO'
         END AS Qtd_Null
 -- Fonte dos dados e a condição de junção entre tabelas
-FROM tb_ocorrencia OCO
-JOIN tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia  
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia  
 -- Filtros aplicados para selecionar ocorrências específicas
 WHERE YEAR(OCO.data_hora_inclusao) = 2023                    -- Filtra ocorrências do ano 2023
  AND MONTH(OCO.data_hora_inclusao) BETWEEN 11 AND 12         -- Filtra ocorrências nos meses de novembro e dezembro
