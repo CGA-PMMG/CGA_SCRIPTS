@@ -18,8 +18,8 @@ SELECT
         THEN 1 ELSE 0 
         END) AS Qtd_Null
 -- TABELAS E JUNÇÕES UTILIZADAS PARA A CONSULTA
-FROM tb_ocorrencia OCO
-JOIN tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia -- JUNÇÃO DAS TABELAS DE OCORRÊNCIA E ENVOLVIDOS
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia -- JUNÇÃO DAS TABELAS DE OCORRÊNCIA E ENVOLVIDOS
 -- FILTROS APLICADOS PARA A SELEÇÃO DOS DADOS
 WHERE YEAR(ENV.data_hora_fato) = 2024  -- FILTRA OS DADOS PARA OCORRÊNCIAS DO ANO 2024
   AND ENV.envolvimento_codigo IN ('1300', '1301', '1302', '1303', '1304', '1305', '1399') -- FILTRA PELOS CÓDIGOS DE ENVOLVIMENTO. APENAS VITIMAS.
