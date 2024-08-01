@@ -16,8 +16,8 @@ SELECT
     GROUP_CONCAT(DISTINCT OCO.natureza_codigo) AS Naturezas_codigo,  -- LISTA DE CÓDIGOS DE NATUREZA DAS OCORRÊNCIAS
     GROUP_CONCAT(DISTINCT OCO.natureza_descricao) AS Naturezas_descricao  -- LISTA DE DESCRIÇÕES DE NATUREZA DAS OCORRÊNCIAS
 -- TABELAS UTILIZADAS NA CONSULTA E JUNÇÕES
-FROM tb_ocorrencia OCO 
-INNER JOIN tb_envolvido_ocorrencia ENV 
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO 
+INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV 
    ON (ENV.numero_ocorrencia = OCO.numero_ocorrencia)  -- JUNÇÃO PARA ASSOCIAR ENVOLVIDOS ÀS OCORRÊNCIAS
 -- FILTROS PARA SELEÇÃO DE DADOS
 WHERE OCO.natureza_codigo IN ('B01121','B01148','B01149','B01147','C01155','C01157','C01159','D01213','D01217','E01250','I04033')  -- FILTRA POR CÓDIGOS ESPECÍFICOS DE NATUREZA DE CRIME
