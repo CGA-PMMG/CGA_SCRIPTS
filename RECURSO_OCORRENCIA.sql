@@ -13,8 +13,8 @@ OCO.unidade_responsavel_registro_nome,
 FROM_TIMESTAMP(OCO.data_hora_fato,'dd/MM/yy') as 'data_fato', -- DATA DO FATO (ESTA LINHA SEGMENTA O CAMPO DATA HORA DO FATO, EXTRAINDO APENAS A DATA)
 FROM_TIMESTAMP(OCO.data_hora_fato,'HH:mm') as 'hora_fato', -- HORA DO FATO (ESTA LINHA SEGMENTA O CAMPO DATA HORA DO FATO, EXTRAINDO APENAS A HORA)
 VO.orgao_sigla -- SIGLA ORGAO DA VIATURA POLICIAL
-FROM tb_ocorrencia OCO
-LEFT JOIN tb_viatura_ocorrencia VO on OCO.numero_ocorrencia = VO.numero_ocorrencia -- RETORNA OCORRÊNCIAS MESMO QUE NÃO TENHAM RECURSO RELACIONADO
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+LEFT JOIN db_bisp_reds_reporting.tb_viatura_ocorrencia VO on OCO.numero_ocorrencia = VO.numero_ocorrencia -- RETORNA OCORRÊNCIAS MESMO QUE NÃO TENHAM RECURSO RELACIONADO
 WHERE YEAR(OCO.data_hora_fato) = :ANO -- PROMPT PARA FILTRAR ANO DO FATO
 AND OCO.unidade_responsavel_registro_nome LIKE '%XX BPM/X RPM'-- FILTRA RPM/UEOP 
 AND OCO.ind_estado = 'F' -- FILTRA ESTADO DA OCORRÊNCIA
