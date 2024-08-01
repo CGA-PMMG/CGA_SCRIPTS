@@ -22,8 +22,8 @@ OCO.numero_latitude, -- LATITUDE
 OCO.numero_longitude,  -- LONGITUDE
 OCO.unidade_responsavel_registro_nome,
 OCO.unidade_area_militar_nome 
-FROM tb_ocorrencia OCO
-INNER JOIN tb_material_apreendido_ocorrencia MAO
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+INNER JOIN db_bisp_reds_reporting.tb_material_apreendido_ocorrencia MAO
 ON OCO.numero_ocorrencia = MAO.numero_ocorrencia 
 WHERE YEAR(OCO.data_hora_fato) = 2024 -- FILTRA O ANO DO FATO
  AND OCO.relator_sigla_orgao = 'PM' -- FILTRA OCORRÊNCIAS RELATADAS PELA POLÍCIA MILITAR
