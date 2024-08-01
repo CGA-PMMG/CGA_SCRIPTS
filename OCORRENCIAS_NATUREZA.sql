@@ -142,7 +142,7 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
     OCO.natureza_secundaria3_codigo,
     OCO.natureza_secundaria3_descricao
 -- ESPECIFICA A TABELA DE ONDE OS DADOS SERÃO RETIRADOS
-FROM tb_ocorrencia OCO
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 -- DEFINE CONDIÇÕES PARA A BUSCA DOS DADOS
 WHERE 
     OCO.data_hora_fato BETWEEN '2021-01-01' AND '2024-03-31'  -- INTERVALO DE DATA E HORA DO FATO
