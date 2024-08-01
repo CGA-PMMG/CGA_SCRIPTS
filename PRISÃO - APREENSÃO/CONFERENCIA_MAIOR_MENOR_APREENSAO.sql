@@ -11,8 +11,8 @@ SELECT
     OCO.nome_municipio, -- Nome do município
     OCO.unidade_area_militar_nome -- Unidade da área militar
 FROM 
-    tb_ocorrencia OCO
-    INNER JOIN tb_envolvido_ocorrencia ENV 
+    db_bisp_reds_reporting.tb_ocorrencia OCO
+    INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV 
     ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
 WHERE 
     YEAR(OCO.data_hora_fato) = 2024 --Filtra o ano da data hora do fato
