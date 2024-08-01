@@ -126,8 +126,8 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '34 BPM%' or OCO.unidade_area_militar_nome LIKE '%/34 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '34 BPM'
 		ELSE 'OUTROS' 
 	END AS UEOP_2024	
-FROM TB_CHAMADA_ATENDIMENTO CA
-LEFT JOIN  vw_chamada_evento  EV 
+FROM db_bisp_cad_reporting.TB_CHAMADA_ATENDIMENTO  CA
+LEFT JOIN  db_bisp_cad_reporting.vw_chamada_evento  EV 
 ON CA.chamada_atendimento_id = EV.id_chamada_atendimento
 INNER JOIN DB_BISP_REDS_REPORTING.TB_OCORRENCIA OCO -- A CHAMADA DEVE EXISTIR NA TABELA OCORRENCIA
 ON OCO.numero_chamada_cad  = CA.chamada_numero 
