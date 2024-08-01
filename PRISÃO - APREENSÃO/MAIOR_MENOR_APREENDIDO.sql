@@ -131,8 +131,8 @@ COUNT(ENV.numero_envolvido),
         ELSE 'MAIOR IDADE'
     END AS FAIXA_ETARIA
 -- ESPECIFICAÇÃO DAS TABELAS DE ONDE OS DADOS SÃO RETIRADOS E A CONDIÇÃO DE JUNÇÃO
-FROM tb_ocorrencia OCO
-INNER JOIN tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
 -- FILTROS PARA A SELEÇÃO DAS OCORRÊNCIAS: ANO, ORGÃO DIGITADOR, ESTADO, STATUS DA OCORRÊNCIA E CÓDIGOS DE PRISÃO
 WHERE YEAR(OCO.data_hora_fato) = 2024
 AND OCO.DIGITADOR_SIGLA_ORGAO = 'PM'
