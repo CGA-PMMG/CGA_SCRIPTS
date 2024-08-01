@@ -128,8 +128,8 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 -- CONTAGEM DE INDIVÍDUOS ENVOLVIDOS NAS PRISÕES
     COUNT(ENV.numero_envolvido) AS Total_Prisoes -- CONTABILIZA  O NUMERO ENVOLVIDOS
 -- TABELAS E JUNÇÕES UTILIZADAS
-FROM tb_ocorrencia OCO
-INNER JOIN tb_envolvido_ocorrencia ENV 
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV 
 ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
 -- FILTROS APLICADOS PARA SELEÇÃO DOS DADOS
 WHERE YEAR(OCO.data_hora_fato) = 2023 -- FILTRA APENAS O ANO DE 2023
