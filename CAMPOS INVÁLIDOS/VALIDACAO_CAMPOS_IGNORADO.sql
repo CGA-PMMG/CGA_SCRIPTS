@@ -17,9 +17,9 @@ SELECT
     -- Verifica se o campo CPF/CNPJ está preenchido ou não
     CASE WHEN ENV.numero_cpf_cnpj IS NULL THEN 'NÃO PREENCHIDO' ELSE 'PREENCHIDO' END AS Status_CPF_CNPJ
 FROM 
-    tb_ocorrencia OCO
+    db_bisp_reds_reporting.tb_ocorrencia OCO
     -- Junta a tabela de ocorrências com a tabela de envolvidos
-    JOIN tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia
+    JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia
 WHERE 
     YEAR(OCO.data_hora_fato) = 2024  -- Filtra ocorrências do ano de 2024
     AND OCO.relator_sigla_orgao = 'PM'  -- Apenas ocorrências relatadas pela Polícia Militar
