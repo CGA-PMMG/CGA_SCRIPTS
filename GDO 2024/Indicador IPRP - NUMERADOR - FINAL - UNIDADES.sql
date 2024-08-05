@@ -169,9 +169,9 @@ INNER JOIN TODOS_PRESOS T ON
 (
     (
         (
-            T.nome_completo_envolvido = ENV.nome_completo_envolvido
-            AND T.nome_mae = ENV.nome_mae
-            AND T.data_nascimento = ENV.data_nascimento
+            UPPER(T.nome_completo_envolvido) = UPPER(ENV.nome_completo_envolvido)
+            AND UPPER(T.nome_mae) = UPPER(ENV.nome_mae)
+            AND T.data_nascimento = cast(ENV.data_nascimento as date) 
         )
     )
     AND ENV.data_hora_fato > T.data_hora_fato -- JUNÇÃO COM A CTE TODOS_PRESOS COM CHAVES: NOME COMPLETO, NOME DA MÃE DA DATA DE NASCIMENTO ONDE A DATA/HORA DA TABELA DE ENVOLVIDO É MAIOR QUE A DATA/HORA DA CTE TODOS_PRESOS
