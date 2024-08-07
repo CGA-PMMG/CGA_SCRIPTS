@@ -43,7 +43,7 @@ ON OCO.numero_ocorrencia = CONCAT(SUBSTRING(IR.reds_numero, 1, 4), '-', SUBSTRIN
 INNER JOIN db_bisp_cad_reporting.tb_empenho EMP -- Junção tabela Integração Reds com Emepenho, pelo ID da chamada atendimento
 ON IR.chamada_atendimento_id = EMP.chamada_atendimento_id 
 WHERE OCO.data_hora_fato >='2024-08-06' -- Filtra data/hora do fato
-AND OCO.ocorrencia_uf ='MG'
+AND OCO.ocorrencia_uf ='MG' -- Filtra UF da ocorrência
 --AND EMP.tipo_recurso_descricao LIKE '%x%' -- Filtra a decrição do tipo de recurso
 --AND OCO.natureza_codigo = 'x' -- Filtra o código da natureza
 --AND OCO.unidade_responsavel_registro_nome LIKE '%X RPM' -- Filtra nome da unidade responsável pelo registro
