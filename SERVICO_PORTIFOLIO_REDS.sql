@@ -23,8 +23,8 @@ OCO.unidade_area_militar_nome, -- Seleciona o nome da unidade da área militar
 OCO.unidade_responsavel_registro_nome, -- Seleciona o nome da unidade responsável pelo registro
 OCO.ocorrencia_uf, -- Seleciona a UF da ocorrência
 IR.chamada_numero, -- Seleciona o número da chamada
-OCO.relator_matricula,
-OCO.digitador_matricula
+OCO.relator_matricula, -- Seleciona o número da matrícula do relator
+OCO.digitador_matricula -- Seleciona o número da matrícula do digitador
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO -- Tabela Ocorrência 
 INNER JOIN db_bisp_cad_reporting.tb_integracao_reds IR -- Junção da tabela Ocorrência com a Integração Reds pelo número da ocorrência ( O campo numero_ocorrencia na tabela Integração Reds retorna em formato diferente da tabela de Ocorrência, o campo foi formatado através de funções)
 ON OCO.numero_ocorrencia = CONCAT(SUBSTRING(IR.reds_numero, 1, 4), '-', SUBSTRING(IR.reds_numero, 5, 9), '-', SUBSTRING(IR.reds_numero, 14))
