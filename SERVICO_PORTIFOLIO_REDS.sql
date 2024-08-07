@@ -3,6 +3,18 @@
  ------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT EMP.tipo_recurso_codigo,  -- Seleciona o código do tipo de recurso empenhado
 EMP.tipo_recurso_descricao, -- Seleciona a descrição do tipo de recurso empenhado
+EMP.empenho_id, -- Seleciona o ID do empenho
+EMP.empenho_cancelado, -- Seleciona se o empenho foi cancelado ou não
+EMP.empenho_data_hora_inicio, -- Seleciona a data/hora do inicio do empenho
+EMP.empenho_data_hora_fim, -- Seleciona a dat/hora fim do empenho
+EMP.recurso_primeiro_empenhado, -- Seleciona se é o primeiro recurso empenhado
+EMP.recurso_codigo_prefixo, -- Seleciona o código do prefixo do recurso
+EMP.recurso_data_hora_inclusao, -- Seleciona a data/hora da inclusão do recurso
+EMP.recurso_data_hora_ativacao, -- Seleciona a data/hora da ativação do recurso
+EMP.recurso_data_hora_expiracao, -- Seleciona a data/hora da expiração do recurso
+EMP.viatura_numero_prefixo, -- Seleciona o número do prefixo da viatura
+EMP.unidade_servico_codigo, -- Seleciona o código da unidade de serviço
+EMP.unidade_servico_nome , -- Seleciona o nome da unidade de serviço
 OCO.numero_ocorrencia, -- Seleciona o número da ocorrência
 OCO.data_hora_fato, -- Seleciona a data/hora fato da ocorrência
 OCO.natureza_codigo, -- Seleciona o código da natureza da ocorrência
