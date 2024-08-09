@@ -15,7 +15,7 @@ db_bisp_reds_reporting.tb_infracao_ocorrencia AIT -- Tabela Infração Ocorrênc
 INNER JOIN db_bisp_reds_reporting.tb_ocorrencia OCO -- Junção com a tabela Ocorrência através do número da ocorrência
 ON AIT.numero_ocorrencia = OCO.numero_ocorrencia 
 WHERE 
-AIT.codigo in ('51691','5169-1','516901','51692','5169-2','516902') -- Filtra código da tabela AIT
+AIT.codigo in ('51691','5169-1','516901','51692','5169-2','516902','75790') -- Filtra as infrações realcionadas a embreaguez e recusa
 AND OCO.data_hora_fato BETWEEN '2020-01-01' AND '2024-07-31' -- Filtra a data/hora do fato dentre do intervalo especificado
 AND OCO.digitador_sigla_orgao = 'PM' -- Filtra a sigla do orgão do digitador Policia Militar
 AND OCO.ocorrencia_uf ='MG' -- Filtra Uf da ocorrência Minas Gerais
