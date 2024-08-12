@@ -14,7 +14,7 @@ FROM db_bisp_reds_reporting.tb_material_apreendido_ocorrencia MAO -- Tabela de m
 WHERE YEAR(MAO.data_hora_fato) = 2024 --Filtra ano da data/hora do fato
 AND MONTH(MAO.data_hora_fato) BETWEEN 1 AND 3 -- Filtra mês da data/hora do fato dentro do intervalo especificado
 AND MAO.digitador_id_orgao = 0 -- Filtra ID do orgão digitador, PM
-AND MAO.unidade_responsavel_registro_nome LIKE '%X RPM%' -- Filtra a unidade responsável pleo registro
+AND MAO.unidade_responsavel_registro_nome LIKE '%X RPM%' -- Filtra a unidade responsável pelo registro
 AND MAO.tipo_objeto_codigo IN('5800', '5599','5999','5699','5301','5503','5104','5399','5103','5102','5299',
 '5603','5202','5605','5201','5499','5604','5601','5602','5302','5704','5101','5504','5199','5708') 
 -- Filtra códigos relacionados a droga, são elas: MERLA, OUTROS - INALAVEIS, OUTROS - OPIACEOS, OUTROS - MACONHA
