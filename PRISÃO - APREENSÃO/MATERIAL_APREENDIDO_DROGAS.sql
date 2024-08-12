@@ -10,7 +10,7 @@ MAO.unidade_medida_descricao,  -- Seleciona a descrição da unidade de medida
 MAO.motivo_apreencao_descricao, -- Seleciona a descrição do motivo da apreensão
 MAO.situacao_descricao, -- Seleciona a descrição da situação do material
 MAO.unidade_responsavel_registro_nome -- Seleciona a unidade responsável pelo registro
-FROM tb_material_apreendido_ocorrencia MAO -- Tabela de material apreendido na ocorrência
+FROM db_bisp_reds_reporting.tb_material_apreendido_ocorrencia MAO -- Tabela de material apreendido na ocorrência
 WHERE YEAR(MAO.data_hora_fato) = 2024 --Filtra ano da data/hora do fato
 AND MONTH(MAO.data_hora_fato) BETWEEN 1 AND 3 -- Filtra mês da data/hora do fato dentro do intervalo especificado
 AND MAO.digitador_id_orgao = 0 -- Filtra ID do orgão digitador, PM
