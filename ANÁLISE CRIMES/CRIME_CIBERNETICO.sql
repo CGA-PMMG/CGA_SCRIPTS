@@ -24,7 +24,7 @@ SELECT
     OCO.unidade_responsavel_registro_nome, -- Seleciona o nome da unidade responsável pelo registro da ocorrência
     OCO.unidade_area_militar_nome, -- Seleciona o nome da área militar responsável pela ocorrência
     OCO.digitador_sigla_orgao -- Seleciona a sigla do órgão responsável pelo digitador que registrou a ocorrência
-FROM tb_ocorrencia OCO -- Seleciona os dados da tabela tb_ocorrencia, alias como OCO
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO -- Seleciona os dados da tabela tb_ocorrencia, alias como OCO
 WHERE 1=1 -- Filtro sempre verdadeiro, usado como ponto de partida para adicionar condições subsequentes
 AND OCO.instrumento_utilizado_codigo = '2600' -- Filtra ocorrências onde o código do instrumento utilizado é '2600' - 'MEIO ELETRÔNICO (INTERNET / SMS)'
 AND (
