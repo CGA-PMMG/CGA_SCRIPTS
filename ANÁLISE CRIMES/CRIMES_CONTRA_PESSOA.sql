@@ -23,4 +23,5 @@ WHERE
     AND SUBSTRING(OCO.natureza_codigo,1,1) = 'B'  -- FILTRA OCORRÊNCIAS CUJO CÓDIGO DA NATUREZA COMEÇA COM 'B'
     AND OCO.digitador_id_orgao IN (0,1)  -- FILTRA PELOS ID DE ÓRGÃOS DOS DIGITADORES (PM E PC)
     AND OCO.ocorrencia_uf = 'MG'  -- FILTRA OCORRÊNCIAS DO ESTADO DE MINAS GERAIS
-	AND OCO.nome_municipio LIKE '%xxxx%'  -- FILTRO PELO NOME DO MUNICÍPIO. SE PREFERIR USE : --and OCO.codigo_municipio = 00  --  FILTRO PELO CÓDIGO DO MUNICÍPIO 
+    AND OCO.ind_estado ='F'
+    AND OCO.nome_municipio LIKE '%xxxx%'  -- FILTRO PELO NOME DO MUNICÍPIO. SE PREFERIR USE : --and OCO.codigo_municipio = 00  --  FILTRO PELO CÓDIGO DO MUNICÍPIO 
