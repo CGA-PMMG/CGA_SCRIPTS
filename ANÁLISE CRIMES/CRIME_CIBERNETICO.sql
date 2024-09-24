@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------------------------------------------------------------------
  * Este código SQL tem como objetivo extrair informações sobre ocorrências relacionadas a cibercrimes, ou seja, crimes cometidos por 
  * meio eletrônico, como o uso da internet ou SMS, a partir da tabela 'tb_ocorrencia'. Ele filtra os registros  que 
- * envolvem instrumentos eletrônicos (código "2600") e cujas naturezas são tipificadas com códigos que variam de 'B' a 'N',
+ * envolvem instrumentos eletrônicos (código "2600") e cujas naturezas dos grupos 'B' a 'N',
  * representando diversas categorias de crimes. A consulta também restringe os resultados a ocorrências fechadas, registradas por órgãos 
  * como a Polícia Militar ou Polícia Civil no estado de Minas Gerais.
 ----------------------------------------------------------------------------------------------------------------------------------------- */SELECT 
