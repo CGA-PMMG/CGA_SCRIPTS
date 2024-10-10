@@ -3,10 +3,10 @@
  * mandados de prisão abertos.Além disso, o script busca trazer informações sobre a última passagem desses
  * indivíduos pelo sistema prisional, como admissão, desligamento e unidade prisional. 
  * 
- * OBS.: A junção desta busca para a tabela 'tb_individuo_sigpri' é feita pelo NOME DO INDIVIDUO, 
- * NOME DA MÃE DO INDIVIDUO E DATA DE NASCIMENTO. Evitando homônimo e sendo mais precisa.
- * 
  * O resultado é filtrado por eventos fatais a partir de 2019 e organizado pela data mais recente do fato.
+ * 
+ * OBS.: A junção desta busca para a tabela 'tb_individuo_sigpri' é feita pelo NOME DO INDIVIDUO E
+ * NOME DA MÃE DO INDIVIDUO. Pode conter homônimo, recomenda-se verificar o individuo desejado.
  * 
  * Contribuição: Gabriel A S e Brito, Sd PM
  -----------------------------------------------------------------------------------------------------------*/
@@ -33,10 +33,9 @@ WITH ultima_admissao AS
     FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia env -- Tabela de envolvidos na ocorrência
     INNER JOIN db_bisp_sip_reporting.vw_individuo_sip AS sip -- Faz um INNER JOIN com a view vw_individuo_sip baseada no número SIP
         ON env.numero_individuo_sip = sip.numero_sip
-    INNER JOIN db_bisp_sigpri_reporting.tb_individuo_sigpri sig -- Faz um INNER JOIN com a tabela tb_individuo_sigpri baseada no nome do indivíduo,da mãe e sua data de nascimento.
+    INNER JOIN db_bisp_sigpri_reporting.tb_individuo_sigpri sig -- Faz um INNER JOIN com a tabela tb_individuo_sigpri baseada no nome do indivíduo e da mãe .
         ON (env.nome_completo_envolvido = sig.nome_individuo
-        AND env.nome_mae = sig.mae_individuo 
-        AND CAST(env.data_nascimento AS DATE) =  from_unixtime(unix_timestamp(sig.data_nascimento_individuo, 'dd/M/yyyy'), 'yyyy-MM-dd'))
+        AND env.nome_mae = sig.mae_individuo )
     INNER JOIN db_bisp_sigpri_reporting.tb_admissao adm -- Faz um INNER JOIN com a tabela tb_admissao baseado no número Infopen
         ON sig.numero_infopen = adm.numero_infopen
     INNER JOIN db_bisp_reds_reporting.tb_ocorrencia oco -- Faz um INNER JOIN com a tabela tb_ocorrencia baseado no número da ocorrência
