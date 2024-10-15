@@ -61,7 +61,7 @@ WHERE
         OR OCO.natureza_secundaria2_codigo = 'U33004'
         OR OCO.natureza_secundaria3_codigo = 'U33004'
        ) -- FILTRA POR NATUREZAS DE OCORRÊNCIA RELEVANTES PARA A PPVD
-    AND ENV.envolvimento_codigo IN ('1300', '1399', '1301', '1302', '1303', '1304', '0100', '1100', '0200') -- FILTRA POR NATUREZAS DE OCORRÊNCIA RELEVANTES PARA A PPVD
+    AND ENV.envolvimento_codigo IN ('1300', '1399', '1301', '1302', '1303', '1304', '0100', '1100', '0200') 
     AND YEAR(OCO.data_hora_fato) >= 2023  -- CONSIDERA APENAS OCORRÊNCIAS A PARTIR DE 2023
     AND (
         VITIMAS.nome_completo_envolvido <> AUTORES.nome_completo_envolvido 
