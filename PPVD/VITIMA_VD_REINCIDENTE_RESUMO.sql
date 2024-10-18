@@ -32,8 +32,8 @@ WITH REINCIDENCIA_VD AS -- Criação de uma CTE (Common Table Expression) denomi
             ELSE 'OUTROS' -- Classifica como 'OUTROS' quando a natureza da ocorrência não corresponde a nenhuma das categorias acima
         END AS TIPO_VIOLENCIA, -- Atribui o tipo de violência com base na natureza da ocorrência
         ROW_NUMBER() OVER (PARTITION BY ENV.nome_completo_envolvido, ENV.nome_mae, ENV.data_nascimento ORDER BY OCO.data_hora_fato) AS ORDEM_OCORRENCIA -- Gera um número sequencial para cada ocorrência, agrupado por nome, mãe e data de nascimento
-    FROM tb_ocorrencia OCO -- Seleciona a tabela de ocorrências (OCO)
-    INNER JOIN tb_envolvido_ocorrencia ENV -- Faz a junção com a tabela de envolvidos (ENV)
+    FROM db_bisp_reds_reporting.tb_ocorrencia OCO -- Seleciona a tabela de ocorrências (OCO)
+    INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV -- Faz a junção com a tabela de envolvidos (ENV)
         ON OCO.numero_ocorrencia = ENV.numero_ocorrencia -- Junta as tabelas OCO e ENV com base no número de ocorrência
     WHERE 1=1 -- Condição sempre verdadeira para facilitar a adição de condições subsequentes
         AND OCO.data_hora_fato BETWEEN '2022-01-01 00:00:00' AND '2024-10-18 23:59:59' -- Filtra data/hora do fato dentro do período especificado
