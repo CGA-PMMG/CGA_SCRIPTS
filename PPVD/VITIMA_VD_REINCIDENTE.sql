@@ -42,7 +42,7 @@ WITH REINCIDENCIA_VD AS
         AND OCO.relator_sigla_orgao = 'PM' -- Filtra ocorrências registradas pela Polícia Militar
         AND OCO.ocorrencia_uf = 'MG' -- Filtra ocorrências que ocorreram no estado de Minas Gerais
         --AND OCO.codigo_municipio IN (0,0,0,...) -- Filtre pelo código de município desejado
-        --AND unidade_responsavel_registro_nome LIKE '%BELO HORI%' --Filtre pelo nome de município desejado
+        --AND unidade_responsavel_registro_nome LIKE '%X BPM/X RPM%' --Filtre pelo nome da unidade responsável pelo registro desejada
 )
 SELECT  
     UPPER(RVD.nome_completo_envolvido) as nome_completo_envolvido, -- Seleciona e converte o nome completo do envolvido para letras maiúsculas
