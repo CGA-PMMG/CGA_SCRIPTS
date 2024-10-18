@@ -54,11 +54,11 @@ SELECT
         ' - ',
         COALESCE(CAST(RVD.data_nascimento AS STRING), 'Data Não Informada') -- Concatena e converte a data de nascimento para string, substituindo valores nulos por 'Data Não Informada'
     ) AS Dados_envolvido, -- Gera a coluna 'Dados_envolvido' concatenando as informações acima
-    GROUP_CONCAT(DISTINCT RVD.envolvimento_descricao) AS envolvimentoS_descricao, -- Agrupa e concatena as descrições distintas do envolvimento do indivíduo
-    GROUP_CONCAT(DISTINCT RVD.numero_ocorrencia) AS numero_ocorrenciaS, -- Agrupa e concatena os números distintos de ocorrência
-    GROUP_CONCAT(DISTINCT RVD.natureza_codigo) AS naturezaS_codigo, -- Agrupa e concatena os códigos distintos de natureza da ocorrência
-    GROUP_CONCAT(DISTINCT RVD.natureza_descricao) AS naturezaS_descricao, -- Agrupa e concatena as descrições distintas da natureza da ocorrência
-    GROUP_CONCAT(DISTINCT RVD.nome_municipio) AS nomeS_municipioS, -- Agrupa e concatena os nomes distintos dos municípios
+    GROUP_CONCAT(DISTINCT RVD.envolvimento_descricao) AS envolvimentos_descricao, -- Agrupa e concatena as descrições distintas do envolvimento do indivíduo
+    GROUP_CONCAT(DISTINCT RVD.numero_ocorrencia) AS numero_ocorrencias, -- Agrupa e concatena os números distintos de ocorrência
+    GROUP_CONCAT(DISTINCT RVD.natureza_codigo) AS naturezas_codigo, -- Agrupa e concatena os códigos distintos de natureza da ocorrência
+    GROUP_CONCAT(DISTINCT RVD.natureza_descricao) AS naturezas_descricao, -- Agrupa e concatena as descrições distintas da natureza da ocorrência
+    GROUP_CONCAT(DISTINCT RVD.nome_municipio) AS nomes_municipios, -- Agrupa e concatena os nomes distintos dos municípios
     GROUP_CONCAT(DISTINCT RVD.TIPO_VIOLENCIA) AS TIPO_VIOLENCIA, -- Agrupa e concatena os tipos distintos de violência
     MAX(RVD.ORDEM_OCORRENCIA) AS QTDE_OCORRENCIAS -- Seleciona o número máximo de reincidências por indivíduo
 FROM REINCIDENCIA_VD RVD -- Usa a CTE REINCIDENCIA_VD definida anteriormente
