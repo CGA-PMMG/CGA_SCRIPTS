@@ -18,7 +18,7 @@ INNER JOIN db_bisp_reds_reporting.tb_veiculo_ocorrencia VEI
 WHERE YEAR(OCO.data_hora_fato) BETWEEN 2023 AND 2024 -- OCORRÊNCIAS ENTRE OS ANOS DE 2023 E 2024
     AND OCO.relator_sigla_orgao = 'PM' -- OCORRÊNCIAS RELATADAS PELA POLÍCIA MILITAR
     AND OCO.ocorrencia_uf = 'MG' -- OCORRÊNCIAS NO ESTADO DE MINAS GERAIS
-    AND OCO.natureza_codigo IN('C01155','C01156','C01157') -- CÓDIGOS ESPECÍFICOS DE NATUREZA DA OCORRÊNCIA
+    AND OCO.natureza_codigo IN('C01155','C01157') -- CÓDIGOS ESPECÍFICOS DE NATUREZA DA OCORRÊNCIA
     AND VEI.tipo_veiculo_codigo = '0400' -- CÓDIGO ESPECÍFICO DO TIPO DE VEÍCULO 
     AND ENV.envolvimento_codigo = '0100' -- CÓDIGO DE ENVOLVIMENTO 
    -- AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%' -- FILTRE SUA BPM/ RPM 
