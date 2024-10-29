@@ -34,14 +34,11 @@ FROM
  db_bisp_reds_reporting.tb_ocorrencia oco 
 INNER JOIN 
   db_bisp_reds_reporting.tb_veiculo_ocorrencia veic ON oco.numero_ocorrencia = veic.numero_ocorrencia  -- Junçãocom a tabela de Veículos (veic) onde o número da ocorrência é correspondente
-
 WHERE 
   YEAR(oco.data_hora_fato) BETWEEN 2019 AND 2023 --BETWEEN '2019-01-01 00:00:00.000' AND '2023-12-31 23:59:59.999'  -- Filtra as ocorrências entre o intervalo especificado
   AND oco.digitador_id_orgao =0 -- Filtra ID do órgão digitador, PM
   AND ocorrencia_uf = 'MG' -- Filtra ocorrências no  UF, Minas Gerais 
-
 GROUP BY 
  1,2,3,4  -- Agrupa os resultados pelas colunas 1, 2, 3 e 4 (nome_municipio, ano_fato, RMBH, RPM_2024)
 ORDER BY
-1  -- Ordena os resultados pela primeira coluna (nome_municipio)
-;
+1; -- Ordena os resultados pela primeira coluna (nome_municipio)
