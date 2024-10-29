@@ -27,9 +27,9 @@ SELECT OCO.ind_tco,                              -- INDICADOR TCO
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO                           
 INNER JOIN db_bisp_reds_reporting.tb_tco_ocorrencia TCO                 -- A NUM OCORRENCIA DEVE EXISTIR NAS DUAS TABELAS
 ON OCO.numero_ocorrencia = TCO.numero_ocorrencia 
-LEFT JOIN tb_material_apreendido_ocorrencia MAO  -- 
+LEFT JOIN db_bisp_reds_reporting.tb_material_apreendido_ocorrencia MAO  -- 
 ON OCO.numero_ocorrencia = MAO.numero_ocorrencia -- 
-INNER JOIN tb_envolvido_ocorrencia ENV 
+INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV 
 ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
 WHERE OCO.unidade_area_militar_nome LIKE '%X BPM%' -- FILTRA RPM/UEOP
 AND YEAR(OCO.data_hora_fato)=2024                -- FILTRA ANO DO FATO
