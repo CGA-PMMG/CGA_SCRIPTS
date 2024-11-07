@@ -6,7 +6,7 @@
 
 
 Coleção de scripts SQL desenvolvidos pelo Centro de Gerenciamento e Análise de Dados para otimizar a análise de dados e relatórios dentro da Polícia Militar de Minas Gerais. Esta sessão contém instruções/ dicas para utilização do Dbeaver e dos scripts.
-- [GDO](GDO)
+- [GDO 2024](GDO 2024)
 - [Produtividade](PRODUTIVIDADE)
 - [SIGOP](SIGOP)
 - [CAD](CAD)
