@@ -5,7 +5,7 @@
 ![Recomendacoes](https://img.shields.io/badge/Recomenda%C3%A7%C3%B5es-red?style=plastic)
 
 
-Coleção de scripts SQL desenvolvidos pelo Centro de Gerenciamento e Análise de dados para otimizar a análise de dados e relatórios dentro da Polícia Militar de Minas Gerais. Esta sessão contém instruções/ dicas para utilização do Dbeaver e dos scripts.
+Coleção de scripts SQL desenvolvidos pelo Centro de Gerenciamento e Análise de Dados para otimizar a análise de dados e relatórios dentro da Polícia Militar de Minas Gerais. Esta sessão contém instruções/ dicas para utilização do Dbeaver e dos scripts.
 - [GDO](GDO)
 - [Produtividade](PRODUTIVIDADE)
 - [SIGOP](SIGOP)
@@ -113,7 +113,7 @@ Aqui estão alguns operadores comuns usados com a cláusula `WHERE`:
 1. **Operador de Igualdade (=)**:
    - Usado para comparar se dois valores são iguais.
      
-    Exemplo: `SELECT` coluna FROM tabela WHERE coluna = 'valor';`
+    Exemplo: `SELECT coluna FROM tabela WHERE coluna = 'valor';`
  
 2. **Operador de Diferença (!=)**:
    - Usado para comparar se dois valores são diferentes.
