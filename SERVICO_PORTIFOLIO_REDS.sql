@@ -40,7 +40,7 @@ OCO.relator_matricula, -- Seleciona o número da matrícula do relator
 OCO.digitador_matricula -- Seleciona o número da matrícula do digitador
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO -- Tabela Ocorrência 
 INNER JOIN db_bisp_cad_reporting.tb_integracao_reds IR -- Junção da tabela Ocorrência com a Integração Reds pelo número da ocorrência ( O campo numero_ocorrencia na tabela Integração Reds retorna em formato diferente da tabela de Ocorrência, o campo foi formatado através de funções)
-ON OCO.numero_ocorrencia = CONCAT(SUBSTRING(IR.reds_numero, 1, 4), '-', SUBSTRING(IR.reds_numero, 5, 9), '-', SUBSTRING(IR.reds_numero, 14))
+ON OCO.numero_ocorrencia = IR.reds_numero
 INNER JOIN db_bisp_cad_reporting.tb_empenho EMP -- Junção tabela Integração Reds com Emepenho, pelo ID da chamada atendimento
 ON IR.chamada_atendimento_id = EMP.chamada_atendimento_id 
 WHERE OCO.data_hora_fato >='2024-08-06' -- Filtra data/hora do fato
