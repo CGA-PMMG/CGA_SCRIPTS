@@ -99,7 +99,7 @@ Exemplo: FROM tb_ocorrencia OCO
 
 3. `RIGHT JOIN`: Retorna todos os registros da tabela à direita e os registros correspondentes da tabela à esquerda, se houver.
 
-Exemplo: `INNER JOIN tb_envolvido_ocorrencia ENV ON (ENV.numero_ocorrencia = OCO.numero_ocorrencia)`
+Exemplo: `INNER JOIN tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia`
 
 ---								
 #### WHERE
