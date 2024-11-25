@@ -22,11 +22,11 @@ WITH HOMICIDIO AS  -- Cria uma CTE (tabela temporária) chamada HOMICIDIO para a
 		ENV.natureza_ocorrencia_codigo, -- Código que identifica a natureza da ocorrência
 		ENV.ind_consumado -- Indicador se o crime foi consumado ou tentado
 	FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV -- Origem dos dados: tabela de envolvidos
-	WHERE 1=1 -- Filtro genérico que permite adicionar condições subsequentes.
-   		AND YEAR(ENV.data_hora_fato) = 2024 -- Filtra data/hora do fato no ano de 2024.
+	WHERE 1=1 -- Filtro genérico que permite adicionar condições subsequentes
+   		AND YEAR(ENV.data_hora_fato) = 2024 -- Filtra data/hora do fato no ano de 2024
 		AND ENV.codigo_uf = 'MG' -- Filtra ocorrências do estado de Minas Gerais
    		AND ENV.id_envolvimento IN (25,32,1097,26,27,872,28,44,36,35) -- Filtra tipos de envolvimento específicos (TODOS VITIMAS, AUTOR, CO-AUTOR, SUSPEITO)
-		AND ENV.natureza_ocorrencia_codigo = 'B01121' -- Filtra ocorrências do tipo "homicídio".
+		AND ENV.natureza_ocorrencia_codigo = 'B01121' -- Filtra ocorrências do tipo "homicídio"
    		AND ENV.digitador_id_orgao IN (0,1) -- Filtra registros digitados por órgãos específicos (PM, PC)
 )
 SELECT 
