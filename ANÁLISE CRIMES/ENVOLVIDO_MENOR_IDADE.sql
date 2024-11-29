@@ -7,7 +7,7 @@
 -- SELECIONA A UNIDADE OPERACIONAL BASEADA NO CÓDIGO DO MUNICÍPIO
 SELECT  
 	OCO.numero_ocorrencia, -- Número da ocorrência.
-	OCO.data_hora_fato, -- Data/ hora  dofato .
+	OCO.data_hora_fato, -- Data/ hora  do fato .
 	YEAR(OCO.data_hora_fato) AS ano, -- Ano da fato, extraído do campo data_hora_fato.
 	MONTH(OCO.data_hora_fato) AS mes, -- Mês da fato, extraído do campo data_hora_fato.
     ENV.numero_envolvido, -- Número identificador do envolvido na ocorrência.
