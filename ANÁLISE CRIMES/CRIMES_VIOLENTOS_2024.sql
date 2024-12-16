@@ -1,3 +1,9 @@
+/*------------------------------------------------------------------------------------------------------------------------------------
+ * Este script SQL foi desenvolvido para extrair e analisar dados de ocorrências de crimes violentos 
+ * registrados em Minas Gerais, excluindo casos de letalidade policial. A consulta integra informações de envolvidos e ocorrências, 
+ * permitindo monitorar eventos criminais graves registrados pela Polícia Militar e Civil, com foco em naturezas específicas 
+ * como homicídios, roubos e outros crimes violentos
+ ------------------------------------------------------------------------------------------------------------------------------------*/
 -- Criação de CTE (Common Table Expression) para filtrar ocorrências com letalidade
 WITH LETALIDADE AS 
 ( 
