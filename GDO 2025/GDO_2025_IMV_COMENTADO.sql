@@ -1,3 +1,7 @@
+/*------------------------------------------------------------------------------------------------------------------------------
+ * Script do IMV (Indicador de Mortes Violentas) em Minas Gerais, tendo como parâmetro as naturezas de
+ *  homicídios, roubo, lesão corporal, tortura, sequestro e cárcere privado. 
+ ------------------------------------------------------------------------------------------------------------------------------*/
 WITH                                                                    -- Início da definição da Common Table Expression (CTE)
 LETALIDADE AS                                                              -- Define uma CTE chamada LETALIDADE que será usada para filtrar ocorrências
 ( 
