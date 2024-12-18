@@ -1,6 +1,6 @@
 /*------------------------------------------------------------------------------------------------------------------------------
  * Script do IMV (Indicador de Mortes Violentas) em Minas Gerais, tendo como parâmetro as naturezas de
- *  homicídios, roubo, lesão corporal, tortura, sequestro e cárcere privado. 
+ *  homicídios, roubo, lesão corporal, tortura, sequestro e cárcere privado, feminicídio. 
  ------------------------------------------------------------------------------------------------------------------------------*/
 WITH                                                                    -- Início da definição da Common Table Expression (CTE)
 LETALIDADE AS                                                              -- Define uma CTE chamada LETALIDADE que será usada para filtrar ocorrências
@@ -178,7 +178,8 @@ LEFT JOIN LETALIDADE LET                                         -- Join com a C
 WHERE 1=1                                                        
     AND LET.numero_ocorrencia IS NULL                           -- Exclui ocorrências presentes na CTE LETALIDADE
     AND ENV.id_envolvimento IN (25,32,1097,26,27,28,872)       -- Filtra tipos específicos de envolvimento (Todos as vitimas)
-    AND ENV.natureza_ocorrencia_codigo IN ('B01121','C01157','B02001','B01129','B01148')  -- Filtra naturezas específicas (Homicídio,Roubo,Tortura,Lesão corporal,Sequestro e cárcere privado )
+    AND ENV.natureza_ocorrencia_codigo IN ('B01121','C01157','B02001','B01129','B01148','B01504')
+  -- Filtra naturezas específicas (Homicídio,Roubo,Tortura,Lesão corporal,Sequestro e cárcere privado, Feminicídio* )
     AND ENV.condicao_fisica_codigo = '0100'                     -- Filtra por condição física específica (Fatal)
     AND OCO.ocorrencia_uf = 'MG'                               -- Filtra apenas ocorrências de Minas Gerais
     AND OCO.digitador_sigla_orgao IN ('PM','PC')               -- Filtra registros feitos pela PM ou PC
