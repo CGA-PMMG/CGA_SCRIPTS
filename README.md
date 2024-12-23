@@ -12,6 +12,7 @@ Neste repositório, você encontrará scripts prontos e comentados, além de ori
 ## 📚 Conteúdo
 - [Apostila Banco de Dados](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/Apostila%20Banco%20de%20Dados)
 - [GDO 2024](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/GDO%202024)
+- [GDO 2025](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/GDO%202025)
 - [SIGOP](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/SIGOP)
 - [Produtividade](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/PRODUTIVIDADE)
 - [PPVD](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/PPVD)
