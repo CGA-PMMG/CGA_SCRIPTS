@@ -13,7 +13,7 @@ WITH LETALIDADE AS                                                        -- Def
     FROM 
         db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV              -- Define a tabela fonte dos dados de envolvidos
     WHERE 1=1                                                           -- Inicia as condições de filtro
-        AND ENV.natureza_ocorrencia_codigo ='B01121'  -- Filtra por natureza específica de letalidade (Homicídio)
+        AND ENV.natureza_ocorrencia_codigo  IN('B01121','B01129')  -- Filtra por natureza específica de letalidade (Homicídio)
         AND ENV.id_envolvimento IN (35,36,44)                          -- Filtra pelos tipos de envolvimento (autor, co-autor, suspeito)
         AND ENV.ind_militar_policial IS NOT DISTINCT FROM 'M'          -- Filtra apenas militares
         AND ENV.ind_militar_policial_servico IS NOT DISTINCT FROM 'S'  -- Filtra apenas militares em serviço
