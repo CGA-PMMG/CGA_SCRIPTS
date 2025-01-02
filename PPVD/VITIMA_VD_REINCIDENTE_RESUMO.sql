@@ -38,7 +38,7 @@ WITH REINCIDENCIA_VD AS -- Criação de uma CTE (Common Table Expression) denomi
     WHERE 1=1 -- Condição sempre verdadeira para facilitar a adição de condições subsequentes
         AND OCO.data_hora_fato BETWEEN '2022-01-01 00:00:00' AND '2024-10-18 23:59:59' -- Filtra data/hora do fato dentro do período especificado
         AND ENV.codigo_sexo = 'F' -- Filtra para selecionar apenas vítimas do sexo feminino
-        AND ENV.id_relacao_vitima_autor IN (22,21,15,6,7,19,18,16,5,20) -- Filtra com base na relação entre vítima e autor, especificando valores predeterminados
+        AND ENV.id_relacao_vitima_autor IN (3,4,5,6,7,9,15,16,18,19,20,21,22) -- Filtra com base na relação entre vítima e autor, especificando valores predeterminados
         AND ENV.id_envolvimento IN (25,32,872) -- Filtra tipos específicos de envolvimento do indivíduo na ocorrência
         AND OCO.natureza_codigo NOT LIKE 'A20%' -- Exclui ocorrências cuja natureza tenha código iniciado por 'A20'
         AND OCO.relator_sigla_orgao = 'PM' -- Filtra apenas ocorrências relatadas pela Polícia Militar
