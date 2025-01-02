@@ -36,7 +36,7 @@ WITH REINCIDENCIA_VD AS
     WHERE 1=1 -- Condição padrão para facilitar a inclusão de outras cláusulas WHERE
         AND OCO.data_hora_fato BETWEEN '2022-01-01 00:00:00' AND '2024-10-18 23:59:59' -- Filtro de data/hora do fato
         AND ENV.codigo_sexo = 'F' -- Filtro para selecionar apenas vítimas do sexo feminino
-        AND ENV.id_relacao_vitima_autor IN (22,21,15,6,7,19,18,16,5,20) -- Filtro para selecionar as relações específicas entre a vítima e o autor
+        AND ENV.id_relacao_vitima_autor IN (3,4,5,6,7,9,15,16,18,19,20,21,22) -- Filtro para selecionar as relações específicas entre a vítima e o autor
         AND ENV.id_envolvimento IN (25,32,872) -- Filtro para selecionar tipos específicos de envolvimento do indivíduo
         AND OCO.natureza_codigo NOT LIKE 'A20%' -- Exclui ocorrências cuja natureza comece com 'A20'
         AND OCO.relator_sigla_orgao = 'PM' -- Filtra ocorrências registradas pela Polícia Militar
