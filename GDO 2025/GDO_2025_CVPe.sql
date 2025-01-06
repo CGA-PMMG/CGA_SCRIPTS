@@ -179,7 +179,7 @@ WHERE 1=1                                                           -- Início d
     AND ENV.id_envolvimento IN (25,32,1097,26,27,28,872)          -- Filtra tipos específicos de envolvimento(Todos vitima)
     AND ENV.natureza_ocorrencia_codigo IN ('B01121','B01148','B02001','B01504')  -- Filtra naturezas específicas(Homicídio,Sequestro e Cárcere Privado,Tortura, Feminicídio*)
     AND ENV.ind_consumado IN ('S','N')                            -- Filtra ocorrências consumadas e tentadas
-    AND ENV.condicao_fisica_codigo <> '0100'                      -- Exclui condição física específica(Fatal)
+    AND ENV.condicao_fisica_codigo IS DISTINCT FROM '0100'          -- Exclui condição física específica(Fatal)
     AND OCO.ocorrencia_uf = 'MG'                                  -- Filtra apenas ocorrências de Minas Gerais
     AND OCO.digitador_sigla_orgao IN ('PM','PC')                  -- Filtra registros da PM ou PC
     AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP')           -- Filtra tipos específicos de relatório
