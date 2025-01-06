@@ -155,7 +155,7 @@ INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia AS ENV    -- Join com 
 WHERE 1=1                                                          
     AND ENV.id_envolvimento IN (25,32,1097,26,27,28,872)           -- Filtra tipos específicos de envolvimento (Todos vitima)
     AND ENV.natureza_ocorrencia_codigo IN ('C01157','C01158','C01159')  -- Filtra naturezas específicas das ocorrências (Roubo,Extorsão,Extorsão Mediante Sequestro)
-    AND ENV.condicao_fisica_codigo <> '0100'                        -- Exclui condição física específica (FATAL)
+    AND ENV.condicao_fisica_codigo IS DISTINCT FROM '0100'        -- Exclui condição física específica (FATAL)
     AND ENV.ind_consumado IN ('S','N')                             -- Filtra ocorrências consumadas e tentadas
     AND OCO.ocorrencia_uf = 'MG'                                   -- Filtra apenas ocorrências de Minas Gerais
     AND OCO.digitador_sigla_orgao IN ('PM','PC')                   -- Filtra registros feitos pela PM ou PC
