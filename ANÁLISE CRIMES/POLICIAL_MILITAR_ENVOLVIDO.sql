@@ -179,7 +179,7 @@ WHERE
 		        FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV2
 		        WHERE ENV2.numero_ocorrencia = OCO.numero_ocorrencia -- Verifica se há pelo menos outro envolvido na mesma ocorrência
 		        AND ENV2.ind_militar_policial IS NOT DISTINCT FROM 'M' -- Filtra novamente para garantir que o outro envolvido também é policial militar
-		        AND ENV.ind_militar_policial_servico IS NOT DISTINCT FROM 'S'  -- Filtra apenas militares em serviço para garantir que o outro envolvido também é policial militar em serviço
+		       -- AND ENV.ind_militar_policial_servico IS NOT DISTINCT FROM 'S'  -- Filtra apenas militares em serviço para garantir que o outro envolvido também é policial militar em serviço
 		        AND ENV2.envolvimento_codigo IN ('0100', '1303', '1302', '1301', '1304', '1305', '1300', '1399') -- Verifica os  códigos de envolvimento
 		        AND ENV2.orgao_lotacao_policial_sigla ='PM' -- Filtra a sigla do orgão de lotação policial
 		        AND ENV2.uf_orgao_lotacao_policial ='MG'-- Filtra a unidade federativa da lotação policial
