@@ -261,6 +261,7 @@ WHERE 1=1
     AND MONTH(OCO.data_hora_fato) >= :MESINICIAL               -- Filtra pelo mês inicial
     AND MONTH(OCO.data_hora_fato) <= :MESFINAL                 -- Filtra pelo mês final
     AND OCO.ind_estado IN ('F')                                -- Filtra apenas ocorrências fechadas
+    AND OCO.local_imediato_codigo NOT IN( '1302','1310')		-- Filtra ocorrências cujo local imediato nâo seja UNIDADE PRISIONAL (CERESP/PRESIDIO/PENITENCIARIA) ou CAEDEIA PUBLICA
    -- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
    -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
 ORDER BY RPM_2024, UEOP_2024, OCO.data_hora_fato,              -- Ordena por RPM, UEOP, data/hora
