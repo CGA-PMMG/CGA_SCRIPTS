@@ -36,8 +36,8 @@ PRESOS_MV AS  -- Define uma CTE (Common Table Expression) chamada PRESOS_MV
 									AND vit.data_hora_fato BETWEEN  '2024-01-01 00:00:00.000' AND '2024-12-31 00:00:00.000' -- Filtra pelo período desejado
 						)
 		AND ENV.digitador_id_orgao IN (0,1) -- Registro realizado por determinados órgãos (PM,PC)
-        AND ENV.ind_militar_policial IS DISTINCT FROM 'M' -- Exclui militares e policiais
-        AND ENV.ind_militar_policial_servico IS DISTINCT FROM 'S' -- Exclui policiais em serviço
+        AND ENV.ind_militar_policial IS DISTINCT FROM 'M' -- Exclui  policiais militares  
+        AND ENV.ind_militar_policial_servico IS DISTINCT FROM 'S' -- Exclui policiais militares em serviço
 )
 SELECT 
 	OCO.numero_ocorrencia, -- Número da ocorrência
