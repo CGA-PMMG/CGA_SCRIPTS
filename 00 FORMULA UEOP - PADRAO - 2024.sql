@@ -113,7 +113,7 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '41 BPM%' or OCO.unidade_area_militar_nome LIKE '%/41 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '41 BPM'
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '49 BPM%' or OCO.unidade_area_militar_nome LIKE '%/49 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '49 BPM'
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '34 BPM%' or OCO.unidade_area_militar_nome LIKE '%/34 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '34 BPM'
-		WHEN oco.codigo_municipio =316620 AND (oco.unidade_area_militar_nome like '31 BPM%' or oco.unidade_area_militar_nome like '%/31 BPM%') THEN '31 BPM'
-		WHEN oco.codigo_municipio =316620 AND (oco.unidade_area_militar_nome like '9 BPM%' or oco.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
+		WHEN OCO.codigo_municipio =316620 AND (oco.unidade_area_militar_nome like '31 BPM%' or oco.unidade_area_militar_nome like '%/31 BPM%') THEN '31 BPM'
+		WHEN OCO.codigo_municipio =316620 AND (oco.unidade_area_militar_nome like '9 BPM%' or oco.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
 		ELSE 'OUTROS' 
 	END AS UEOP_2024,	
