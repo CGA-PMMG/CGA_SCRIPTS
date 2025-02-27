@@ -17,6 +17,7 @@ WITH LETALIDADE AS                                                        -- Def
         AND ENV.id_envolvimento IN (35,36,44)                          -- Filtra pelos tipos de envolvimento (autor, co-autor, suspeito)
         AND ENV.ind_militar_policial IS NOT DISTINCT FROM 'M'          -- Filtra apenas militares
         AND ENV.ind_militar_policial_servico IS NOT DISTINCT FROM 'S'  -- Filtra apenas militares em serviço
+        AND ENV.orgao_lotacao_policial_sigla = 'PM' 				 -- Filtra sigla do órgão policial, PM
         AND YEAR(ENV.data_hora_fato) = :ANO                           -- Filtra pelo ano parametrizado
         AND MONTH(ENV.data_hora_fato) >= :MESINICIAL                  -- Filtra a partir do mês inicial parametrizado
         AND MONTH(ENV.data_hora_fato) <= :MESFINAL                    -- Filtra até o mês final parametrizado
