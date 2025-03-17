@@ -16,10 +16,11 @@ WITH LETALIDADE AS
     FROM 
         db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  -- Tabela de envolvidos em ocorrências
     WHERE 1=1
-        AND ENV.natureza_ocorrencia_codigo IN ('B01121','B01148','B02001')       -- Filtra ocorrências com naturezas específicas relacionadas à letalidade (HOMICÍDIO, SEQÜESTRO OU CÁRCERE PRIVADO,TORTURA )
+        AND ENV.natureza_ocorrencia_codigo IN ('B01121')       -- Filtra ocorrências com naturezas específicas relacionadas à letalidade (HOMICÍDIO)
         AND ENV.envolvimento_descricao IN ('AUTOR','CO-AUTOR','SUSPEITO')         -- Filtra envolvidos que são autores ou suspeitos
         AND ENV.ind_militar_policial IS NOT DISTINCT FROM 'M'         -- Filtra apenas militares
         AND ENV.ind_militar_policial_servico IS NOT DISTINCT FROM 'S'         -- Filtra apenas militares em serviço
+        AND ENV.orgao_lotacao_policial_sigla = 'PM' 				 -- Filtra sigla do órgão policial, PM
         AND YEAR(ENV.data_hora_fato) = :ANO         -- Filtra pelo ano informado no parâmetro
         AND MONTH(ENV.data_hora_fato) >= :MESINICIAL         -- Filtra pelo mês inicial informado no parâmetro
         AND MONTH(ENV.data_hora_fato) <= :MESFINAL         -- Filtra pelo mês final informado no parâmetro
@@ -35,7 +36,7 @@ SELECT
     ENV.condicao_fisica_descricao,                -- Descrição da condição física do envolvido
     CAST(OCO.codigo_municipio AS INTEGER) AS codigo_municipio,  -- Código do município convertido para inteiro
     OCO.nome_municipio,                           -- Nome do município
-    CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
+   CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
    		WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
 		WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
     	WHEN OCO.codigo_municipio IN (310150 , 310310 , 310370 , 310440 , 310460 , 310550 , 310610 , 310690 , 310870 , 311020 , 311170 , 311330 , 311530 , 311590 , 311620 , 311670 , 311960 , 312130 , 312190 , 312200 , 312290 , 312330 , 312400 , 312460 , 312490 , 312530 , 312595 , 312738 , 312840 , 312850 , 312880 , 312900 , 313260 , 313670 , 313800 , 313840 , 313860 , 313980 , 314020 , 314080 , 314160 , 314210 , 314220 , 314390 , 314540 , 314587 , 314670 , 314820 , 314830 , 314880 , 314900 , 314940 , 314950 , 315010 , 315110 , 315130 , 315410 , 315540 , 315580 , 315590 , 315620 , 315630 , 315645 , 315727 , 315840 , 315860 , 315930 , 316000 , 316140 , 316150 , 316290 , 316380 , 316443 , 316560 , 316570 , 316730 , 316750 , 316790 , 316850 , 316900 , 316920 , 316990 , 317130 , 317140 , 317200 , 317210) THEN '04 RPM'	
@@ -61,7 +62,7 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio IN (312770,310180,311265,312370,312580,313320,314995,316770,316840,310220,312690,314010,317150,316160,316300) THEN '06 BPM'
 		WHEN OCO.codigo_municipio IN (310020,310700,310740,311560,311980,312320,312470,313530,313720,313880,314050,314240,314350,314640,314890,315200,315370,316040,316660) THEN '07 BPM'
 		WHEN OCO.codigo_municipio IN (310080,310800,311120,311190,311200,311400,311450,311460,312020,313000,313040,313080,313430,313450,313820,313870,314460,314560,314770,314990,315060,315470,315880,315990,316120) THEN '08 BPM'
-		WHEN OCO.codigo_municipio IN (310163,310210,310290,310330,310560,310680,311630,312150,312500,312940,314570,314660,315030,315440,315730,315870,315940,316070,316620) THEN '09 BPM'
+		WHEN OCO.codigo_municipio IN (310163,310210,310290,310330,310560,310680,311630,312150,312500,312940,314570,314660,315030,315440,315730,315870,315940,316070) THEN '09 BPM'
 		WHEN OCO.codigo_municipio IN (314480,315390,315480) THEN '1 CIA PM IND'
 		WHEN OCO.codigo_municipio IN (310730,311650,311880,312380,312660,312735,312825,312960,313200,313680,313730,314545,316225,316265) THEN '10 BPM'
 		WHEN OCO.codigo_municipio IN (310370,311020,311170,311670,312400,314830,314880,316380,316850,317130) THEN '10 CIA PM IND'
@@ -150,6 +151,8 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '41 BPM%' or OCO.unidade_area_militar_nome LIKE '%/41 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '41 BPM'
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '49 BPM%' or OCO.unidade_area_militar_nome LIKE '%/49 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '49 BPM'
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '34 BPM%' or OCO.unidade_area_militar_nome LIKE '%/34 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '34 BPM'
+		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '31 BPM%' or OCO.unidade_area_militar_nome like '%/31 BPM%') THEN '31 BPM'
+		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '9 BPM%' or OCO.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
 		ELSE 'OUTROS' 
 	END AS UEOP_2024,	
     OCO.unidade_area_militar_codigo,              -- Código da unidade militar da área
@@ -168,10 +171,9 @@ WHERE 1=1
     AND ENV.id_envolvimento IN (25,32,1097,26,27,28,872)     -- Filtra tipos específicos de envolvimento (todos tipos de vitima)
     AND ENV.natureza_ocorrencia_codigo IN ('B01121','B01148','B02001','C01157','C01158','C01159','D01213','D01217')     -- Filtra naturezas específicas de crime violento (HOMICÍDIO, SEQÜESTRO OU CÁRCERE PRIVADO,TORTURA, ROUBO, EXTORSÃO, EXTORSÃO MEDIANTE SEQÜESTRO,ESTUPRO, ESTUPRO DE VULNERÁVEL )
     AND ENV.ind_consumado IN ('S','N')           -- Filtra ocorrências consumadas e tentadas
-    AND ENV.condicao_fisica_codigo <> '0100'     -- Exclui condição física específica
     AND OCO.ocorrencia_uf ='MG'                  -- Filtra apenas ocorrências de Minas Gerais
     AND OCO.digitador_sigla_orgao IN ('PM','PC') -- Filtra registros feitos pela PM ou PC
-    AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP')  -- Filtra tipos específicos de relatório
+--    AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP')  -- Filtra tipos específicos de relatório
     AND YEAR(OCO.data_hora_fato) = :ANO          -- Filtra pelo ano informado
     AND MONTH(OCO.data_hora_fato) >= :MESINICIAL -- Filtra pelo mês inicial
     AND MONTH(OCO.data_hora_fato) <= :MESFINAL   -- Filtra pelo mês final
