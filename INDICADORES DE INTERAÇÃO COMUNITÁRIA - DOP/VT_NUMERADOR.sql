@@ -33,8 +33,9 @@ OCO.local_imediato_codigo,  								 -- Código do local imediato
 OCO.local_imediato_descricao,								 -- Descrição do local imediato
 OCO.complemento_natureza_codigo,							 -- Código do complemento da natureza da ocorrência
 OCO.complemento_natureza_descricao,							 -- Descrição do complemento da natureza da ocorrência
-OCO.unidade_area_militar_codigo,                              -- Código da unidade militar da área
-OCO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
+OCO.id_local,												-- Identificador do local área militar 
+LO.codigo_unidade_area,										-- Código da unidade militar da área
+LO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
 OCO.unidade_responsavel_registro_codigo,                      -- Código da unidade que registrou a ocorrência
 OCO.unidade_responsavel_registro_nome,                        -- Nome da unidade que registrou a ocorrência
 CAST(OCO.codigo_municipio AS INTEGER) codigo_municipio,                        -- Converte o código do município para número inteiro
@@ -54,6 +55,7 @@ OCO.digitador_sigla_orgao,                                  -- Sigla do órgão 
 OCO.ind_estado,
     REGEXP_EXTRACT(OCO.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS numero_reds_furto
   FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+  LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
   WHERE OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000'
     AND OCO.natureza_codigo = 'A20000'
     AND OCO.ocorrencia_uf = 'MG'                                
@@ -198,7 +200,7 @@ CASE WHEN VT.codigo_municipio IN (310690,311590,311960,312130,312738,312850,3140
 		WHEN VT.codigo_municipio =316620 AND (VT.unidade_area_militar_nome like '9 BPM%' or VT.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
 		ELSE 'OUTROS' 
 	END AS UEOP_2024,	
-  VT.unidade_area_militar_codigo,                       -- Código da unidade militar da área
+  VT.codigo_unidade_area,                       -- Código da unidade militar da área
   VT.unidade_area_militar_nome,                         -- Nome da unidade militar da área
   VT.unidade_responsavel_registro_codigo,               -- Código da unidade responsável pelo registro
   VT.unidade_responsavel_registro_nome,                 -- Nome da unidade responsável pelo registro
