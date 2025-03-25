@@ -13,7 +13,12 @@ ENV.envolvimento_codigo,                                     -- Código que iden
 ENV.envolvimento_descricao,                                  -- Descrição do tipo de envolvimento (vítima, autor, testemunha, etc.)
 ENV.nome_completo_envolvido,                                 -- Nome completo da pessoa envolvida na ocorrência
 ENV.nome_mae,                                                -- Nome da mãe do envolvido
-ENV.data_nascimento,                                         -- Data de nascimento do envolvido
+CONCAT(
+    SUBSTR(CAST(ENV.data_nascimento AS STRING), 9, 2), '/',  -- Dia (posições 9-10)
+    SUBSTR(CAST(ENV.data_nascimento AS STRING), 6, 2), '/',  -- Mês (posições 6-7)
+    SUBSTR(CAST(ENV.data_nascimento AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
+    SUBSTR(CAST(ENV.data_nascimento AS STRING), 12, 8)       -- Hora (posições 12-19)
+  ) AS data_nascimento,                   -- Converte a data/hora do data_nascimento do envolvido para o padrão brasileiro
 OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
 OCO.natureza_descricao,                                      -- Descrição da natureza da ocorrência
     CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
