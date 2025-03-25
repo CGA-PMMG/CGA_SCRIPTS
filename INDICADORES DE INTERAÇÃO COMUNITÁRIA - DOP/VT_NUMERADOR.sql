@@ -47,9 +47,7 @@ OCO.nome_bairro,                                              -- Nome do bairro
 OCO.ocorrencia_uf,                                            -- Estado da ocorrência
 OCO.numero_latitude ,										-- Numero latitude
 OCO.numero_longitude,										-- Numero longitude
-OCO.data_hora_fato,                                        -- Data e hora do fato
-YEAR(OCO.data_hora_fato) AS ano,                           -- Ano do fato
-MONTH(OCO.data_hora_fato) AS mes,                          -- Mês do fato
+OCO.data_hora_fato,      -- Data e hora do fato
 OCO.nome_tipo_relatorio,                                   -- Tipo do relatório
 OCO.digitador_sigla_orgao,                                  -- Sigla do órgão que registrou
 OCO.ind_estado,
@@ -215,7 +213,12 @@ CASE WHEN VT.codigo_municipio IN (310690,311590,311960,312130,312738,312850,3140
   VT.ocorrencia_uf,                                     -- UF da ocorrência
   REPLACE(CAST(VT.numero_latitude AS STRING), '.', ',') AS local_latitude_formatado,  -- Formata latitude com vírgula
   REPLACE(CAST(VT.numero_longitude AS STRING), '.', ',') AS local_longitude_formatado,  -- Formata longitude com vírgula
-  VT.data_hora_fato,                                    -- Data e hora da visita
+  CONCAT(
+    SUBSTR(CAST(VT.data_hora_fato AS STRING), 9, 2), '/',  -- Dia (posições 9-10)
+    SUBSTR(CAST(VT.data_hora_fato AS STRING), 6, 2), '/',  -- Mês (posições 6-7)
+    SUBSTR(CAST(VT.data_hora_fato AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
+    SUBSTR(CAST(VT.data_hora_fato AS STRING), 12, 8)       -- Hora (posições 12-19)
+  ) AS data_hora_fato,                   -- Converte a data/hora do fato para o padrão brasileiro
   YEAR(VT.data_hora_fato) AS ano,                       -- Extrai o ano da data da visita
   MONTH(VT.data_hora_fato) AS mes,                      -- Extrai o mês da data da visita
   VT.nome_tipo_relatorio,                               -- Nome do tipo de relatório
