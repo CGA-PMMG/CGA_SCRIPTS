@@ -111,30 +111,30 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio IN (310440,310460,311530,312290,313260,313840,314220,315410,315840,316443,315110,317210,310150,316000,312460) THEN '68 BPM'
 		WHEN OCO.codigo_municipio IN (313370,313380) THEN '9 CIA PM IND'
 		/* MUNIC PIOS COM MAIS DE 01 UEOP - 7 Munic pios*/
-		WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome LIKE '32 BPM%' or OCO.unidade_area_militar_nome LIKE '%/32 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '32 BPM'
-		WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome LIKE '17 BPM%' or OCO.unidade_area_militar_nome LIKE '%/17 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '17 BPM'
-		WHEN OCO.codigo_municipio =317010 AND (OCO.unidade_area_militar_nome LIKE '4 BPM%' or OCO.unidade_area_militar_nome LIKE '%/4 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '04 BPM'
-		WHEN OCO.codigo_municipio =317010 AND (OCO.unidade_area_militar_nome LIKE '67 BPM%' or OCO.unidade_area_militar_nome LIKE '%/67 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '67 BPM'
-		WHEN OCO.codigo_municipio =314330 AND (OCO.unidade_area_militar_nome LIKE '50 BPM%' or OCO.unidade_area_militar_nome LIKE '%/50 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '50 BPM'
-		WHEN OCO.codigo_municipio =314330 AND (OCO.unidade_area_militar_nome LIKE '10 BPM%' or OCO.unidade_area_militar_nome LIKE '%/10 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '10 BPM'
-		WHEN OCO.codigo_municipio =313670 AND (OCO.unidade_area_militar_nome LIKE '27 BPM%' or OCO.unidade_area_militar_nome LIKE '%/27 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '27 BPM'
-		WHEN OCO.codigo_municipio =313670 AND (OCO.unidade_area_militar_nome LIKE '2 BPM%' or OCO.unidade_area_militar_nome LIKE '%/2 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '02 BPM'
-		WHEN OCO.codigo_municipio =311860 AND (OCO.unidade_area_militar_nome LIKE '39 BPM%' or OCO.unidade_area_militar_nome LIKE '%/39 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '39 BPM'
-		WHEN OCO.codigo_municipio =311860 AND (OCO.unidade_area_militar_nome LIKE '18 BPM%' or OCO.unidade_area_militar_nome LIKE '%/18 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '18 BPM'
-		WHEN OCO.codigo_municipio =310670 AND (OCO.unidade_area_militar_nome LIKE '66 BPM%' or OCO.unidade_area_militar_nome LIKE '%/66 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '66 BPM'
-		WHEN OCO.codigo_municipio =310670 AND (OCO.unidade_area_militar_nome LIKE '33 BPM%' or OCO.unidade_area_militar_nome LIKE '%/33 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '33 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '1 BPM%' or OCO.unidade_area_militar_nome LIKE '%/1 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '01 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '5 BPM%' or OCO.unidade_area_militar_nome LIKE '%/5 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%') THEN '05 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '13 BPM%' or OCO.unidade_area_militar_nome LIKE '%/13 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%') THEN '13 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '16 BPM%' or OCO.unidade_area_militar_nome LIKE '%/16 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%') THEN '16 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '22 BPM%' or OCO.unidade_area_militar_nome LIKE '%/22 BPM%' ) AND (OCO.unidade_area_militar_nome not LIKE '%TM%') THEN '22 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '41 BPM%' or OCO.unidade_area_militar_nome LIKE '%/41 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '41 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '49 BPM%' or OCO.unidade_area_militar_nome LIKE '%/49 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '49 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '34 BPM%' or OCO.unidade_area_militar_nome LIKE '%/34 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '34 BPM'
+		WHEN OCO.codigo_municipio =317020 AND (LO.unidade_area_militar_nome LIKE '32 BPM%' or LO.unidade_area_militar_nome LIKE '%/32 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '32 BPM'
+		WHEN OCO.codigo_municipio =317020 AND (LO.unidade_area_militar_nome LIKE '17 BPM%' or LO.unidade_area_militar_nome LIKE '%/17 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '17 BPM'
+		WHEN OCO.codigo_municipio =317010 AND (LO.unidade_area_militar_nome LIKE '4 BPM%' or LO.unidade_area_militar_nome LIKE '%/4 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '04 BPM'
+		WHEN OCO.codigo_municipio =317010 AND (LO.unidade_area_militar_nome LIKE '67 BPM%' or LO.unidade_area_militar_nome LIKE '%/67 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '67 BPM'
+		WHEN OCO.codigo_municipio =314330 AND (LO.unidade_area_militar_nome LIKE '50 BPM%' or LO.unidade_area_militar_nome LIKE '%/50 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '50 BPM'
+		WHEN OCO.codigo_municipio =314330 AND (LO.unidade_area_militar_nome LIKE '10 BPM%' or LO.unidade_area_militar_nome LIKE '%/10 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '10 BPM'
+		WHEN OCO.codigo_municipio =313670 AND (LO.unidade_area_militar_nome LIKE '27 BPM%' or LO.unidade_area_militar_nome LIKE '%/27 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '27 BPM'
+		WHEN OCO.codigo_municipio =313670 AND (LO.unidade_area_militar_nome LIKE '2 BPM%' or LO.unidade_area_militar_nome LIKE '%/2 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '02 BPM'
+		WHEN OCO.codigo_municipio =311860 AND (LO.unidade_area_militar_nome LIKE '39 BPM%' or LO.unidade_area_militar_nome LIKE '%/39 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '39 BPM'
+		WHEN OCO.codigo_municipio =311860 AND (LO.unidade_area_militar_nome LIKE '18 BPM%' or LO.unidade_area_militar_nome LIKE '%/18 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '18 BPM'
+		WHEN OCO.codigo_municipio =310670 AND (LO.unidade_area_militar_nome LIKE '66 BPM%' or LO.unidade_area_militar_nome LIKE '%/66 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '66 BPM'
+		WHEN OCO.codigo_municipio =310670 AND (LO.unidade_area_militar_nome LIKE '33 BPM%' or LO.unidade_area_militar_nome LIKE '%/33 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '33 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (LO.unidade_area_militar_nome LIKE '1 BPM%' or LO.unidade_area_militar_nome LIKE '%/1 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '01 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (LO.unidade_area_militar_nome LIKE '5 BPM%' or LO.unidade_area_militar_nome LIKE '%/5 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%') THEN '05 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (LO.unidade_area_militar_nome LIKE '13 BPM%' or LO.unidade_area_militar_nome LIKE '%/13 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%') THEN '13 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (LO.unidade_area_militar_nome LIKE '16 BPM%' or LO.unidade_area_militar_nome LIKE '%/16 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%') THEN '16 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (LO.unidade_area_militar_nome LIKE '22 BPM%' or LO.unidade_area_militar_nome LIKE '%/22 BPM%' ) AND (LO.unidade_area_militar_nome not LIKE '%TM%') THEN '22 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (LO.unidade_area_militar_nome LIKE '41 BPM%' or LO.unidade_area_militar_nome LIKE '%/41 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '41 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (LO.unidade_area_militar_nome LIKE '49 BPM%' or LO.unidade_area_militar_nome LIKE '%/49 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '49 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (LO.unidade_area_militar_nome LIKE '34 BPM%' or LO.unidade_area_militar_nome LIKE '%/34 BPM%') AND (LO.unidade_area_militar_nome not LIKE '%TM%')THEN '34 BPM'
 		ELSE 'OUTROS' 
 	END AS UEOP_2024,	
-OCO.unidade_area_militar_codigo,                              -- Código da unidade militar da área
-OCO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
+LO.codigo_unidade_area,										-- Código da unidade militar da área
+LO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
 OCO.unidade_responsavel_registro_codigo,                      -- Código da unidade que registrou a ocorrência
 OCO.unidade_responsavel_registro_nome,                        -- Nome da unidade que registrou a ocorrência
 SPLIT_PART(OCO.unidade_responsavel_registro_nome,'/',-1) RPM_REGISTRO, 
@@ -148,12 +148,18 @@ OCO.nome_bairro,                                              -- Nome do bairro
 OCO.ocorrencia_uf,                                            -- Estado da ocorrência
 OCO.numero_latitude,                                          -- Latitude da localização
 OCO.numero_longitude,                                         -- Longitude da localização
-OCO.data_hora_fato,                                        -- Data e hora do fato
+CONCAT(
+    SUBSTR(CAST(OCO.data_hora_fato AS STRING), 9, 2), '/',  -- Dia (posições 9-10)
+    SUBSTR(CAST(OCO.data_hora_fato AS STRING), 6, 2), '/',  -- Mês (posições 6-7)
+    SUBSTR(CAST(OCO.data_hora_fato AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
+    SUBSTR(CAST(OCO.data_hora_fato AS STRING), 12, 8)       -- Hora (posições 12-19)
+  ) AS data_hora_fato,                   -- Converte a data/hora do fato para o padrão brasileiro
 YEAR(OCO.data_hora_fato) AS ano,                           -- Ano do fato
 MONTH(OCO.data_hora_fato) AS mes,                          -- Mês do fato
 OCO.nome_tipo_relatorio,                                   -- Tipo do relatório
 OCO.digitador_sigla_orgao                                  -- Sigla do órgão que registrou
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO -- Tabela principal ( tabela ocorrencia)
+LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON OCO.numero_ocorrencia = ENV.numero_ocorrencia -- inner join com a tabela de envolvidos
 WHERE 1 = 1   -- Condição sempre verdadeira que facilita adicionar ou remover condições durante o desenvolvimento
 AND EXISTS (                            
