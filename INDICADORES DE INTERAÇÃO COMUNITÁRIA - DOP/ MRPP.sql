@@ -20,7 +20,6 @@ CONCAT(
     SUBSTR(CAST(ENV.data_nascimento AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
     SUBSTR(CAST(ENV.data_nascimento AS STRING), 12, 8)       -- Hora (posições 12-19)
   ) AS data_nascimento,                   -- Converte a data/hora do data_nascimento do envolvido para o padrão brasileiro
-ENV.data_nascimento,                                         -- Data data_nascimento
 OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
 OCO.natureza_descricao,                                      -- Descrição da natureza da ocorrência
     CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
