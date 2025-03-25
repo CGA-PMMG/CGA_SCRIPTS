@@ -31,8 +31,8 @@ SELECT
 	OCO.numero_ocorrencia,   -- Número da ocorrência                                      
 	OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
 	OCO.natureza_descricao,                                      -- Descrição da natureza da ocorrência
-	OCO.unidade_area_militar_codigo,                              -- Código da unidade militar da área
-	OCO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
+	LO.codigo_unidade_area,										-- Código da unidade militar da área
+	LO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
 	OCO.unidade_responsavel_registro_codigo,                      -- Código da unidade que registrou a ocorrência
 	OCO.unidade_responsavel_registro_nome,                        -- Nome da unidade que registrou a ocorrência
 	CAST(OCO.codigo_municipio AS INTEGER) codigo_municipio,                        -- Converte o código do município para número inteiro
@@ -52,6 +52,7 @@ SELECT
 	OCO.ind_estado,
     REGEXP_EXTRACT(OCO.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS numero_reds_furto
   FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+  LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
   WHERE OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000'
     AND OCO.natureza_codigo = 'A20001'
     AND OCO.ocorrencia_uf = 'MG'                                
@@ -192,7 +193,7 @@ CASE WHEN VT.codigo_municipio IN (310690,311590,311960,312130,312738,312850,3140
 		WHEN VT.codigo_municipio =316620 AND (VT.unidade_area_militar_nome like '9 BPM%' or VT.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
 		ELSE 'OUTROS' 
 	END AS UEOP_2024,	
-  VT.unidade_area_militar_codigo,                       -- Código da unidade militar da área
+  VT.codigo_unidade_area,                       -- Código da unidade militar da área
   VT.unidade_area_militar_nome,                         -- Nome da unidade militar da área
   VT.unidade_responsavel_registro_codigo,               -- Código da unidade responsável pelo registro
   VT.unidade_responsavel_registro_nome,                 -- Nome da unidade responsável pelo registro
@@ -207,7 +208,12 @@ CASE WHEN VT.codigo_municipio IN (310690,311590,311960,312130,312738,312850,3140
   VT.ocorrencia_uf,                                     -- UF da ocorrência
   REPLACE(CAST(VT.numero_latitude AS STRING), '.', ',') AS local_latitude_formatado,  -- Formata latitude com vírgula
   REPLACE(CAST(VT.numero_longitude AS STRING), '.', ',') AS local_longitude_formatado,  -- Formata longitude com vírgula
-  VT.data_hora_fato,                                    -- Data e hora da visita
+   CONCAT(
+    SUBSTR(CAST(VT.data_hora_fato AS STRING), 9, 2), '/',  -- Dia (posições 9-10)
+    SUBSTR(CAST(VT.data_hora_fato AS STRING), 6, 2), '/',  -- Mês (posições 6-7)
+    SUBSTR(CAST(VT.data_hora_fato AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
+    SUBSTR(CAST(VT.data_hora_fato AS STRING), 12, 8)       -- Hora (posições 12-19)
+  ) AS data_hora_fato,                   -- Converte a data/hora do fato para o padrão brasileiro
   YEAR(VT.data_hora_fato) AS ano,                       -- Extrai o ano da data da visita
   MONTH(VT.data_hora_fato) AS mes,                      -- Extrai o mês da data da visita
   VT.nome_tipo_relatorio,                               -- Nome do tipo de relatório
