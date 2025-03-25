@@ -72,7 +72,12 @@ SELECT
   ENV.envolvimento_descricao envolvimento_descricao_BOS,  -- Descrição do tipo de envolvimento
   ENV.nome_completo_envolvido nome_completo_envolvido_BOS,  -- Nome completo do envolvido
   ENV.nome_mae nome_mae_BOS,                            -- Nome da mãe do envolvido
-  ENV.data_nascimento data_nascimento_BOS,              -- Data de nascimento do envolvido                                       
+  CONCAT(
+    SUBSTR(CAST(ENV.data_nascimento AS STRING), 9, 2), '/',  -- Dia (posições 9-10)
+    SUBSTR(CAST(ENV.data_nascimento AS STRING), 6, 2), '/',  -- Mês (posições 6-7)
+    SUBSTR(CAST(ENV.data_nascimento AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
+    SUBSTR(CAST(ENV.data_nascimento AS STRING), 12, 8)       -- Hora (posições 12-19)
+  ) AS data_nascimento_BOS,                   -- Converte a data/hora do data_nascimento do envolvido para o padrão brasileiro                                
   VT.natureza_codigo,                                   -- Código da natureza da visita
   VT.natureza_descricao,                                -- Descrição da natureza da visita
   VT.local_imediato_codigo,  								 -- Código do local imediato
