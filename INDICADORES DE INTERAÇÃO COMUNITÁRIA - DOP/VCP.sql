@@ -159,8 +159,8 @@ MONTH(OCO.data_hora_fato) AS mes,                          -- Mês do fato
 OCO.nome_tipo_relatorio,                                   -- Tipo do relatório
 OCO.digitador_sigla_orgao                                  -- Sigla do órgão que registrou
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO -- Tabela principal ( tabela ocorrencia)
-LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON OCO.numero_ocorrencia = ENV.numero_ocorrencia -- inner join com a tabela de envolvidos
+LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 WHERE 1 = 1   -- Condição sempre verdadeira que facilita adicionar ou remover condições durante o desenvolvimento
 AND EXISTS (                            
     SELECT 1                                                                           -- Seleciona apenas um valor constante (otimização de performance)
