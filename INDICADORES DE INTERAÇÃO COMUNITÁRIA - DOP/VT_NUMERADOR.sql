@@ -16,7 +16,7 @@ FURTOS AS (                                            -- CTE que define ocorrê
     oco.complemento_natureza_codigo,                    -- Código do complemento da natureza
     oco.local_imediato_codigo,							-- Código do local imediato
     oco.local_imediato_descricao						-- Descrição do local imediato
-  FROM tb_ocorrencia oco                               -- Tabela base de ocorrências
+  FROM db_bisp_reds_reporting.tb_ocorrencia oco                               -- Tabela base de ocorrências
   WHERE oco.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
     AND oco.natureza_codigo = 'C01155' --  Filtra pelo código de natureza - FURTO
 	AND  (SUBSTRING(oco.local_imediato_codigo ,1,2) = '07' OR SUBSTRING(oco.local_imediato_codigo,1,2) = '10' OR SUBSTRING(oco.local_imediato_codigo,1,2) = '14' OR oco.local_imediato_codigo IN ('1501','1502','1503','1599') OR oco.complemento_natureza_codigo IN ('2002','2003','2004','2005','2015'))
