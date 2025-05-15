@@ -17,14 +17,14 @@ CRIME_VIOLENTO AS (
     AND oco.ocorrencia_uf = 'MG'         -- Filtra apenas ocorrências do estado de Minas Gerais                        
     AND oco.digitador_sigla_orgao IN ('PM', 'PC')  -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
     AND oco.ind_estado = 'F'                                                         -- Filtra apenas ocorrências fechadas
-	AND NOT EXISTS (                                                           
-					-- Predicado que verifica a não existência de registros na subconsulta (negação do EXISTS)
-					   SELECT 1                                                              
-					   FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido          
-					   WHERE envolvido.numero_ocorrencia = oco.numero_ocorrencia             
-					   AND envolvido.id_envolvimento IN(25,1097, 27, 32, 28, 26, 872)        -- Filtro por códigos específicos de envolvimento -  vítimas
-					   AND envolvido.condicao_fisica_codigo = '0100'                         -- Filtro por condição física fatal (código '0100')
-					)                                                                          -- Fim da subconsulta NOT EXISTS - exclui ocorrências com vítimas fatais
+	AND EXISTS (                                                           
+			-- Predicado que verifica a não existência de registros na subconsulta 
+			   SELECT 1                                                              
+			   FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido          
+			   WHERE envolvido.numero_ocorrencia = oco.numero_ocorrencia             
+			   AND envolvido.id_envolvimento IN(25,1097, 27, 32, 28, 26, 872)        -- Filtro por códigos específicos de envolvimento -  vítimas
+			   AND envolvido.condicao_fisica_codigo <> '0100'                         -- Filtro por condição física difernte de fatal (código '0100')
+			)          -- Fim da subconsulta EXISTS - exclui vítima fatal  
 ),
 VISITAS_TRANQUILIZADORAS AS (
 SELECT 
