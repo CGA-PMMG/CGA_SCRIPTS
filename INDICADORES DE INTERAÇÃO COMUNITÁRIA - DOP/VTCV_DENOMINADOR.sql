@@ -156,14 +156,14 @@ OCO.digitador_sigla_orgao                                  -- Sigla do órgão q
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 WHERE 1 = 1      -- Condição sempre verdadeira que serve como ponto inicial para facilitar manutenção da query
-AND NOT EXISTS (                                                           
+AND EXISTS (                                                           
 -- Predicado que verifica a não existência de registros na subconsulta (negação do EXISTS)
    SELECT 1                                                              
    FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido          
    WHERE envolvido.numero_ocorrencia = OCO.numero_ocorrencia             
    AND envolvido.id_envolvimento IN(25,1097, 27, 32, 28, 26, 872)        -- Filtro por códigos específicos de envolvimento -  vítimas
-   AND envolvido.condicao_fisica_codigo = '0100'                         -- Filtro por condição física fatal (código '0100')
-)                                                                          -- Fim da subconsulta NOT EXISTS - exclui ocorrências com vítimas fatais
+   AND envolvido.condicao_fisica_codigo <> '0100'                         -- Filtro por condição física difernte de fatal (código '0100')
+)                                                                          -- Fim da subconsulta EXISTS - exclui vítima fatal
 AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
 AND OCO.ocorrencia_uf = 'MG'                                                     -- Filtra apenas ocorrências do estado de Minas Gerais
 AND OCO.digitador_sigla_orgao IN ('PM','PC')                              -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
