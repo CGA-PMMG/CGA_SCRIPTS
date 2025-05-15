@@ -60,6 +60,17 @@ OCO.ind_estado,
     AND OCO.digitador_sigla_orgao = 'PM'
     AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')
     AND OCO.historico_ocorrencia LIKE '%20__-%-00%'
+    AND OCO.unidade_responsavel_registro_nome NOT LIKE '%IND PE%'
+	AND OCO.unidade_responsavel_registro_nome NOT LIKE '%PVD%'
+	AND (
+	    OCO.unidade_responsavel_registro_nome NOT REGEXP '/[A-Za-z]'
+	    OR OCO.unidade_responsavel_registro_nome LIKE '%/PEL TM%'
+	)
+	AND (
+	    OCO.unidade_responsavel_registro_nome REGEXP '^(SG|PEL|GP)'
+	    OR OCO.unidade_responsavel_registro_nome REGEXP '^[^A-Za-z]'
+	) -- Filtra apenas unidades com responsabilidade territorial. 
+	AND OCO.ind_estado IN ('F','R')
 )
 SELECT 
   VT.numero_ocorrencia,                                 -- Número da ocorrência da visita
