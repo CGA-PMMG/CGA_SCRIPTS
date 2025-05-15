@@ -157,7 +157,7 @@ FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 WHERE 1 = 1      -- Condição sempre verdadeira que serve como ponto inicial para facilitar manutenção da query
 AND EXISTS (                                                           
--- Predicado que verifica a não existência de registros na subconsulta (negação do EXISTS)
+-- Predicado que verifica a não existência de registros na subconsulta 
    SELECT 1                                                              
    FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido          
    WHERE envolvido.numero_ocorrencia = OCO.numero_ocorrencia             
