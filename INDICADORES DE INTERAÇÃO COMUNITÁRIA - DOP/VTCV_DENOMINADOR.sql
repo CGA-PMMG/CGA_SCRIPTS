@@ -167,7 +167,7 @@ AND EXISTS (
 AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
 AND OCO.ocorrencia_uf = 'MG'                                                     -- Filtra apenas ocorrências do estado de Minas Gerais
 AND OCO.digitador_sigla_orgao IN ('PM','PC')                              -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
-AND OCO.natureza_codigo IN('B01121', 'B01148', 'B02001', 'C01157', 'C01158', 'C01159', 'B01504') -- Seleção de naturezas do CV
+AND OCO.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','D01217','B01504') -- Seleção de naturezas do CV
 AND OCO.ind_estado = 'F'                                                         -- Filtra apenas ocorrências fechadas
 --AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 ORDER BY  OCO.numero_ocorrencia
