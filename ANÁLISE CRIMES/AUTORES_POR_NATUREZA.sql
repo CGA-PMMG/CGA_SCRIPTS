@@ -9,7 +9,6 @@ ajudando na tomada de decisões para estratégias de prevenção, investigação
 são apresentados de forma organizada para facilitar a interpretação e a análise subsequente dos dados coletados.
 ----------------------------------------------------------------------------------------------------------------------------*/
 SELECT DISTINCT
-    
     OCO.numero_ocorrencia,                                            -- Número único que identifica a ocorrência
     ENV.envolvimento_codigo,                                         -- Código que identifica o tipo de envolvimento na ocorrência
     ENV.envolvimento_descricao,                                      -- Descrição do tipo de envolvimento na ocorrência
