@@ -147,8 +147,8 @@ CASE WHEN OCO.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
     OCO.digitador_sigla_orgao                                   -- Sigla do órgão que registrou (PM ou PC)
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO  -- TABELA DE OCORRÊNCIAS COM ALIÁS "OCO"
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
-WHERE 
- AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
+WHERE 1= 1
+    AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
 	AND OCO.ocorrencia_uf = 'MG'      -- Filtra apenas ocorrências do estado de Minas Gerais
 	AND OCO.digitador_sigla_orgao IN ('PM','PC')      -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
     AND OCO.natureza_codigo IN ('C01155', 'C01157' ,'C01158' ) -- Filtra naturezas de FURTO, ROUBO, EXTORSÃO
