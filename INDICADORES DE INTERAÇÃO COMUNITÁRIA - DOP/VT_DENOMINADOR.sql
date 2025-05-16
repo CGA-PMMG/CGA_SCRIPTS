@@ -171,5 +171,5 @@ AND (SUBSTRING(OCO.local_imediato_codigo ,1,2) = '07'                      -- In
 AND OCO.ocorrencia_uf = 'MG'          -- Filtra apenas ocorrências do estado de Minas Gerais                         
 AND OCO.digitador_sigla_orgao  IN ('PM','PC') -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
 AND OCO.ind_estado = 'F'                                -- Filtra apenas ocorrências fechadas
---AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
+--AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%'   -- FILTRE PELO NOME DA UNIDADE AREA MILITAR
 ORDER BY OCO.numero_ocorrencia
