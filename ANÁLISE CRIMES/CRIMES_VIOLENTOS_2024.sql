@@ -169,7 +169,7 @@ LEFT JOIN LETALIDADE LET
 WHERE 1=1  
     AND LET.numero_ocorrencia IS NULL            -- Exclui ocorrências que estão na CTE de letalidade
     AND ENV.id_envolvimento IN (25,32,1097,26,27,28,872)     -- Filtra tipos específicos de envolvimento (todos tipos de vitima)
-    AND ENV.natureza_ocorrencia_codigo IN ('B01121','B01148','B02001','C01157','C01158','C01159','D01213','D01217')     -- Filtra naturezas específicas de crime violento (HOMICÍDIO, SEQÜESTRO OU CÁRCERE PRIVADO,TORTURA, ROUBO, EXTORSÃO, EXTORSÃO MEDIANTE SEQÜESTRO,ESTUPRO, ESTUPRO DE VULNERÁVEL )
+    AND ENV.natureza_ocorrencia_codigo IN ('B01121', 'B01148', 'B02001', 'C01157','C01158', 'C01159','D01213', 'D01217','B01504')     -- Filtra naturezas específicas de crime violento (HOMICÍDIO, SEQUESTRO E CÁRCERE PRIVADO, TORTURA, ROUBO, EXTORSÃO, EXTORSÃO MEDIANTE SEQUESTRO, ESTUPRO, ESTUPRO DE VULNERÁVEL, FEMINICIDIO)
     AND ENV.ind_consumado IN ('S','N')           -- Filtra ocorrências consumadas e tentadas
     AND OCO.ocorrencia_uf ='MG'                  -- Filtra apenas ocorrências de Minas Gerais
     AND OCO.digitador_sigla_orgao IN ('PM','PC') -- Filtra registros feitos pela PM ou PC
