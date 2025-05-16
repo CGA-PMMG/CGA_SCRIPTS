@@ -12,19 +12,11 @@ CRIME_VIOLENTO AS (
     oco.data_hora_fato,                                -- Data/hora do fato
     oco.natureza_codigo                               -- Código da natureza da ocorrência
   FROM db_bisp_reds_reporting.tb_ocorrencia oco 
-  WHERE oco.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000'-- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
+  WHERE oco.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-04-30 23:59:59.000'-- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
     AND oco.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','D01217','B01504') -- Seleção de naturezas especifícas do CV
     AND oco.ocorrencia_uf = 'MG'         -- Filtra apenas ocorrências do estado de Minas Gerais                        
     AND oco.digitador_sigla_orgao IN ('PM', 'PC')  -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
     AND oco.ind_estado = 'F'                                                         -- Filtra apenas ocorrências fechadas
-	AND EXISTS (                                                           
-			-- Predicado que verifica a não existência de registros na subconsulta 
-			   SELECT 1                                                              
-			   FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido          
-			   WHERE envolvido.numero_ocorrencia = oco.numero_ocorrencia             
-			   AND envolvido.id_envolvimento IN(25,1097, 27, 32, 28, 26, 872)        -- Filtro por códigos específicos de envolvimento -  vítimas
-			   AND envolvido.condicao_fisica_codigo <> '0100'                         -- Filtro por condição física difernte de fatal (código '0100')
-			)          -- Fim da subconsulta EXISTS - exclui vítima fatal  
 ),
 VISITAS_TRANQUILIZADORAS AS (
 SELECT 
@@ -53,7 +45,7 @@ SELECT
     REGEXP_EXTRACT(OCO.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS numero_reds_furto
   FROM db_bisp_reds_reporting.tb_ocorrencia OCO
   LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
-  WHERE OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000'
+  WHERE OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-04-30 23:59:59.000'
     AND OCO.natureza_codigo = 'A20001'
     AND OCO.ocorrencia_uf = 'MG'                                
     AND OCO.digitador_sigla_orgao = 'PM'
