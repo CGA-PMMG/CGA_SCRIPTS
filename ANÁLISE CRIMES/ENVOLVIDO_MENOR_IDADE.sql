@@ -4,7 +4,6 @@
  * de menores de idade(na data do fato), sejam como vítima, autor ou coautor. 
  * A consulta organiza os dados por RPM e UEOP, detalhando ocorrências, envolvidos e locais.
  ----------------------------------------------------------------------------------------------------------------------*/
--- SELECIONA A UNIDADE OPERACIONAL BASEADA NO CÓDIGO DO MUNICÍPIO
 SELECT  
 	OCO.numero_ocorrencia, -- Número da ocorrência.
 	OCO.data_hora_fato, -- Data/ hora  do fato .
