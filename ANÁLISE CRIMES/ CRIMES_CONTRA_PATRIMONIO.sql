@@ -1,6 +1,6 @@
-/*---------------------------------------------------------------------------------------------------------------------------------------------
- *  Este script SQL tem como objetivo principal extrair e organizar dados sobre ocorrências cujo a natureza principal pertence ao grupo B00000. 
- ---------------------------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------
+ *  Este script SQL tem como objetivo principal extrair e organizar dados sobre ocorrências cujo a natureza principal seja de Furto, Roubo ou Extorsão.  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT 
 	OCO.numero_ocorrencia,  -- Numero da ocorrência
 	OCO.data_hora_fato,  -- Data/hora do fato
