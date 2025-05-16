@@ -169,5 +169,5 @@ AND OCO.ocorrencia_uf = 'MG'                                                    
 AND OCO.digitador_sigla_orgao IN ('PM','PC')                              -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
 AND OCO.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','D01217','B01504') -- Seleção de naturezas do CV
 AND OCO.ind_estado = 'F'                                                         -- Filtra apenas ocorrências fechadas
---AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
+--AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%'   -- FILTRE PELO NOME DA UNIDADE AREA MILITAR
 ORDER BY  OCO.numero_ocorrencia
