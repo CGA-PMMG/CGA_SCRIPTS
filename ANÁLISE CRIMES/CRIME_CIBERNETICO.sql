@@ -174,7 +174,7 @@ AND (
 AND OCO.digitador_id_orgao IN (0, 1) -- Filtra registros digitados por órgãos (PM, PC)
 AND OCO.ind_estado = 'F' -- Filtra ocorrências onde o estado é fechado
 AND OCO.ocorrencia_uf = 'MG' -- Filtra ocorrências no estado de Minas Gerais
--- AND OCO.unidade_responsavel_registro_nome LIKE '%x RPM%' -- Filtra nome da unidade responsável pelo registro
--- AND OCO.unidade_area_militar_nome LIKE '%x BPM%' -- Filtra nome da unidade área militar
--- AND OCO.nome_municipio LIKE '%xxx%' -- Filtra nome do município da ocorrência. Caso prefira, use: -- AND OCO.codigo_municipio = 000 -- Filtra código do município da ocorrência
+	-- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
+	-- AND OCO.unidade_responsavel_registro_nome LIKE '%xx RPM%' -- Filtra pelo nome da unidade responsável pelo registro
+	-- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
 ORDER BY data_hora_inclusao, OCO.numero_ocorrencia -- Ordena os resultados pela data de inclusão e número da ocorrência
