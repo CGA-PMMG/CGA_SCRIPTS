@@ -1,7 +1,17 @@
-/*﻿----------------------------------------------------------------------------------------------------------------------------
-Este código SQL foi elaborado com o propósito de identificar e relatar informações sobre furtos de telefones celulares 
-em Minas Gerais. 
-Busca informações específicas sobre ocorrências relacionadas e materiais envolvidos.
+/*----------------------------------------------------------------------------------------------------------------------------
+Este script SQL tem como objetivo principal a extração de dados relacionados a ocorrências de furto de aparelhos celulares
+no estado de Minas Gerais. A consulta realiza a junção entre registros de ocorrências policiais e os respectivos materiais 
+apreendidos ou vinculados, permitindo identificar atributos específicos dos objetos subtraídos (como tipo, marca, modelo e cor),
+além de classificar os registros pela RPM com base no código do município de ocorrência.
+
+A estrutura contempla:
+- Identificação da ocorrência (número e data/hora do fato);
+- Natureza da ocorrência (descrição do tipo de crime);
+- Detalhamento do material relacionado (objeto, situação, marca, modelo, cor, observações complementares);
+- Classificação territorial da ocorrência conforme agrupamento do município em sua respectiva RPM.
+
+Este relatório pode ser utilizado para subsidiar análises estatísticas, mapeamento geográfico de crimes
+e formulação de estratégias de prevenção e combate ao furto de celulares.
 ----------------------------------------------------------------------------------------------------------------------------*/
 SELECT OCO.numero_ocorrencia, -- NÚMERO DA OCORRÊNCIA
 		OCO.data_hora_fato, -- DATA HORA DO FATO
