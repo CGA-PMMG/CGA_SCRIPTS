@@ -1,6 +1,6 @@
 /*----------------------------------------------------------------------------------------------------------------------
  * Este script SQL tem como objetivo principal extrair informações detalhadas de ocorrências policiais registradas 
- * pela Polícia Militar de Minas Gerais, com ênfase na análise de registros que contenham palavras-chave específicas 
+ * pela PM e PC, com ênfase na análise de registros que contenham palavras-chave específicas 
  * no campo "Histórico Ocorrência".
  *
  * A estrutura contempla:
