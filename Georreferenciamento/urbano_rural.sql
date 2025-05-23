@@ -28,6 +28,5 @@ WHERE
     AND oco.data_hora_inclusao < '2025-02-01 00:00:00' 			-- Filtro de data final
     --AND (oco.unidade_area_militar_nome LIKE '%/XX RPM%') 		-- Filtro pela Unide de Área Militar (CIA/BPM/RPM)
    -- AND oco.nome_municipio = 'XXX' 							-- Filtro pelo Município
-
 ORDER BY  oco.numero_ocorrencia DESC
 ; 
