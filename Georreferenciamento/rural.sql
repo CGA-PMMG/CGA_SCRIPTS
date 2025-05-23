@@ -50,6 +50,5 @@ WHERE
         '12', 		-- BOS
         '13'		-- BOS AMPLO
     )
-
 ORDER BY  oco.numero_ocorrencia DESC
 ;
