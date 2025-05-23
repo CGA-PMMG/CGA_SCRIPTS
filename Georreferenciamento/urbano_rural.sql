@@ -9,8 +9,7 @@ SELECT -- Colunas que deseja inserir na saida
   	geo.setor_codigo,						-- codigo do Setor Censitário no IBGE
 	geo.situacao_zona, 						-- se o território é Urbano ou Rural segundo o IBGE
     ibge.tipo_descricao, 					-- se o território é Favela segundo o IBGE
-    mub.codigo_espacial_pm AS setor_PM		-- articulação SETORPM conforme Setor IBGE
-    
+    mub.codigo_espacial_pm AS setor_PM		-- articulação SETORPM conforme Setor IBGE    
 FROM
     db_bisp_reds_reporting.tb_ocorrencia AS oco -- Tabela principal que servirá de base
 LEFT JOIN
@@ -23,7 +22,6 @@ LEFT JOIN
 LEFT JOIN
     db_bisp_shared.tb_pmmg_setores_geodata AS mub			-- Tabela de secundaria com dados do GeoPM MUB compatilizados com a malha censitária
     ON geo.setor_codigo = mub.setor_codigo
-
 WHERE
 	oco.ocorrencia_uf ='MG' -- FILTRA OCORRENCIAS EM MINAS GERAIS 
 	AND oco.data_hora_inclusao >= '2025-01-01 00:00:00'			-- Filtro de data inicial
