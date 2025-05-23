@@ -7,12 +7,10 @@ SELECT -- Colunas que deseja inserir na saida
     oco.descricao_localizacao_ocorrencia,	-- campo parametrizado RURAL preenchido pelo usuário
     geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
     geo.longitude_sirgas2000,				-- reprojeção da longitude de SAD69 para SIRGAS2000
-
     CASE 													-- codigo do Setor Censitário no IBGE
     	WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF' 		-- ignora ocorrencias de fora de MG
     	ELSE geo.setor_codigo
-	END AS setor_codigo,						
-   
+	END AS setor_codigo,						 
 	CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
@@ -20,15 +18,13 @@ SELECT -- Colunas que deseja inserir na saida
         WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
        	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
     	ELSE geo.situacao_zona
-    END AS situacao_zona,                  						
-	
+    END AS situacao_zona,                  							
     ibge.tipo_descricao, 					-- se o território é Favela segundo o IBGE
     oco.unidade_area_militar_nome,			-- artigulação PMMG conforme GeoMUB
     MUB.udi,								-- articulação RPM conforme Setor IBGE
     MUB.ueop,								-- articulação BPM conforme Setor IBGE
     MUB.cia,								-- articulação CIA conforme Setor IBGE
-    MUB.codigo_espacial_pm AS setor_PM		-- articulação SETORPM conforme Setor IBGE
-    
+    MUB.codigo_espacial_pm AS setor_PM		-- articulação SETORPM conforme Setor IBGE    
 FROM
     db_bisp_reds_reporting.tb_ocorrencia AS oco -- Tabela principal que servirá de base
 LEFT JOIN
