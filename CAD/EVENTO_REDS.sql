@@ -1,3 +1,7 @@
+-- Script para realizar a extração de Ocorrências com a coluna EVENTO DO CAD.
+-- traz o numero da chamada CAD ('numero_chamada') que pode ser usada para JOIN com dados daquele sistema 
+-- e o numero do REDS ('numero_ocorrencia') que pode ser usada para JOIN com dados desse formulário 
+-- 
 SELECT distinct 
 OCO.numero_ocorrencia, -- NÚMERO DA OCORRENCIA
 EV.descricao_evento, -- DESCRICAO DO EVENTO
@@ -131,8 +135,9 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 FROM db_bisp_reds_reporting.tb_ocorrencia  OCO
 INNER JOIN  db_bisp_cad_reporting.vw_chamada_evento  EV ON OCO.numero_chamada_cad  = EV.numero_chamada
 WHERE 1 = 1
-    AND YEAR(OCO.data_hora_fato) = 2024 -- FILTRA PELO ANO DE 2024
-    AND MONTH(OCO.data_hora_fato) BETWEEN 1 AND 3 -- FILTRA PELOS MESES DE JANEIRO A MARÇO
+    AND YEAR(OCO.data_hora_fato) =  :ANO -- Filtra pelo ano com prompt
+    AND MONTH(OCO.data_hora_fato) >= :MESINICIAL               -- Filtra pelo mês inicial com prompt
+    AND MONTH(OCO.data_hora_fato) <= :MESFINAL               -- Filtra pelo mês final com prompt
     AND OCO.ocorrencia_uf ='MG' -- FILTRA OCORRENCIAS EM MINAS GERAIS 
     AND OCO.digitador_sigla_orgao = 'PM' -- FILTRA PELA SIGLA DA POLÍCIA MILITAR
     --AND (OCO.unidade_area_militar_nome LIKE '%/XX RPM%') -- FILTRA PELAS UNIDADES ESPECÍFICAS DA PM (CIA/BPM/RPM)
