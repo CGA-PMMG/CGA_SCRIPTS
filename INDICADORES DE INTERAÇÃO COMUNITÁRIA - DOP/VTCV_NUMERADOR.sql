@@ -42,7 +42,8 @@ SELECT
 	OCO.nome_tipo_relatorio,                                   -- Tipo do relatório
 	OCO.digitador_sigla_orgao,                                  -- Sigla do órgão que registrou
 	OCO.ind_estado,
-    REGEXP_EXTRACT(OCO.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS numero_reds_furto
+    REGEXP_EXTRACT(OCO.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS numero_reds_furto, 
+    OCO.pais_codigo
   FROM db_bisp_reds_reporting.tb_ocorrencia OCO
   LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
   WHERE OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-04-30 23:59:59.000'
@@ -102,7 +103,6 @@ CASE
             WHEN VT.codigo_municipio IN (310120 , 310130 , 310140 , 310490 , 310720 , 310790 , 310830 , 310890 , 310910 , 310970 , 311050 , 311060 , 311360 , 311410 , 311480 , 311550 , 311720 , 311780 , 311790 , 311850 , 311900 , 311990 , 312050 , 312080 , 312110 , 312280 , 312440 , 312450 , 312510 , 312740 , 312920 , 313060 , 313240 , 313300 , 313310 , 313360 , 313490 , 313850 , 313990 , 314040 , 314190 , 314340 , 314380 , 314440 , 314600 , 314730 , 314760 , 314780 , 314910 , 315090 , 315100 , 315250 , 315260 , 315960 , 316200 , 316230 , 316320 , 316370 , 316440 , 316490 , 316540 , 316557 , 316580 , 316640 , 316700 , 316740 , 316780 , 316905 , 316910 , 316980 , 317170 , 317220) THEN'17 RPM'	
             WHEN VT.codigo_municipio IN (310160 , 310190 , 310200 , 310260 , 310410 , 310430 , 310530 , 310760 , 310840 , 310950 , 311030 , 311100 , 311130 , 311160 , 311240 , 311280 , 311440 , 311470 , 311510 , 311640 , 311710 , 312120 , 312240 , 312340 , 312520 , 312630 , 312830 , 312870 , 312970 , 312990 , 313150 , 313290 , 313375 , 313480 , 313690 , 313900 , 314300 , 314320 , 314410 , 314510 , 314720 , 314790 , 315150 , 315170 , 315180 , 315290 , 315920 , 316220 , 316294 , 316390 , 316430 , 316470 , 316510 , 316690 , 317060) THEN '18 RPM'	
             WHEN VT.codigo_municipio IN (316720 , 314930 , 314110 , 314740 , 315360 , 310990 , 310500 , 311250 , 313570 , 313100 , 310320 , 312720 , 311890 , 312640 , 310960 , 315850) THEN '19 RPM'	
-        
     END AS RPM_2025_AREA,
 CASE WHEN VT.codigo_municipio in (310690,311590,311960,312130,312738,312850,314020,314950,315010,315540,315620,316290) THEN '02 BPM'
         WHEN VT.codigo_municipio in (310240,311750,311810,312010,312100,312160,312260,312540,312550,312760,314250,314370,315330,316020,316050,316480,316590,316650,316710) THEN '03 BPM'
@@ -208,6 +208,14 @@ CASE WHEN VT.codigo_municipio in (310690,311590,311960,312130,312738,312850,3140
   VT.unidade_responsavel_registro_nome,                 -- Nome da unidade responsável pelo registro
   SPLIT_PART(VT.unidade_responsavel_registro_nome,'/',-1) AS RPM_REGISTRO,  -- Extrai a RPM do nome da unidade
   SPLIT_PART(VT.unidade_responsavel_registro_nome,'/',-2) AS UEOP_REGISTRO,  -- Extrai a UEOP do nome da unidade
+--    CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
+--    	WHEN VT.pais_codigo <> 1 AND VT.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
+--		WHEN VT.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
+--    	WHEN VT.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
+--        WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
+--       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+--    	ELSE geo.situacao_zona
+--END AS situacao_zona,  
   VT.codigo_municipio,   								-- Código do município
   VT.nome_municipio,                                    -- Nome do município
   VT.tipo_logradouro_descricao,                         -- Descrição do tipo de logradouro
@@ -230,6 +238,7 @@ CASE WHEN VT.codigo_municipio in (310690,311590,311960,312130,312738,312850,3140
 FROM VISITAS_TRANQUILIZADORAS VT                        -- Tabela base da consulta (visitas)
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON VT.numero_ocorrencia = ENV.numero_ocorrencia -- Junta com envolvidos
 INNER JOIN CRIME_VIOLENTO CV ON CV.numero_ocorrencia = VT.numero_reds_furto AND CV.data_hora_fato < VT.data_hora_fato  -- Junta com furtos e garante que a visita ocorreu após o CV
+--LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON VT.numero_ocorrencia = geo.numero_ocorrencia AND VT.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 =1 
 AND EXISTS (                            
     SELECT 1                                                                           -- Seleciona apenas um valor constante (otimização de performance)
