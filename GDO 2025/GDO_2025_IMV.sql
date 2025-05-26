@@ -1,113 +1,19 @@
-/*------------------------------------------------------------------------------------------------------------------------------
- * Script do IMV (Indicador de Mortes Violentas) em Minas Gerais, tendo como parâmetro as naturezas de
- *  homicídios, roubo, lesão corporal, tortura, sequestro e cárcere privado, feminicídio.
- ------------------------------------------------------------------------------------------------------------------------------*/
-WITH                                                                    -- Início da definição da Common Table Expression (CTE)
-LETALIDADE AS                                                              -- Define uma CTE chamada LETALIDADE que será usada para filtrar ocorrências
-( 
-    SELECT                                                                 
-        ENV.numero_ocorrencia,                                            -- Seleciona o número da ocorrência da tabela de envolvidos
-        ENV.digitador_id_orgao,                                          -- Seleciona o ID do órgão que registrou a ocorrência
-        ENV.natureza_ocorrencia_codigo,                                  -- Seleciona o código da natureza da ocorrência
-        ENV.data_hora_fato,                                             -- Seleciona a data e hora do fato
-        ENV.ind_militar_policial_servico                                -- Seleciona o indicador se o militar estava em serviço
-    FROM 
-        db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV              -- Tabela origem dos dados de envolvidos
-    WHERE 1=1                                                           -- Início das condições de filtro (1=1 é sempre verdadeiro)
-        AND ENV.natureza_ocorrencia_codigo IN('B01121','B01129')  -- Filtra natureza específica (Homicídio, Lesão Corporal)
-        AND ENV.id_envolvimento IN (35,36,44)                          -- Filtra apenas autores, co-autores e suspeitos
-        AND ENV.ind_militar_policial IS NOT DISTINCT FROM 'M'          -- Filtra apenas militares
-        AND ENV.ind_militar_policial_servico IS NOT DISTINCT FROM 'S'  -- Filtra apenas militares em serviço
-        AND ENV.orgao_lotacao_policial_sigla = 'PM' 				 -- Filtra sigla do órgão policial, PM
-        AND YEAR(ENV.data_hora_fato) BETWEEN 2020 AND 2024            -- Filtra pelo mês final informado no parâmetro
-)
-SELECT                                                           
-    OCO.numero_ocorrencia,                                           -- Seleciona o número da ocorrência
-    ENV.envolvimento_codigo,                                         -- Seleciona o código do tipo de envolvimento
-    ENV.envolvimento_descricao,                                     -- Seleciona a descrição do tipo de envolvimento
-    ENV.numero_envolvido,                                           -- Seleciona o número do envolvido
-CONCAT(                                                                    -- Início da concatenação principal que formará a chave do envolvido
-(CASE                                                                 -- Início do primeiro CASE para tratamento do nome do envolvido
-    WHEN UPPER(ENV.nome_completo_envolvido) IS NULL                      -- Verifica se o nome do envolvido é nulo
-	    OR TRIM(UPPER(ENV.nome_completo_envolvido)) = ''                     -- Verifica se o nome do envolvido está vazio após remoção de espaços
-	    OR UPPER(ENV.nome_completo_envolvido) LIKE '%DESCONHECID%'          -- Verifica se o nome contém variações de "DESCONHECIDO"
-	    OR UPPER(ENV.nome_completo_envolvido) LIKE '%IGNORAD%'              -- Verifica se o nome contém variações de "IGNORADO"
-	    OR UPPER(ENV.nome_completo_envolvido) LIKE '%IDENTIFICA%' THEN     -- Verifica se o nome contém variações de "IDENTIFICADO"
-    CONCAT('DESCONHECIDO ',                                             -- Início da concatenação para casos de nome inválido
-	    CAST(SUBSTRING(ENV.numero_ocorrencia, 6,9) AS STRING),              -- Extrai e converte para string os dígitos 6-9 do número da ocorrência
-	    '0',                                                                -- Adiciona um zero como separador
-	    CAST(ENV.numero_envolvido AS STRING)                                -- Converte o número do envolvido para string
-    )
-    ELSE UPPER(ENV.nome_completo_envolvido)                            -- Se nome válido, utiliza o nome em maiúsculas
-END),
-    '-',                                                               -- Adiciona hífen como separador entre os campos da chave
-(CASE                                                              -- Início do segundo CASE para tratamento do nome da mãe
-    WHEN UPPER(ENV.nome_mae) IS NULL                                  -- Verifica se o nome da mãe é nulo
-	    OR TRIM(UPPER(ENV.nome_mae)) = ''                                 -- Verifica se o nome da mãe está vazio após remoção de espaços
-	    OR UPPER(ENV.nome_mae) LIKE '%DESCONHECID%'                      -- Verifica se o nome da mãe contém variações de "DESCONHECIDO"
-	    OR UPPER(ENV.nome_completo_envolvido) LIKE '%IGNORAD%'           -- Verifica se o nome contém variações de "IGNORADO"
-	    OR UPPER(ENV.nome_completo_envolvido) LIKE '%IDENTIFICA%'       -- Verifica se o nome contém variações de "IDENTIFICADO"
-    THEN
-    CONCAT(' MAE ',                                                  -- Início da concatenação para casos de nome da mãe inválido
-	    CAST(SUBSTRING(ENV.numero_ocorrencia, 6,9) AS STRING),          -- Extrai e converte para string os dígitos 6-9 do número da ocorrência
-	    '0',                                                            -- Adiciona um zero como separador
-	    CAST(ENV.numero_envolvido AS STRING)                            -- Converte o número do envolvido para string
-    )
-    ELSE UPPER(ENV.nome_mae)                                        -- Se nome da mãe válido, utiliza o nome em maiúsculas
- END),
-    '-',                                                           -- Adiciona hífen como separador entre os campos da chave
-(CASE                                                          -- Início do terceiro CASE para tratamento da data de nascimento
-    WHEN COALESCE(CAST(ENV.data_nascimento AS STRING), '') = ''   -- Verifica se a data de nascimento é nula ou vazia após conversão
-    THEN
-	    CONCAT('CAMPO NULO ',                                         -- Início da concatenação para casos de data de nascimento inválida
-	    CAST(SUBSTRING(ENV.numero_ocorrencia, 6,9) AS STRING),       -- Extrai e converte para string os dígitos 6-9 do número da ocorrência
-	    '0',                                                         -- Adiciona um zero como separador
-	    CAST(ENV.numero_envolvido AS STRING)                         -- Converte o número do envolvido para string
-    )
-    ELSE CAST(ENV.data_nascimento AS STRING)                     -- Se data válida, converte para string
-END)
-) AS chave_envolvido,                                             -- Nomeia o resultado da concatenação como "chave_envolvido"
-CASE                                                                              -- Inicia estrutura de decisão condicional
-	WHEN UPPER(ENV.nome_completo_envolvido) IS NULL OR TRIM(UPPER(ENV.nome_completo_envolvido)) = ''  
-		OR UPPER(ENV.nome_completo_envolvido) LIKE '%DESCONHECID%' 
-		OR UPPER(ENV.nome_completo_envolvido) LIKE '%IGNORAD%' 
-		OR UPPER(ENV.nome_completo_envolvido) LIKE '%IDENTIFICAD%'  
-	THEN -- Verifica se nome está nulo, vazio ou contém 'DESCONHECID'
-			CONCAT('DESCONHECIDO ',                                                          -- Inicia concatenação para criar identificador
-			    CAST(SUBSTRING(ENV.numero_ocorrencia, 6,9) AS STRING),                      -- Extrai e converte dígitos 6-9 do número da ocorrência
-			    '0',                                                                         -- Adiciona um zero como separador
-			    CAST(ENV.numero_envolvido AS STRING)                                        -- Adiciona número do envolvido convertido para string
-			)
-	ELSE UPPER(ENV.nome_completo_envolvido)                                                -- Se nome existir, mantém o original
-	END AS nome_completo_envolvido,-- Finaliza o CASE e nomeia o campo como nome_completo  
-CASE                                                                              -- Inicia estrutura de decisão condicional
-		WHEN UPPER(ENV.nome_mae) IS NULL OR TRIM(UPPER(ENV.nome_mae)) = ''  
-			OR UPPER(ENV.nome_mae) LIKE '%DESCONHECID%' 
-			OR UPPER(ENV.nome_completo_envolvido) LIKE '%IGNORAD%' 
-			OR UPPER(ENV.nome_completo_envolvido) LIKE '%IDENTIFICA%'  
-		THEN                 -- Verifica se nome está nulo, vazio ou contém 'DESCONHECID'
-				CONCAT('MÃE ',                                                          -- Inicia concatenação para criar identificador
-				    CAST(SUBSTRING(ENV.numero_ocorrencia, 6,9) AS STRING),                      -- Extrai e converte dígitos 6-9 do número da ocorrência
-				    '0',                                                                         -- Adiciona um zero como separador
-				    CAST(ENV.numero_envolvido AS STRING)                                        -- Adiciona número do envolvido convertido para string
-				)
-		ELSE UPPER(ENV.nome_mae)                                                -- Se nome existir, mantém o original
-END AS nome_mae,                                                            -- Finaliza o CASE e nomeia o campo como nome_completo  
-CASE                                                                             -- Inicia estrutura de decisão condicional 
-	WHEN COALESCE(CAST(ENV.data_nascimento AS STRING), '') = '' THEN                -- Verifica se o campo data_nascimento está vazio ou nulo usando COALESCE para tratar NULL como string vazia
-		CONCAT(                                                                          -- Inicia concatenação para criar identificador
-		   'CAMPO NULO ',                                                              -- String literal indicando campo nulo
-		   CAST(SUBSTRING(ENV.numero_ocorrencia, 6,9) AS STRING),                      -- Extrai e converte dígitos 6-9 do número da ocorrência
-		   '0',                                                                        -- Adiciona zero como separador
-		   CAST(ENV.numero_envolvido AS STRING)                                        -- Adiciona número do envolvido convertido para string
-		)
-	ELSE CAST(ENV.data_nascimento AS STRING)                                        -- Se data existir, converte para string e retorna
-END AS data_nascimento,                                                         -- Finaliza o CASE e nomeia o campo como data_nascimento
-LET.ind_militar_policial_servico,                             -- Seleciona o indicador de militar em serviço(CTE)
-    ENV.condicao_fisica_descricao,                                -- Seleciona a descrição da condição física do envolvido
-    ENV.natureza_ocorrencia_codigo,                               -- Seleciona o código da natureza da ocorrência (envolvido)
-    ENV.natureza_ocorrencia_descricao,                           -- Seleciona a descrição da natureza da ocorrência (envolvido)
-    ENV.ind_consumado,                                           -- Seleciona se a ocorrência foi consumada ou tentada
+/*---------------------------------------------------------------------------------------------------------------------------
+ * Script do indicador CVPa tem por finalidade avaliar a quantidade de vítimas de Crimes Violentos Contra o Patrimônio 
+ * (roubo, extorsão e extorsão mediante sequestros).
+ ---------------------------------------------------------------------------------------------------------------------------*/
+SELECT                                                                
+    OCO.numero_ocorrencia,                                            -- Número único que identifica a ocorrência
+    ENV.envolvimento_codigo,                                         -- Código que identifica o tipo de envolvimento na ocorrência
+    ENV.envolvimento_descricao,                                      -- Descrição do tipo de envolvimento na ocorrência
+    ENV.numero_envolvido,                                            -- Número único que identifica o envolvido
+    ENV.nome_completo_envolvido,                                     -- Nome completo do envolvido na ocorrência
+    ENV.nome_mae,                                                    -- Nome da mãe do envolvido
+    ENV.data_nascimento,                                            -- Data de nascimento do envolvido
+    ENV.condicao_fisica_descricao,                                  -- Descrição da condição física do envolvido
+    ENV.natureza_ocorrencia_codigo,                                 -- Código da natureza da ocorrência
+    ENV.natureza_ocorrencia_descricao,                              -- Descrição da natureza da ocorrência
+    ENV.ind_consumado,                                              -- Indicador se a ocorrência foi consumada (S) ou tentada (N)
 CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
    		WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
 		WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
@@ -227,24 +133,24 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '9 BPM%' or OCO.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
 		ELSE 'OUTROS' 
 	END AS UEOP_2025,		
-    OCO.unidade_area_militar_codigo,                               -- Seleciona o código da unidade militar da área
-    OCO.unidade_area_militar_nome,                                -- Seleciona o nome da unidade militar da área
-    OCO.unidade_responsavel_registro_codigo,                      -- Seleciona o código da unidade responsável pelo registro
-    OCO.unidade_responsavel_registro_nome,                        -- Seleciona o nome da unidade responsável pelo registro
-    CAST(OCO.codigo_municipio AS INTEGER),                        -- Converte e seleciona o código do município
-    OCO.nome_municipio,                                          -- Seleciona o nome do município
-    OCO.tipo_logradouro_descricao,                              -- Seleciona o tipo do logradouro
-    OCO.logradouro_nome,                                        -- Seleciona o nome do logradouro
-    OCO.numero_endereco,                                        -- Seleciona o número do endereço
-    OCO.nome_bairro,                                           -- Seleciona o nome do bairro
-    OCO.ocorrencia_uf,                                         -- Seleciona a UF da ocorrência
-    OCO.numero_latitude,                                       -- Seleciona a latitude da ocorrência
-    OCO.numero_longitude,                                      -- Seleciona a longitude da ocorrência
-    OCO.data_hora_fato,                                       -- Seleciona a data e hora do fato
-    YEAR(OCO.data_hora_fato) AS ano,                          -- Extrai o ano da data do fato
-    MONTH(OCO.data_hora_fato) AS mes,                         -- Extrai o mês da data do fato
-    OCO.nome_tipo_relatorio,                                  -- Seleciona o tipo do relatório
-    OCO.digitador_sigla_orgao,
+    OCO.unidade_area_militar_codigo,                                -- Código da unidade militar responsável pela área
+    OCO.unidade_area_militar_nome,                                  -- Nome da unidade militar responsável pela área
+    OCO.unidade_responsavel_registro_codigo,                        -- Código da unidade que registrou a ocorrência
+    OCO.unidade_responsavel_registro_nome,                          -- Nome da unidade que registrou a ocorrência
+    CAST(OCO.codigo_municipio AS INTEGER),                          -- Converte o código do município para número inteiro
+    OCO.nome_municipio,                                            -- Nome do município onde ocorreu o fato
+    OCO.tipo_logradouro_descricao,                                -- Tipo do logradouro (Rua, Avenida, etc)
+    OCO.logradouro_nome,                                          -- Nome do logradouro
+    OCO.numero_endereco,                                          -- Número do endereço
+    OCO.nome_bairro,                                             -- Nome do bairro
+    OCO.ocorrencia_uf,                                           -- UF onde ocorreu o fato
+    OCO.numero_latitude,                                         -- Latitude do local da ocorrência
+    OCO.numero_longitude,                                        -- Longitude do local da ocorrência
+    OCO.data_hora_fato,                                         -- Data e hora em que ocorreu o fato
+    YEAR(OCO.data_hora_fato) AS ano,                            -- Extrai o ano da data do fato
+    MONTH(OCO.data_hora_fato) AS mes,                           -- Extrai o mês da data do fato
+    OCO.nome_tipo_relatorio,                                    -- Tipo do relatório (POLICIAL ou REFAP)
+    OCO.digitador_sigla_orgao,                                   -- Sigla do órgão que registrou (PM ou PC)
     COALESCE(set_pm.udi, 'SEM INFORMAÇÃO') AS udi,
     COALESCE(set_pm.ueop, 'SEM INFORMAÇÃO') AS ueop,
     COALESCE(set_pm.cia, 'SEM INFORMAÇÃO') AS cia,
@@ -255,22 +161,31 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
         ELSE COALESCE(set_pm.cia, 'SEM INFORMAÇÃO')
     END AS cia_pel_final,
     COALESCE(set_reg.situacao_zona, 'SEM INFORMAÇÃO') AS area_local
-FROM db_bisp_reds_reporting.tb_ocorrencia AS OCO                -- Tabela principal de ocorrências
-INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia AS ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
-LEFT JOIN LETALIDADE LET ON OCO.numero_ocorrencia = LET.numero_ocorrencia -- Join com a CTE de LETALIDADE
+FROM db_bisp_reds_reporting.tb_ocorrencia AS OCO                    -- Tabela principal de ocorrências
+INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia AS ENV    -- Join com a tabela de envolvidos
+    ON OCO.numero_ocorrencia = ENV.numero_ocorrencia                -- Relaciona ocorrências com seus envolvidos
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata set_reg ON OCO.numero_ocorrencia = set_reg.numero_ocorrencia
 LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata set_pm ON set_reg.setor_codigo = set_pm.setor_codigo
-WHERE 1=1                                                        
-    AND LET.numero_ocorrencia IS NULL                           -- Exclui ocorrências presentes na CTE LETALIDADE
-    AND ENV.id_envolvimento IN (25,32,1097,26,27,28,872)       -- Filtra tipos específicos de envolvimento (Todos as vitimas)
-    AND ENV.natureza_ocorrencia_codigo IN ('B01121','C01157','B02001','B01129','B01148','B01504')-- Filtra naturezas específicas (Homicídio,Roubo,Tortura,Lesão corporal,Sequestro e cárcere privado, Feminicídio* )
-    AND ENV.condicao_fisica_codigo = '0100'                     -- Filtra por condição física específica (Fatal)
-    AND OCO.ocorrencia_uf = 'MG'                               -- Filtra apenas ocorrências de Minas Gerais
-    AND OCO.digitador_sigla_orgao IN ('PM','PC')               -- Filtra registros feitos pela PM ou PC
-    AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP')        -- Filtra tipos específicos de relatório (POLICIAL e REFAP)
-    AND YEAR(OCO.data_hora_fato) BETWEEN 2020 AND 2024                     -- Filtra pelo ano informado
-    AND OCO.ind_estado IN ('F')                                -- Filtra apenas ocorrências fechadas
-    AND OCO.local_imediato_codigo NOT IN( '1302','1310')		-- Filtra ocorrências cujo local imediato nâo seja UNIDADE PRISIONAL (CERESP/PRESIDIO/PENITENCIARIA) ou CAEDEIA PUBLICA
-ORDER BY RPM_2025, UEOP_2025, OCO.data_hora_fato,              -- Ordena por RPM, UEOP, data/hora
-         OCO.numero_ocorrencia, ENV.nome_completo_envolvido,    -- Número da ocorrência, nome do envolvido
-         ENV.nome_mae, ENV.data_nascimento;                     -- Nome da mãe e data de nascimento
+WHERE 1=1                                                          
+    AND ENV.id_envolvimento IN (25,32,1097,26,27,28,872)           -- Filtra tipos específicos de envolvimento (Todos vitima)
+    AND ENV.natureza_ocorrencia_codigo IN ('C01157','C01158','C01159')  -- Filtra naturezas específicas das ocorrências (Roubo,Extorsão,Extorsão Mediante Sequestro)
+    AND ENV.condicao_fisica_codigo IS DISTINCT FROM '0100'        -- Exclui condição física específica (FATAL)
+    AND ENV.ind_consumado IN ('S','N')                             -- Filtra ocorrências consumadas e tentadas
+    AND OCO.ocorrencia_uf = 'MG'                                   -- Filtra apenas ocorrências de Minas Gerais
+    AND OCO.digitador_sigla_orgao IN ('PM','PC')                   -- Filtra registros feitos pela PM ou PC
+    AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP')            -- Filtra tipos específicos de relatório (POLICIAL ou REFAP)
+    AND YEAR(OCO.data_hora_fato) = :ANO                            -- Filtra pelo ano informado no parâmetro
+    AND MONTH(OCO.data_hora_fato) >= :MESINICIAL                   -- Filtra a partir do mês inicial informado
+    AND MONTH(OCO.data_hora_fato) <= :MESFINAL                     -- Filtra até o mês final informado
+    AND OCO.ind_estado = 'F'                                       -- Filtra apenas ocorrências finalizadas
+    AND OCO.local_imediato_codigo NOT IN( '1302','1310')	   -- Filtra ocorrências cujo local imediato nâo seja UNIDADE PRISIONAL (CERESP/PRESIDIO/PENITENCIARIA) ou CAEDEIA PUBLICA
+   -- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
+   -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
+ORDER BY                                                           -- Ordenação dos resultados
+    RPM_2025,                                                     -- Primeiro por RPM
+    UEOP_2025,                                                    -- Depois por Batalhão
+    OCO.data_hora_fato,                                          -- Depois por data/hora
+    OCO.numero_ocorrencia,                                       -- Depois por número da ocorrência
+    ENV.nome_completo_envolvido,                                 -- Depois por nome do envolvido
+    ENV.nome_mae,                                                -- Depois por nome da mãe
+    ENV.data_nascimento;                                         -- Por fim, por data de nascimento
