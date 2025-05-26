@@ -159,7 +159,9 @@ OCO.numero_longitude,                                         -- Longitude da lo
 YEAR(OCO.data_hora_fato) AS ano,                           -- Ano do fato
 MONTH(OCO.data_hora_fato) AS mes,                          -- Mês do fato
 OCO.nome_tipo_relatorio,                                   -- Tipo do relatório
-OCO.digitador_sigla_orgao                                  -- Sigla do órgão que registrou
+OCO.digitador_sigla_orgao,                                  -- Sigla do órgão que registrou
+geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
+geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
