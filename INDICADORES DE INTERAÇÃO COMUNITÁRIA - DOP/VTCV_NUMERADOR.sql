@@ -234,7 +234,9 @@ END AS situacao_zona,
   YEAR(VT.data_hora_fato) AS ano,                       -- Extrai o ano da data da visita
   MONTH(VT.data_hora_fato) AS mes,                      -- Extrai o mês da data da visita
   VT.nome_tipo_relatorio,                               -- Nome do tipo de relatório
-  VT.digitador_sigla_orgao                              -- Sigla do órgão que registrou
+  VT.digitador_sigla_orgao,                              -- Sigla do órgão que registrou
+  geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
+  geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM VISITAS_TRANQUILIZADORAS VT                        -- Tabela base da consulta (visitas)
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON VT.numero_ocorrencia = ENV.numero_ocorrencia -- Junta com envolvidos
 INNER JOIN CRIME_VIOLENTO CV ON CV.numero_ocorrencia = VT.numero_reds_furto AND CV.data_hora_fato < VT.data_hora_fato  -- Junta com furtos e garante que a visita ocorreu após o CV
