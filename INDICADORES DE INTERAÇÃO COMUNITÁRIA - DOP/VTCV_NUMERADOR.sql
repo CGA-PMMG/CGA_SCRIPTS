@@ -208,14 +208,14 @@ CASE WHEN VT.codigo_municipio in (310690,311590,311960,312130,312738,312850,3140
   VT.unidade_responsavel_registro_nome,                 -- Nome da unidade responsável pelo registro
   SPLIT_PART(VT.unidade_responsavel_registro_nome,'/',-1) AS RPM_REGISTRO,  -- Extrai a RPM do nome da unidade
   SPLIT_PART(VT.unidade_responsavel_registro_nome,'/',-2) AS UEOP_REGISTRO,  -- Extrai a UEOP do nome da unidade
---    CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
---    	WHEN VT.pais_codigo <> 1 AND VT.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
---		WHEN VT.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
---    	WHEN VT.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
---        WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
---       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
---    	ELSE geo.situacao_zona
---END AS situacao_zona,  
+    CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
+    	WHEN VT.pais_codigo <> 1 AND VT.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
+		WHEN VT.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
+    	WHEN VT.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
+        WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.situacao_zona
+END AS situacao_zona,  
   VT.codigo_municipio,   								-- Código do município
   VT.nome_municipio,                                    -- Nome do município
   VT.tipo_logradouro_descricao,                         -- Descrição do tipo de logradouro
@@ -238,7 +238,7 @@ CASE WHEN VT.codigo_municipio in (310690,311590,311960,312130,312738,312850,3140
 FROM VISITAS_TRANQUILIZADORAS VT                        -- Tabela base da consulta (visitas)
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON VT.numero_ocorrencia = ENV.numero_ocorrencia -- Junta com envolvidos
 INNER JOIN CRIME_VIOLENTO CV ON CV.numero_ocorrencia = VT.numero_reds_furto AND CV.data_hora_fato < VT.data_hora_fato  -- Junta com furtos e garante que a visita ocorreu após o CV
---LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON VT.numero_ocorrencia = geo.numero_ocorrencia AND VT.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON VT.numero_ocorrencia = geo.numero_ocorrencia AND VT.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 =1 
 AND EXISTS (                            
     SELECT 1                                                                           -- Seleciona apenas um valor constante (otimização de performance)
