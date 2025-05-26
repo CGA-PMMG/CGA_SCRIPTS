@@ -144,7 +144,15 @@ LO.unidade_area_militar_nome,                                -- Nome da unidade 
 OCO.unidade_responsavel_registro_codigo,                      -- Código da unidade que registrou a ocorrência
 OCO.unidade_responsavel_registro_nome,                        -- Nome da unidade que registrou a ocorrência
 SPLIT_PART(OCO.unidade_responsavel_registro_nome,'/',-1) RPM_REGISTRO, 
-SPLIT_PART(OCO.unidade_responsavel_registro_nome,'/',-2) UEOP_REGISTRO, 
+SPLIT_PART(OCO.unidade_responsavel_registro_nome,'/',-2) UEOP_REGISTRO, 					 
+	CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
+    	WHEN OCO.pais_codigo <> 1 AND OCO.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
+		WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
+    	WHEN OCO.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
+        WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.situacao_zona
+END AS situacao_zona,  
 CAST(OCO.codigo_municipio AS INTEGER),                        -- Converte o código do município para número inteiro
 OCO.nome_municipio,                                           -- Nome do município da ocorrência
 OCO.tipo_logradouro_descricao,                                -- Tipo do logradouro (Rua, Avenida, etc)
@@ -166,7 +174,8 @@ OCO.nome_tipo_relatorio,                                   -- Tipo do relatório
 OCO.digitador_sigla_orgao                                  -- Sigla do órgão que registrou
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
-LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
+LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local 
+LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 = 1 
 AND (                                                                            
     SELECT COUNT(DISTINCT envolvido.numero_envolvido)                           -- Conta o número de envolvidos distintos (evitando duplicatas)
@@ -197,4 +206,4 @@ AND (
 AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                             -- Filtra por tipos específicos de relatórios BOS e BOS AMPLO
 AND OCO.ind_estado IN ('F','R')                                                               -- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%1 BPM/1 RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
-order by OCO.numero_ocorrencia, ENV.numero_envolvido 
+order by OCO.numero_ocorrencia, ENV.numero_envolvido  
