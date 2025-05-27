@@ -160,7 +160,6 @@ OCO.digitador_sigla_orgao,                                  -- Sigla do órgão 
 geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
 geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
-INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local 
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 = 1 
@@ -193,4 +192,4 @@ AND (
 AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                             -- Filtra por tipos específicos de relatórios BOS e BOS AMPLO
 AND OCO.ind_estado IN ('F','R')                                                               -- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
-order by OCO.numero_ocorrencia, ENV.numero_envolvido  
+order by OCO.numero_ocorrencia
