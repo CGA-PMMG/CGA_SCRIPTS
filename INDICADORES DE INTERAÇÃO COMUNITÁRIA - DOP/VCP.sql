@@ -5,20 +5,6 @@
  * os cidadãos quanto à adoção de medidas de autoproteção e transmitir informações relevantes sobre a atuação da PMMG
  ---------------------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT  OCO.numero_ocorrencia,                                      -- Número da ocorrência 
-ENV.numero_envolvido,                                        -- Identificador único do envolvido na ocorrência
-ENV.numero_cpf_cnpj,                                         -- Número de CPF ou CNPJ do envolvido
-ENV.tipo_documento_descricao,                                -- Descrição do tipo de documento apresentado
-ENV.numero_documento_id,                                     -- Número do documento de identificação
-ENV.envolvimento_codigo,                                     -- Código que identifica o tipo de envolvimento na ocorrência
-ENV.envolvimento_descricao,                                  -- Descrição do tipo de envolvimento (vítima, autor, testemunha, etc.)
-ENV.nome_completo_envolvido,                                 -- Nome completo da pessoa envolvida na ocorrência
-ENV.nome_mae,                                                -- Nome da mãe do envolvido
-CONCAT(
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 9, 2), '/',  -- Dia (posições 9-10)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 6, 2), '/',  -- Mês (posições 6-7)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 12, 8)       -- Hora (posições 12-19)
-  ) AS data_nascimento,                   -- Converte a data/hora do data_nascimento do envolvido para o padrão brasileiro
 OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
 OCO.natureza_descricao,                                      -- Descrição da natureza da ocorrência
 CASE
@@ -176,7 +162,6 @@ OCO.digitador_sigla_orgao,                                  -- Sigla do órgão 
 geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
 geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO -- Tabela principal ( tabela ocorrencia)
-INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON OCO.numero_ocorrencia = ENV.numero_ocorrencia -- inner join com a tabela de envolvidos
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 = 1   -- Condição sempre verdadeira que facilita adicionar ou remover condições durante o desenvolvimento
