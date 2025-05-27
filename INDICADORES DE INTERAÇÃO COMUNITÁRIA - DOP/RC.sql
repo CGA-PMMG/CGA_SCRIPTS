@@ -6,6 +6,7 @@
  * informações relevantes sobre a atuação da PMMG.
  -------------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT 
+OCO.numero_ocorrencia, -- Número da ocorrência
 CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN OCO.pais_codigo <> 1 AND OCO.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
@@ -14,20 +15,6 @@ CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
        	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
     	ELSE geo.situacao_zona
 END AS situacao_zona,                  							
-ENV.numero_envolvido,                                        -- Identificador único do envolvido na ocorrência
-ENV.numero_cpf_cnpj,                                         -- Número de CPF ou CNPJ do envolvido
-ENV.tipo_documento_descricao,                                -- Descrição do tipo de documento apresentado
-ENV.numero_documento_id,                                     -- Número do documento de identificação
-ENV.envolvimento_codigo,                                     -- Código que identifica o tipo de envolvimento na ocorrência
-ENV.envolvimento_descricao,                                  -- Descrição do tipo de envolvimento (vítima, autor, testemunha, etc.)
-ENV.nome_completo_envolvido,                                 -- Nome completo da pessoa envolvida na ocorrência
-ENV.nome_mae,                                                -- Nome da mãe do envolvido
-CONCAT(
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 9, 2), '/',  -- Dia (posições 9-10)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 6, 2), '/',  -- Mês (posições 6-7)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 12, 8)       -- Hora (posições 12-19)
-  ) AS data_nascimento,                   -- Converte a data/hora do data_nascimento do envolvido para o padrão brasileiro
 OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
 OCO.natureza_descricao,                                      -- Descrição da natureza da ocorrência
 CASE  WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
@@ -174,7 +161,6 @@ OCO.digitador_sigla_orgao,                                  -- Sigla do órgão 
 geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
 geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
-INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 = 1         -- Condição sempre verdadeira que facilita o desenvolvimento da query, permitindo adicionar/remover condições sem preocupação com a sintaxe
@@ -207,4 +193,4 @@ AND (
 AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                             -- Filtra por tipos específicos de relatórios BOS e BOS AMPLO
 AND OCO.ind_estado IN ('F','R')                                                               -- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
-order by OCO.numero_ocorrencia, ENV.numero_envolvido 
+order by OCO.numero_ocorrencia
