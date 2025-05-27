@@ -6,20 +6,6 @@
  * e transmitir informações relevantes sobre a atuação da PMMG.
  -------------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT OCO.numero_ocorrencia,                                -- Número da ocorrência 
-ENV.numero_envolvido,                                        -- Identificador único do envolvido na ocorrência
-ENV.numero_cpf_cnpj,                                         -- Número de CPF ou CNPJ do envolvido
-ENV.tipo_documento_descricao,                                -- Descrição do tipo de documento apresentado
-ENV.numero_documento_id,                                     -- Número do documento de identificação
-ENV.envolvimento_codigo,                                     -- Código que identifica o tipo de envolvimento na ocorrência
-ENV.envolvimento_descricao,                                  -- Descrição do tipo de envolvimento (vítima, autor, testemunha, etc.)
-ENV.nome_completo_envolvido,                                 -- Nome completo da pessoa envolvida na ocorrência
-ENV.nome_mae,   -- Nome da mãe do envolvido
-CONCAT(
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 9, 2), '/',  -- Dia (posições 9-10)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 6, 2), '/',  -- Mês (posições 6-7)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 12, 8)       -- Hora (posições 12-19)
-  ) AS data_nascimento,                   -- Converte a data/hora do data_nascimento do envolvido para o padrão brasileiro
 OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
 OCO.natureza_descricao,                                      -- Descrição da natureza da ocorrência
 CASE  WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
@@ -206,5 +192,5 @@ AND (
 ) -- Filtra apenas unidades com responsabilidade territorial. 
 AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                             -- Filtra por tipos específicos de relatórios BOS e BOS AMPLO
 AND OCO.ind_estado IN ('F','R')                                                               -- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
---AND OCO.unidade_responsavel_registro_nome LIKE '%1 BPM/1 RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
+--AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 order by OCO.numero_ocorrencia, ENV.numero_envolvido  
