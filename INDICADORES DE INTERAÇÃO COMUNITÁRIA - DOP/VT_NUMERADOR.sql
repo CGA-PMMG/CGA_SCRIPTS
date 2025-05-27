@@ -75,21 +75,7 @@ OCO.pais_codigo
 )
 SELECT 
   VT.numero_ocorrencia,                                 -- Número da ocorrência da visita
-  VT.numero_reds_furto,                                 -- Número da ocorrência de furto relacionada
-  ENV.numero_envolvido numero_envolvido_BOS,            -- Número do envolvido no BOS
-  ENV.numero_cpf_cnpj numero_cpf_cnpj_BOS,              -- CPF/CNPJ do envolvido no BOS
-  ENV.tipo_documento_descricao tipo_documento_descricao_BOS,  -- Descrição do tipo de documento do envolvido
-  ENV.numero_documento_id numero_documento_id_BOS,      -- Número do documento de identidade do envolvido
-  ENV.envolvimento_codigo envolvimento_codigo_BOS,      -- Código do tipo de envolvimento na ocorrência
-  ENV.envolvimento_descricao envolvimento_descricao_BOS,  -- Descrição do tipo de envolvimento
-  ENV.nome_completo_envolvido nome_completo_envolvido_BOS,  -- Nome completo do envolvido
-  ENV.nome_mae nome_mae_BOS,                            -- Nome da mãe do envolvido
-  CONCAT(
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 9, 2), '/',  -- Dia (posições 9-10)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 6, 2), '/',  -- Mês (posições 6-7)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 1, 4), ' ',  -- Ano (posições 1-4)
-    SUBSTR(CAST(ENV.data_nascimento AS STRING), 12, 8)       -- Hora (posições 12-19)
-  ) AS data_nascimento_BOS,                   -- Converte a data/hora do data_nascimento do envolvido para o padrão brasileiro                                
+  VT.numero_reds_furto,                                 -- Número da ocorrência de furto relacionada                            
   VT.natureza_codigo,                                   -- Código da natureza da visita
   VT.natureza_descricao,                                -- Descrição da natureza da visita
   VT.local_imediato_codigo,  								 -- Código do local imediato
