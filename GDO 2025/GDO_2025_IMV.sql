@@ -231,6 +231,14 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
     OCO.unidade_area_militar_nome,                                -- Seleciona o nome da unidade militar da área
     OCO.unidade_responsavel_registro_codigo,                      -- Seleciona o código da unidade responsável pelo registro
     OCO.unidade_responsavel_registro_nome,                        -- Seleciona o nome da unidade responsável pelo registro
+    CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
+    	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
+		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
+    	WHEN oco.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
+        WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.situacao_zona
+    END AS situacao_zona,   
     CAST(OCO.codigo_municipio AS INTEGER),                        -- Converte e seleciona o código do município
     OCO.nome_municipio,                                          -- Seleciona o nome do município
     OCO.tipo_logradouro_descricao,                              -- Seleciona o tipo do logradouro
@@ -260,6 +268,10 @@ INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia AS ENV ON OCO.numero_o
 LEFT JOIN LETALIDADE LET ON OCO.numero_ocorrencia = LET.numero_ocorrencia -- Join com a CTE de LETALIDADE
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata set_reg ON OCO.numero_ocorrencia = set_reg.numero_ocorrencia
 LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata set_pm ON set_reg.setor_codigo = set_pm.setor_codigo
+LEFT JOIN
+    db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo -- Tabela de apoio que compara as lat/long com os setores IBGE
+    ON oco.numero_ocorrencia = geo.numero_ocorrencia
+    AND oco.ocorrencia_uf = 'MG'							-- ignora os registros de fora de MG, para evitar erro
 WHERE 1=1                                                        
     AND LET.numero_ocorrencia IS NULL                           -- Exclui ocorrências presentes na CTE LETALIDADE
     AND ENV.id_envolvimento IN (25,32,1097,26,27,28,872)       -- Filtra tipos específicos de envolvimento (Todos as vitimas)
