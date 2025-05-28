@@ -165,13 +165,8 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
     OCO.numero_longitude,                                      -- Seleciona a longitude da ocorrência
     OCO.nome_tipo_relatorio,                                  -- Seleciona o tipo do relatório
     OCO.digitador_sigla_orgao
--- ESPECIFICA A TABELA DE ONDE OS DADOS SERÃO RETIRADOS
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
--- DEFINE CONDIÇÕES PARA A BUSCA DOS DADOS
-LEFT JOIN
-    db_bisp_reds_master.tb_ocorrencia_setores_geodata AS GEO -- Tabela de apoio que compara as lat/long com os setores IBGE
-    ON OCO.numero_ocorrencia = GEO.numero_ocorrencia
-    AND OCO.ocorrencia_uf = 'MG'		
+LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata GEO ON OCO.numero_ocorrencia = GEO.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'		-- Tabela de apoio que compara as lat/long com os setores IBGE
 WHERE 1=1
     AND OCO.data_hora_fato BETWEEN '2025-03-01 00:00:00.000' AND '2025-03-31 23:59:59.000'  -- INTERVALO DE DATA E HORA DO FATO
     AND OCO.ocorrencia_uf = 'MG'                               -- Filtra apenas ocorrências de Minas Gerais
@@ -179,7 +174,7 @@ WHERE 1=1
     AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP')        -- Filtra tipos específicos de relatório (POLICIAL e REFAP)
     AND OCO.ind_estado = 'F'                            -- Filtra apenas ocorrências fechadas
     and UPPER(GEO.situacao_zona) = 'RURAL'
---    AND OCO.natureza_codigo IN ('C01157', 'C01158', 'C01159', 'B01148', 'D01213', 'D01217', 'B01121')  -- CÓDIGOS ESPECÍFICOS DE NATUREZA
+    AND OCO.natureza_codigo IN ('C01157', 'C01158', 'C01159', 'B01148', 'D01213', 'D01217', 'B01121')  -- Filtra por códigos de natureza
    -- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
    -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
     -- ORDENA OS RESULTADOS POR NÚMERO E DATA DA OCORRÊNCIA
