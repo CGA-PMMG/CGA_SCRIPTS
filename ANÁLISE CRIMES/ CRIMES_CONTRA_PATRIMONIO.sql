@@ -7,7 +7,7 @@ SELECT
 	OCO.natureza_codigo,  -- Código da natureza da ocorrência
 	OCO.natureza_descricao,  -- Descrição da natureza da ocorrência
 	OCO.historico_ocorrencia,  -- Histórico da ocorrência
-	    CASE
+	CASE
             WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
             WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
             WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
@@ -126,9 +126,21 @@ CASE WHEN OCO.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
         WHEN OCO.codigo_municipio =316620 AND (LO.unidade_area_militar_nome like '9 BPM%' or LO.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
         ELSE 'OUTROS'
     END AS UEOP_2025_AREA,
-	LO.codigo_unidade_area,										-- Código da unidade militar da área
-	LO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
-    OCO.unidade_responsavel_registro_codigo,                        -- Código da unidade que registrou a ocorrência
+	 ibge.tipo_descricao,                              -- Informações adicionais do IBGE 
+	  OCO.unidade_area_militar_nome,                    -- Nome da unidade da área militar 
+	  MUB.udi,                                          
+	  MUB.ueop,                                         
+	  MUB.cia,                                          
+	  MUB.codigo_espacial_pm AS setor_PM,              
+    CASE 	
+    	WHEN OCO.pais_codigo <> 1 AND OCO.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
+		WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'		-- trata erro - ocorrencia de fora de MG
+    	WHEN OCO.numero_latitude IS NULL THEN 'Invaaí qualido'		-- trata erro - ocorrencia sem latitude
+        WHEN geo.situacao_codigo = 9 THEN 'Agua'			-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'	-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.situacao_zona
+	END AS situacao_zona,      -- se o território é Urbano ou Rural segundo o IBGE      
+	OCO.unidade_responsavel_registro_codigo,                        -- Código da unidade que registrou a ocorrência
     OCO.unidade_responsavel_registro_nome,                          -- Nome da unidade que registrou a ocorrência
     CAST(OCO.codigo_municipio AS INTEGER),                          -- Converte o código do município para número inteiro
     OCO.nome_municipio,                                            -- Nome do município onde ocorreu o fato
@@ -146,6 +158,9 @@ CASE WHEN OCO.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
     OCO.digitador_sigla_orgao                                   -- Sigla do órgão que registrou (PM ou PC)
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO  -- TABELA DE OCORRÊNCIAS COM ALIÁS "OCO"
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
+LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
+LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
 WHERE 1= 1
     AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
 	AND OCO.ocorrencia_uf = 'MG'      -- Filtra apenas ocorrências do estado de Minas Gerais
