@@ -139,8 +139,20 @@ CASE WHEN OCO.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
         WHEN OCO.codigo_municipio =316620 AND (LO.unidade_area_militar_nome like '9 BPM%' or LO.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
         ELSE 'OUTROS'
     END AS UEOP_2025_AREA,
-	LO.codigo_unidade_area,										-- Código da unidade militar da área
-	LO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
+	  ibge.tipo_descricao,                              -- Informações adicionais do IBGE 
+	  OCO.unidade_area_militar_nome,                    -- Nome da unidade da área militar 
+	  MUB.udi,                                          
+	  MUB.ueop,                                         
+	  MUB.cia,                                          
+	  MUB.codigo_espacial_pm AS setor_PM,              
+    CASE 	
+    	WHEN OCO.pais_codigo <> 1 AND OCO.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
+		WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'		-- trata erro - ocorrencia de fora de MG
+    	WHEN OCO.numero_latitude IS NULL THEN 'Invaaí qualido'		-- trata erro - ocorrencia sem latitude
+        WHEN geo.situacao_codigo = 9 THEN 'Agua'			-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'	-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.situacao_zona
+	END AS situacao_zona,      -- se o território é Urbano ou Rural segundo o IBGE      
     OCO.unidade_responsavel_registro_codigo,                        -- Código da unidade que registrou a ocorrência
     OCO.unidade_responsavel_registro_nome,                          -- Nome da unidade que registrou a ocorrência
     CAST(OCO.codigo_municipio AS INTEGER),                          -- Converte o código do município para número inteiro
@@ -160,17 +172,14 @@ CASE WHEN OCO.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
 FROM 
     db_bisp_reds_reporting.tb_ocorrencia OCO -- Seleciona dados da tabela de ocorrências (alias 'OCO').
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
-LEFT JOIN 
-    db_bisp_reds_reporting.tb_anexo_meio_ambiente_ocorrencia AMB -- Realiza um LEFT JOIN com a tabela de anexo de meio ambiente.
-    ON OCO.numero_ocorrencia = AMB.numero_ocorrencia -- Junta as duas tabelas pelo número de ocorrência.
-LEFT JOIN 
-    db_bisp_reds_reporting.tb_autuacao_procedimento_ocorrencia AUT -- Realiza um LEFT JOIN com a tabela de autuações de procedimentos.
-    ON OCO.numero_ocorrencia = AUT.numero_ocorrencia -- Junta as tabelas pelo número de ocorrência.
-LEFT JOIN 
-    db_bisp_reds_reporting.tb_animal_ocorrencia ANIM -- Realiza um LEFT JOIN com a tabela de ocorrências de animais.
-    ON OCO.numero_ocorrencia = ANIM.numero_ocorrencia -- Junta as tabelas pelo número de ocorrência.
+LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
+LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
+LEFT JOIN  db_bisp_reds_reporting.tb_anexo_meio_ambiente_ocorrencia AMB ON OCO.numero_ocorrencia = AMB.numero_ocorrencia -- Realiza um LEFT JOIN com a tabela de anexo de meio ambiente. Junta as duas tabelas pelo número de ocorrência.
+LEFT JOIN db_bisp_reds_reporting.tb_autuacao_procedimento_ocorrencia AUT ON OCO.numero_ocorrencia = AUT.numero_ocorrencia -- Realiza um LEFT JOIN com a tabela de autuações de procedimentos. Junta as tabelas pelo número de ocorrência.
+LEFT JOIN db_bisp_reds_reporting.tb_animal_ocorrencia ANIM  ON OCO.numero_ocorrencia = ANIM.numero_ocorrencia -- Realiza um LEFT JOIN com a tabela de ocorrências de animais. Junta as tabelas pelo número de ocorrência.
 WHERE 1 = 1
-    AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
+    AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2024-01-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
     AND OCO.digitador_id_orgao IN (0,1) -- Filtra as ocorrências registradas pela PM e PC.
     AND OCO.ind_estado ='F' -- Filtra apenas ocorrências com estado 'Fechado'.
     AND OCO.ocorrencia_uf = 'MG' -- Filtra ocorrências registradas no estado de Minas Gerais.
