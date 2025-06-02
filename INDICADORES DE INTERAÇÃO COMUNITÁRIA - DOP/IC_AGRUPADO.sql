@@ -8,7 +8,7 @@
  * padronizar análises e dashboards.
  *-----------------------------------------------------------------------------------------------------------------------------------------------------*/
 WITH
-BASE AS (  -- Define a CTE para extrair informações de ocorrências com possíveis boletins (BO) no histórico
+BASE AS (  -- Define a CTE para extrair informações de ocorrências com número do BO no histórico
   SELECT 
     oco.numero_ocorrencia,                  -- Seleciona o número da ocorrência
     oco.natureza_codigo,                    -- Seleciona o código da natureza da ocorrência
