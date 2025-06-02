@@ -160,7 +160,8 @@ FROM db_bisp_reds_reporting.tb_ocorrencia OCO  -- TABELA DE OCORRÊNCIAS COM ALI
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
 LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB WHERE 1 = 1 
-    AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2024-01-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
+WHERE    1 = 1 
+AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2024-01-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
 	AND OCO.ocorrencia_uf = 'MG'      -- Filtra apenas ocorrências do estado de Minas Gerais
 	AND OCO.digitador_sigla_orgao IN ('PM','PC')      -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
     AND SUBSTRING(OCO.natureza_codigo,1,1) = 'B'  -- FILTRA OCORRÊNCIAS CUJO CÓDIGO DA NATUREZA COMEÇA COM 'B'
