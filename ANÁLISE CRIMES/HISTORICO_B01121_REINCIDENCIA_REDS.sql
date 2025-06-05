@@ -20,7 +20,9 @@ WITH HOMICIDIO AS  -- Cria uma CTE (tabela temporária) chamada HOMICIDIO para a
 		ENV.data_hora_fato, 
 		ENV.nome_completo_envolvido, -- Nome completo do envolvido
 		ENV.nome_mae, -- Nome da mãe do envolvido
-		ENV.data_nascimento -- Data de nascimento do envolvido
+		ENV.data_nascimento, -- Data de nascimento do envolvido
+		ENV.envolvimento_descricao, -- Descrição do envolvimento 
+		ENV.natureza_ocorrencia_codigo -- Código da natureza do envolvido
 	FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV -- Origem dos dados: tabela de envolvidos
 	WHERE 1=1 -- Filtro genérico que permite adicionar condições subsequentes
    		AND ENV.digitador_id_orgao IN (0,1) -- Filtra registros digitados por órgãos específicos (PM, PC)
@@ -35,10 +37,13 @@ SELECT
 	HM.nome_completo_envolvido, -- Nome completo do envolvido, vindo da CTE HOMICIDIO
 	HM.nome_mae, -- Nome da mãe do envolvido
 	HM.data_nascimento, -- Data de nascimento do envolvido
-	ENV.envolvimento_descricao, -- Tipo de envolvimento do indivíduo na ocorrência
+	ENV.envolvimento_descricao AS envolvimento_anterior, -- Descrição do envolvimento 
+	HM.natureza_ocorrencia_codigo as natureza_envolvido_anterior,
+	ENV.envolvimento_descricao AS envolvimento_ultimo, -- Tipo de envolvimento do indivíduo na ocorrênc
+	ENV.natureza_ocorrencia_codigo AS natureza_envolvido_ultimo,
 	ENV.tipo_prisao_apreensao_descricao, -- Tipo de prisão ou apreensão do envolvido
-	OCO.natureza_codigo, -- Código da natureza da ocorrência
-	OCO.natureza_descricao, -- Descrição da natureza da ocorrência
+	OCO.natureza_codigo as natureza_ocorrencia, -- Código da natureza da ocorrência
+	OCO.natureza_descricao natureza_ocorrencia_descricao, -- Descrição da natureza da ocorrência
 	ENV.ind_consumado, -- Indicador de consumação do crime
 CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
    		WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
