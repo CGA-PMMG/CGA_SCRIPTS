@@ -31,4 +31,4 @@ Nossa equipe revisará e, estando tudo de acordo, integrará o conteúdo ao repo
   - Filtros ou parâmetros aplicados.
 ---
 
-**#SQL #Colaboração #CGA #PMMG 
+**#SQL #Colaboração #CGA #PMMG**
