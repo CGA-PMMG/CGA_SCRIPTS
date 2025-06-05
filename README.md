@@ -5,7 +5,12 @@ fomentar o uso de boas práticas em consultas SQL, promovendo o desenvolvimento 
 
 Neste repositório, você encontrará scripts prontos e comentados, além de orientações detalhadas sobre comandos básicos e avançados, aplicáveis a diversos cenários e análises. O objetivo é oferecer suporte tanto a analistas experientes quanto a iniciantes, promovendo a criação de consultas otimizadas e bem estruturadas, alinhadas às demandas operacionais e estratégicas da instituição.
 
-
+> 💡 **Dica de configuração no DBeaver:**  
+> Para evitar problemas com a execução de múltiplas instruções SQL separadas por linhas em branco, configure o DBeaver da seguinte forma:  
+> - No topo da janela principal, clique em **“Janela”** e depois em **“Preferências”**.  
+> - No menu lateral esquerdo, vá em **Editores > Editor SQL > Processamento de SQL**.  
+> - No painel da direita, na seção **Delimitadores**, altere a opção **“Linha em branco como delimitador de instruções”** para **“Never”** e aplique a mudança.  
+> Isso garante que linhas em branco não sejam interpretadas como separadores de instruções SQL.
 
 ---
 
