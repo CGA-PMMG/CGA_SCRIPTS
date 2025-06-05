@@ -148,7 +148,7 @@ CASE WHEN OCO.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
     CASE 	
     	WHEN OCO.pais_codigo <> 1 AND OCO.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'		-- trata erro - ocorrencia de fora de MG
-    	WHEN OCO.numero_latitude IS NULL THEN 'Invaaí qualido'		-- trata erro - ocorrencia sem latitude
+    	WHEN OCO.numero_latitude IS NULL THEN 'Invalido'		-- trata erro - ocorrencia sem latitude
         WHEN geo.situacao_codigo = 9 THEN 'Agua'			-- trata erro - ocorrencia dentro de curso d'água
        	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'	-- checa se restou alguma ocorrencia com erro
     	ELSE geo.situacao_zona
