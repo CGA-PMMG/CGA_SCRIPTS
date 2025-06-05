@@ -22,7 +22,7 @@ Neste repositório, você encontrará scripts prontos e comentados, além de ori
 - [Produtividade](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/PRODUTIVIDADE)
 - [PPVD](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/PPVD)
 - [Demandas e OS](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/Demandas%20e%20OS)
-
+- [Contribuições](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/CONTRIBUI%C3%87%C3%95ES)
 
 
 Além destes tópicos, o repositório também inclui outros conteúdos relevantes, continuamente atualizados. Explore o repositório para descobrir mais materiais úteis!
