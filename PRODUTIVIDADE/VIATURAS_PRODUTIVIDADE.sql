@@ -8,23 +8,20 @@
 */
 -- Seleção de campos relacionados às viaturas envolvidas em ocorrências
 SELECT 
-    db_bisp_reds_reporting.tb_viatura_ocorrencia.numero_ocorrencia,  -- Número da ocorrência
-    db_bisp_reds_reporting.tb_viatura_ocorrencia.numero_sequencial_viatura,  -- Número sequencial da viatura na ocorrência
-    db_bisp_reds_reporting.tb_viatura_ocorrencia.descricao_tipo_viatura,  -- Descrição do tipo de viatura (ex: carro, moto, etc.)
-    db_bisp_reds_reporting.tb_viatura_ocorrencia.unidade_servico_codigo,  -- Código da unidade de serviço a que a viatura pertence
-    db_bisp_reds_reporting.tb_viatura_ocorrencia.unidade_servico_nome,  -- Nome da unidade de serviço
-    db_bisp_reds_reporting.tb_viatura_ocorrencia.codigo_tipo_viatura,  -- Código do tipo de viatura
-    db_bisp_reds_reporting.tb_viatura_ocorrencia.orgao_sigla  -- Sigla do órgão ao qual a viatura pertence
+    VT.numero_ocorrencia,  -- Número da ocorrência
+    VT.numero_sequencial_viatura,  -- Número sequencial da viatura na ocorrência
+    VT.descricao_tipo_viatura,  -- Descrição do tipo de viatura (ex: carro, moto, etc.)
+    VT.unidade_servico_codigo,  -- Código da unidade de serviço a que a viatura pertence
+    VT.unidade_servico_nome,  -- Nome da unidade de serviço
+    VT.codigo_tipo_viatura,  -- Código do tipo de viatura
+    VT.orgao_sigla  -- Sigla do órgão ao qual a viatura pertence
 FROM 
-    db_bisp_reds_reporting.tb_viatura_ocorrencia -- Tabela que registra as viaturas envolvidas em ocorrências
-LEFT JOIN 
-    db_bisp_reds_reporting.tb_ocorrencia -- Junção com a tabela de ocorrências
-ON 
-    db_bisp_reds_reporting.tb_ocorrencia.numero_ocorrencia = db_bisp_reds_reporting.tb_viatura_ocorrencia.numero_ocorrencia 
-WHERE 
-    YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) >= 2018 -- Filtra ocorrências entre 2018 e 2022
-    AND YEAR(db_bisp_reds_reporting.tb_ocorrencia.data_hora_fato) <= 2022
-    AND (db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXXX%'  -- Ocorrências registradas por unidades de polícia rodoviária
-    OR db_bisp_reds_reporting.tb_ocorrencia.unidade_responsavel_registro_nome LIKE '%XXXXXX%')
- -- AND db_bisp_reds_reporting.tb_ocorrencia.nome_municipio  LIKE '%BELO HOR%'-- FILTRE O MUNICIPIO
-;
+    db_bisp_reds_reporting.tb_viatura_ocorrencia as VT -- Tabela que registra as viaturas envolvidas em ocorrências
+ LEFT JOIN 
+    db_bisp_reds_reporting.tb_ocorrencia as OCO ON OCO.numero_ocorrencia = VT.numero_ocorrencia  -- Junção com a tabela de ocorrências
+WHERE  1 = 1
+    AND OCO.data_hora_fato BETWEEN '2025-02-27 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico
+	AND OCO.ocorrencia_uf = 'MG'      -- Filtra apenas ocorrências do estado de Minas Gerais
+    	AND OCO.digitador_sigla_orgao = 'PM'      -- Filtro por ocorrências Polícia Militar 
+	--  AND OCO.unidade_responsavel_registro_nome LIKE '%xx BPM/xx RPM%' -- Filtra pelo nome da unidade responsável pelo registro
+;	--  AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
