@@ -156,6 +156,8 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
     OCO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
     OCO.unidade_responsavel_registro_codigo,                      -- Código da unidade que registrou a ocorrência
     OCO.unidade_responsavel_registro_nome,                        -- Nome da unidade que registrou a ocorrência
+    geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
+    geo.longitude_sirgas2000,				-- reprojeção da longitude de SAD69 para SIRGAS2000
     CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 	   WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
