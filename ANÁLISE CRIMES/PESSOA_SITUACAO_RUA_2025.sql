@@ -148,7 +148,7 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 	END AS situacao_zona,      -- se o território é Urbano ou Rural segundo o IBGE      
 	OCO.unidade_responsavel_registro_codigo,                        -- Código da unidade que registrou a ocorrência
     OCO.unidade_responsavel_registro_nome,                          -- Nome da unidade que registrou a ocorrência
-    CAST(OCO.codigo_municipio AS INTEGER),                          -- Converte o código do município para número inteiro
+    CAST(OCO.codigo_municipio AS INTEGER) codigo_municipio,                          -- Converte o código do município para número inteiro
     OCO.nome_municipio,                                            -- Nome do município onde ocorreu o fato
     OCO.tipo_logradouro_descricao,                                -- Tipo do logradouro (Rua, Avenida, etc)
     OCO.logradouro_nome,                                          -- Nome do logradouro
@@ -168,10 +168,11 @@ INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocor
  LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
  LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB
 -- FILTROS PARA A SELEÇÃO DAS OCORRÊNCIAS: DATA, ORGÃO DIGITADOR, ESTADO, STATUS DA OCORRÊNCIA E SOMENTE INDIVIDUO EM SITUACAO DE RUA
-WHERE  ( ENV.ind_pessoa_situacao_rua = 'S' -- BUSCA INDIVIDUO EM SITUACAO DE RUA, com as respostas possíveis nessa coluna sendo 'S' (sim), 'N' (nao) e 'D' (nao informado)
-    OR OCO.complemento_natureza_codigo = '0117')  -- ou usa o ALVO DO EVENTO que tem dados anteriores a JANEIRO DE 2025
+WHERE 1 =1
 AND OCO.ocorrencia_uf = 'MG'
 AND OCO.descricao_estado = 'FECHADO'
+AND ( ENV.ind_pessoa_situacao_rua = 'S' -- BUSCA INDIVIDUO EM SITUACAO DE RUA, com as respostas possíveis nessa coluna sendo 'S' (sim), 'N' (nao) e 'D' (nao informado)
+    OR OCO.complemento_natureza_codigo = '0117')  -- ou usa o ALVO DO EVENTO que tem dados anteriores a JANEIRO DE 2025
 AND OCO.data_hora_fato BETWEEN '2025-05-01 00:00:00' AND '2025-05-01 00:00:00' -- Filtra data/hora fato dentro do intervalo especificado.
 --AND ENV.tipo_prisao_apreensao_codigo IN ('9900', '0400', '0100', '0300', '0600', '0200') -- BUSCA SOMENTE PRESOS
 --AND OCO.unidade_area_militar_nome LIKE '%X CIA PM IND/X RPM%' -- FILTRE SUA CIA/BPM/RPM
