@@ -3,7 +3,7 @@
  * permitindo uma análise indidualizado por viatura.
  ﻿----------------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT 
-OCO.numero_ocorrencia, -- Selciona o número da ocorrÊncia
+OCO.numero_ocorrencia, -- Seleciona o número da ocorrÊncia
 VO.numero_sequencial_viatura, -- Seleciona o número sequncial da viatura
 VO.placa, -- Seleciona a placa da viatura
 VO.tipo, -- Seleciona o tipo da viatura
