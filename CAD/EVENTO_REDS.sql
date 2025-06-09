@@ -1,7 +1,10 @@
--- Script para realizar a extração de Ocorrências com a coluna EVENTO DO CAD.
--- traz o numero da chamada CAD ('numero_chamada') que pode ser usada para JOIN com dados daquele sistema 
--- e o numero do REDS ('numero_ocorrencia') que pode ser usada para JOIN com dados desse formulário 
--- 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+ * Este script realiza a extração de ocorrências policiais registradas pela PM  com base em critérios específicos como período e 
+ * localização (Minas Gerais).
+ * A consulta inclui dados integrados do sistema CAD, trazendo o número da chamada, evento relacionado e informações georreferenciadas 
+ * enriquecidas com dados do IBGE e MUB.
+ * Classifica as ocorrências por RPM e UEOP e permite análise detalhada do contexto e distribuição das ocorrências no território estadual.
+------------------------------------------------------------------------------------------------------------------------------------ */
 SELECT distinct 
 OCO.numero_ocorrencia, -- Seleciona o número da ocorrência
 EV.id_evento, -- Seleciona o identificado único do evento
