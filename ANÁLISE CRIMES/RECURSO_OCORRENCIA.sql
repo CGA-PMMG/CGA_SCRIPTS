@@ -151,7 +151,6 @@ FROM db_bisp_reds_reporting.tb_ocorrencia OCO
  LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
  LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
  LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
-AND OCO.digitador_sigla_orgao = 'PM' -- FILTRA ORGÃO DIGITADOR DO REGISTRO
 WHERE 1=1 -- Filtro genérico para adicionar condições subsequentes
 	AND OCO.digitador_id_orgao = 0 -- Filtra registros de ID do órgão 0 - PM
 	AND OCO.ind_estado = 'F'    -- Filtra apenas ocorrências fechadas
