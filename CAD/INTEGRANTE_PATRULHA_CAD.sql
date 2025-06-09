@@ -4,7 +4,6 @@
  * oriundo de relatórios da Polícia Militar. O foco é obter dados para chamadas atendidas por unidades específicas 
  * da PM, com ênfase nos militares associados ao recurso e no tempo de atuação nas ocorrências.  
  ----------------------------------------------------------------------------------------------------------------*/
-
 -- Início da cláusula SELECT: define os campos a serem extraídos da base de dados
 SELECT 
     CA.chamada_id,                          -- Seleciona o identificador único da chamada 
