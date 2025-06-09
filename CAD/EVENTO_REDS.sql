@@ -3,16 +3,15 @@
 -- e o numero do REDS ('numero_ocorrencia') que pode ser usada para JOIN com dados desse formulário 
 -- 
 SELECT distinct 
-OCO.numero_ocorrencia, -- NÚMERO DA OCORRENCIA
-EV.descricao_evento, -- DESCRICAO DO EVENTO
-OCO.data_hora_fato, -- DATA/HORA DO FATO
-EV.numero_chamada, -- NÚMERO DA CHAMADA DO EVENTO
-HOUR(OCO.data_hora_fato) HORA_FATO, -- HORA DO FATO
-OCO.natureza_codigo, -- CODIGO DA NATUREZA DA OCORRENCIA
-OCO.natureza_descricao, -- DESCRICAO DA NATUREZA DA OCORRENCIA
-OCO.nome_municipio, -- NOME DO MUNICIPIO DO FATO
-OCO.nome_bairro , -- NOME DO BAIRRO DO FATO
-OCO.logradouro_nome, -- NOME DO LOGRADOURO DO FATO
+OCO.numero_ocorrencia, -- Seleciona o número da ocorrência
+EV.id_evento, -- Seleciona o identificado único do evento
+EV.descricao_evento, -- Seleciona a decrição do evento
+EV.numero_chamada, -- Seleciona o número da chamada no CAD
+OCO.data_hora_fato, -- Seleciona a data/hora do fato
+FROM_TIMESTAMP(OCO.data_hora_fato,'dd/MM/yy') as 'data_fato', -- DATA DO FATO (ESTA LINHA SEGMENTA O CAMPO DATA HORA DO FATO, EXTRAINDO APENAS A DATA)
+FROM_TIMESTAMP(OCO.data_hora_fato,'HH:mm') as 'hora_fato', -- HORA DO FATO (ESTA LINHA SEGMENTA O CAMPO DATA HORA DO FATO, EXTRAINDO APENAS A HORA)
+OCO.natureza_codigo, -- Selciona o código da natureza da ocorrência
+OCO.natureza_descricao, -- Selciona a descrição da natureza da ocorrência
 CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
    		WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
 		WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
@@ -32,7 +31,7 @@ CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
 	    WHEN OCO.codigo_municipio IN (310120 , 310130 , 310140 , 310490 , 310720 , 310790 , 310830 , 310890 , 310910 , 310970 , 311050 , 311060 , 311360 , 311410 , 311480 , 311550 , 311720 , 311780 , 311790 , 311850 , 311900 , 311990 , 312050 , 312080 , 312110 , 312280 , 312440 , 312450 , 312510 , 312740 , 312920 , 313060 , 313240 , 313300 , 313310 , 313360 , 313490 , 313850 , 313990 , 314040 , 314190 , 314340 , 314380 , 314440 , 314600 , 314730 , 314760 , 314780 , 314910 , 315090 , 315100 , 315250 , 315260 , 315960 , 316200 , 316230 , 316320 , 316370 , 316440 , 316490 , 316540 , 316557 , 316580 , 316640 , 316700 , 316740 , 316780 , 316905 , 316910 , 316980 , 317170 , 317220) THEN'17 RPM'	
 	    WHEN OCO.codigo_municipio IN (310160 , 310190 , 310200 , 310260 , 310410 , 310430 , 310530 , 310760 , 310840 , 310950 , 311030 , 311100 , 311130 , 311160 , 311240 , 311280 , 311440 , 311470 , 311510 , 311640 , 311710 , 312120 , 312240 , 312340 , 312520 , 312630 , 312830 , 312870 , 312970 , 312990 , 313150 , 313290 , 313375 , 313480 , 313690 , 313900 , 314300 , 314320 , 314410 , 314510 , 314720 , 314790 , 315150 , 315170 , 315180 , 315290 , 315920 , 316220 , 316294 , 316390 , 316430 , 316470 , 316510 , 316690 , 317060) THEN '18 RPM'	
 	    WHEN OCO.codigo_municipio IN (316720 , 314930 , 314110 , 314740 , 315360 , 310990 , 310500 , 311250 , 313570 , 313100 , 310320 , 312720 , 311890 , 312640 , 310960 , 315850) THEN '19 RPM'	
-   	END AS RPM_2024,
+   	END AS RPM_2025,
 CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314020,314950,315010,315540,315620,316290) THEN '02 BPM'
 		WHEN OCO.codigo_municipio IN (310240,311750,311810,312010,312100,312160,312260,312540,312550,312760,314250,314370,315330,316020,316050,316480,316590,316650,316710) THEN '03 BPM'
 		WHEN OCO.codigo_municipio IN (312125) THEN '04 BPM'
@@ -107,7 +106,7 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio IN (310810,312060,312600,313010,313220,313665,314070,315040,315530,316292) THEN '7 CIA PM IND'
 		WHEN OCO.codigo_municipio IN (310440,310460,311530,312290,313260,313840,314220,315410,315840,316443,315110,317210,310150,316000,312460) THEN '68 BPM'
 		WHEN OCO.codigo_municipio IN (313370,313380) THEN '9 CIA PM IND'
-		/* MUNIC PIOS COM MAIS DE 01 UEOP - 7 Munic pios*/
+		/* MUNIC PIOS COM MAIS DE 01 UEOP - 8 Munic pios*/
 		WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome LIKE '32 BPM%' or OCO.unidade_area_militar_nome LIKE '%/32 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '32 BPM'
 		WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome LIKE '17 BPM%' or OCO.unidade_area_militar_nome LIKE '%/17 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '17 BPM'
 		WHEN OCO.codigo_municipio =317010 AND (OCO.unidade_area_militar_nome LIKE '4 BPM%' or OCO.unidade_area_militar_nome LIKE '%/4 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '04 BPM'
@@ -131,15 +130,23 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '31 BPM%' or OCO.unidade_area_militar_nome like '%/31 BPM%') THEN '31 BPM'
 		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '9 BPM%' or OCO.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
 		ELSE 'OUTROS' 
-	END AS UEOP_2024
+	END AS UEOP_2025,		
+	 ibge.tipo_descricao,                              -- Informações adicionais do IBGE 
+	  OCO.unidade_area_militar_nome,                    -- Nome da unidade da área militar 
+	  MUB.udi,                                          
+	  MUB.ueop,                                         
+	  MUB.cia,                                          
+	  MUB.codigo_espacial_pm AS setor_PM,  
+OCO.unidade_responsavel_registro_nome
 FROM db_bisp_reds_reporting.tb_ocorrencia  OCO
 INNER JOIN  db_bisp_cad_reporting.vw_chamada_evento  EV ON OCO.numero_chamada_cad  = EV.numero_chamada
+ LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+ LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
+ LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
 WHERE 1 = 1
-    AND YEAR(OCO.data_hora_fato) =  :ANO -- Filtra pelo ano com prompt
-    AND MONTH(OCO.data_hora_fato) >= :MESINICIAL               -- Filtra pelo mês inicial com prompt
-    AND MONTH(OCO.data_hora_fato) <= :MESFINAL               -- Filtra pelo mês final com prompt
     AND OCO.ocorrencia_uf ='MG' -- FILTRA OCORRENCIAS EM MINAS GERAIS 
     AND OCO.digitador_sigla_orgao = 'PM' -- FILTRA PELA SIGLA DA POLÍCIA MILITAR
-    --AND (OCO.unidade_area_militar_nome LIKE '%/XX RPM%') -- FILTRA PELAS UNIDADES ESPECÍFICAS DA PM (CIA/BPM/RPM)
+    --AND OCO.unidade_area_militar_nome LIKE '%/XX RPM%' -- FILTRA PELAS UNIDADES ESPECÍFICAS DA PM (CIA/BPM/RPM)
    -- AND OCO.nome_municipio = 'XXX' -- FILTRA MUNICIPIO
+     AND OCO.data_hora_fato  BETWEEN '2025-01-01 00:00:00' AND '2025-02-01 00:00:00'
 ORDER BY OCO.numero_ocorrencia 
