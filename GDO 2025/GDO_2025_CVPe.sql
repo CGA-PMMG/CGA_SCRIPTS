@@ -158,12 +158,13 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
     OCO.unidade_responsavel_registro_nome,                        -- Nome da unidade que registrou a ocorrência
     CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
-	WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
+	   WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
     	WHEN oco.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
         WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
        	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
     	ELSE geo.situacao_zona
-    END AS situacao_zona,       
+    END AS situacao_zona,
+    ibge.tipo_descricao,                              -- Informações adicionais do IBGE 
     CAST(OCO.codigo_municipio AS INTEGER),                        -- Converte o código do município para número inteiro
     OCO.nome_municipio,                                           -- Nome do município da ocorrência
     OCO.tipo_logradouro_descricao,                                -- Tipo do logradouro (Rua, Avenida, etc)
@@ -178,38 +179,33 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
     MONTH(OCO.data_hora_fato) AS mes,                          -- Mês do fato
     OCO.nome_tipo_relatorio,                                   -- Tipo do relatório
     OCO.digitador_sigla_orgao,
-    COALESCE(set_pm.udi, 'SEM INFORMAÇÃO') AS udi,
-    COALESCE(set_pm.ueop, 'SEM INFORMAÇÃO') AS ueop,
-    COALESCE(set_pm.cia, 'SEM INFORMAÇÃO') AS cia,
-    COALESCE(set_pm.codigo_espacial_pm, 'SEM INFORMAÇÃO') AS codigo_espacial_pm,
+    COALESCE(MUB.udi, 'SEM INFORMAÇÃO') AS udi,
+    COALESCE(MUB.ueop, 'SEM INFORMAÇÃO') AS ueop,
+    COALESCE(MUB.cia, 'SEM INFORMAÇÃO') AS cia,
+    COALESCE(MUB.codigo_espacial_pm, 'SEM INFORMAÇÃO') AS codigo_espacial_pm,
     CASE 
-        WHEN set_pm.cia LIKE '% CIA PM IND' 
-            THEN CONCAT(RIGHT(set_pm.codigo_espacial_pm, 1), ' PEL')
-        ELSE COALESCE(set_pm.cia, 'SEM INFORMAÇÃO')
-    END AS cia_pel_final,
-    COALESCE(set_reg.situacao_zona, 'SEM INFORMAÇÃO') AS area_local  -- Sigla do órgão que registrou
+        WHEN MUB.cia LIKE '% CIA PM IND' THEN CONCAT(RIGHT(MUB.codigo_espacial_pm, 1), ' PEL')
+        ELSE COALESCE(MUB.cia, 'SEM INFORMAÇÃO')
+    END AS cia_pel_final
 FROM db_bisp_reds_reporting.tb_ocorrencia AS OCO                    -- Tabela principal de ocorrências
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia AS ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia    -- Join com tabela de envolvidos
 LEFT JOIN LETALIDADE LET ON OCO.numero_ocorrencia = LET.numero_ocorrencia -- Join com a CTE de letalidade
-LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata set_reg ON OCO.numero_ocorrencia = set_reg.numero_ocorrencia
-LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata set_pm ON set_reg.setor_codigo = set_pm.setor_codigo
-LEFT JOIN
-    db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo -- Tabela de apoio que compara as lat/long com os setores IBGE
-    ON oco.numero_ocorrencia = geo.numero_ocorrencia
-    AND oco.ocorrencia_uf = 'MG'							-- ignora os registros de fora de MG, para evitar erro
+LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
+LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
 WHERE 1=1                                                           -- Início das condições de filtro
     AND LET.numero_ocorrencia IS NULL                              -- Exclui ocorrências que estão na CTE de letalidade
+    AND OCO.ind_estado = 'F'                                      -- Filtra apenas ocorrências finalizadas
+    AND OCO.ocorrencia_uf = 'MG'                                  -- Filtra apenas ocorrências de Minas Gerais
     AND ENV.id_envolvimento IN (25,32,1097,26,27,28,872)          -- Filtra tipos específicos de envolvimento(Todos vitima)
     AND ENV.natureza_ocorrencia_codigo IN ('B01121','B01148','B02001','B01504')  -- Filtra naturezas específicas(Homicídio,Sequestro e Cárcere Privado,Tortura, Feminicídio*)
-    AND ENV.ind_consumado IN ('S','N')                            -- Filtra ocorrências consumadas e tentadas
     AND ENV.condicao_fisica_codigo IS DISTINCT FROM '0100'          -- Exclui condição física específica(Fatal)
-    AND OCO.ocorrencia_uf = 'MG'                                  -- Filtra apenas ocorrências de Minas Gerais
+    AND ENV.ind_consumado IN ('S','N')                            -- Filtra ocorrências consumadas e tentadas
+    AND OCO.local_imediato_codigo NOT IN('1302','1310')		-- Filtra ocorrências cujo local imediato nâo seja UNIDADE PRISIONAL (CERESP/PRESIDIO/PENITENCIARIA) ou CAEDEIA PUBLICA
     AND OCO.digitador_sigla_orgao IN ('PM','PC')                  -- Filtra registros da PM ou PC
     AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP')           -- Filtra tipos específicos de relatório
-    AND YEAR(OCO.data_hora_fato) BETWEEN 2020 AND 2024                   -- Filtra até o mês final
-    AND OCO.ind_estado = 'F'                                      -- Filtra apenas ocorrências finalizadas
-    AND OCO.local_imediato_codigo NOT IN('1302','1310')		-- Filtra ocorrências cujo local imediato nâo seja UNIDADE PRISIONAL (CERESP/PRESIDIO/PENITENCIARIA) ou CAEDEIA PUBLICA
--- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
+    AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-02-01 00:00:00'    -- Filtra dentro do intervalo especificado
+   -- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
    -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
   ORDER BY                                                           -- Define a ordem de apresentação dos resultados
     --RPM_2025,                                                     -- Primeiro por RPM
