@@ -1,32 +1,29 @@
-/*﻿----------------------------------------------------------------------------------------------------------------------------------------------
- * Este código SQL foi desenvolvido para fornecer uma visão detalhada sobre a integridade dos dados relacionados aos motivos presumidos 
- * das ocorrências fechadas registradas pela Polícia Militar de Minas Gerais no ano de 2024. O foco principal está em identificar 
+/*----------------------------------------------------------------------------------------------------------------------------------------------
+ * este código sql foi desenvolvido para fornecer uma visão detalhada sobre a integridade dos dados relacionados aos motivos presumidos 
+ * das ocorrências fechadas registradas pela polícia militar de minas gerais no ano de 2024. o foco principal está em identificar 
  * quantas dessas ocorrências não têm um motivo presumido registrado ou estão categorizadas com códigos específicos ('9800', '0133') 
- * que podem indicar categorias padrão ou dados genéricos. Ao contabilizar o total de ocorrências e avaliar a frequência ou a falta desses códigos, 
+ * que podem indicar categorias padrão ou dados genéricos. ao contabilizar o total de ocorrências e avaliar a frequência ou a falta desses códigos, 
  * o relatório ajuda a entender a qualidade da documentação das motivações nas ocorrências.
- ﻿----------------------------------------------------------------------------------------------------------------------------------------------*/
--- SELEÇÃO DE COLUNAS ESPECÍFICAS PARA IDENTIFICAÇÃO DO DIGITADOR E A UNIDADE RESPONSÁVEL
+ ----------------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT
-    OCO.digitador_matricula AS MATRICULA_DIGITADOR, -- EXTRAI A MATRÍCULA DO DIGITADOR RESPONSÁVEL PELO REGISTRO
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- EXTRAI O ÚLTIMO SEGMENTO DA UNIDADE (MAIS ESPECÍFICO)
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- EXTRAI O PENÚLTIMO SEGMENTO DA UNIDADE
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- EXTRAI O ANTEPENÚLTIMO SEGMENTO DA UNIDADE
-    COUNT(OCO.numero_ocorrencia) AS Total_Registros, -- CONTA O TOTAL DE OCORRÊNCIAS ÚNICAS
+    OCO.digitador_matricula AS MATRICULA_DIGITADOR, -- Extrai a matrícula do digitador responsável pelo registro
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- Extrai o último segmento da unidade 
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- Extrai o penúltimo segmento da unidade
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- Extrai o antepenúltimo segmento da unidade
+    COUNT(OCO.numero_ocorrencia) AS Total_Registros, -- Conta o total de ocorrências únicas
     SUM(CASE 
         WHEN OCO.motivo_presumido_codigo IS NULL 
-             OR OCO.motivo_presumido_codigo IN ('9800', '0133') -- VERIFICA A AUSÊNCIA OU CÓDIGOS ESPECÍFICOS DE MOTIVO PRESUMIDO
+             OR OCO.motivo_presumido_codigo IN ('9800', '0133') -- Verifica a ausência ou códigos específicos de motivo presumido(Nulo,IGNORADO MOTIVACAO OU CAUSA IGNORADA)
         THEN 1 ELSE 0 
-        END) AS Qtd_Null_9800_0133
--- TABELAS UTILIZADAS PARA A CONSULTA
+        END) AS Qtd_Null_9800_0133 -- Verifica a ausência ou códigos específicos de motivo presumido(Nulo,IGNORADO MOTIVACAO OU CAUSA IGNORADA). Se ausente, atribui valor 1, caso contrario 0, então soma os valores
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
--- FILTROS APLICADOS PARA A SELEÇÃO DOS DADOS
-WHERE YEAR(OCO.data_hora_fato) = 2024  -- FILTRA OS DADOS PARA OCORRÊNCIAS DO ANO 2024
-  AND OCO.relator_sigla_orgao = 'PM' -- APENAS OCORRÊNCIAS RELATADAS PELA POLÍCIA MILITAR
-  AND OCO.ocorrencia_uf = 'MG' -- FILTRA OCORRÊNCIAS NO ESTADO DE MINAS GERAIS
-  AND OCO.descricao_estado = 'FECHADO' -- FILTRA OCORRÊNCIAS QUE ESTÃO FECHADAS
-  AND OCO.nome_tipo_relatorio NOT IN ('RAT', 'BOS', 'BOS AMPLO') -- EXCLUI CERTOS TIPOS DE RELATÓRIOS
-  -- AND OCO.unidade_responsavel_registro_nome LIKE '%/X BPM%' -- FILTRA OCORRÊNCIAS RELACIONADAS A UNIDADE DE REGISTRO.
--- AGRUPAMENTO DOS DADOS PARA ESTRUTURAR OS RESULTADOS
+WHERE 1 = 1 
+  AND OCO.digitador_sigla_orgao = 'PM' -- Apenas ocorrências digitadas pela Polícia Militar
+  AND OCO.ocorrencia_uf = 'MG' -- Filtra ocorrências no estado de Minas Gerais
+  AND OCO.descricao_estado = 'FECHADO' -- Filtra ocorrências que estão fechadas
+  AND OCO.nome_tipo_relatorio NOT IN ('RAT', 'BOS', 'BOS AMPLO') -- Exclui certos tipos de relatórios
+  AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-05-01 00:00:00'  -- Filtra os dados para ocorrências dentro do intervalo especificado
+ -- AND OCO.unidade_responsavel_registro_nome LIKE '%/X BPM%' -- filtra ocorrências relacionadas à unidade de registro
 GROUP BY OCO.digitador_matricula, RPM, BPM, CIA
--- ORDENAÇÃO DOS RESULTADOS PELA HIERARQUIA DA UNIDADE
+-- ordenação dos resultados pela hierarquia da unidade
 ORDER BY RPM, BPM, CIA;
