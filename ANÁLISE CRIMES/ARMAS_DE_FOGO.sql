@@ -189,8 +189,12 @@ INNER JOIN db_bisp_reds_reporting.tb_arma_ocorrencia AFO ON  ENV.numero_ocorrenc
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
 LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
-WHERE 
-    OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00'  AND '2025-02-01 00:00:00'-- FILTRA INTERVALO TEMPORAL DAS OCORRÊNCIAS
+WHERE 1 = 1
+AND OCO.digitador_sigla_orgao = 'PM'  -- FILTRA OCORRÊNCIAS REGISTRADAS PELA POLÍCIA MILITAR
+    AND OCO.ocorrencia_uf = 'MG'  -- FILTRA OCORRÊNCIAS NO ESTADO DE MINAS GERAIS
+    AND OCO.ind_estado = 'F'  -- FILTRA SOMENTE OCORRÊNCIAS QUE ESTÃO FECHADAS
+	AND ENV.ind_militar_policial IS  DISTINCT FROM 'M'    -- FILTRA VALORES DISTINDO DE 'M', POLICIAL MILITAR.
+  	AND ENV.ind_militar_policial_servico IS  DISTINCT FROM 'S'  -- FILTRA VALORES DISTINDOS A 'S', POLICIAL MILITAR EM SERVIÇO. 
     AND AFO.situacao_descricao IN ('APREENDIDO', 'RECUPERADO')  -- FILTRA ARMAS QUE FORAM APREENDIDAS OU RECUPERADAS
     AND AFO.tipo_arma_descricao NOT IN
     ( 
@@ -199,12 +203,7 @@ WHERE
 		'ARMAS DE PRESSAO IGUAL OU INFERIOR A 6MM', 
 		'NAO INFORMADO' 
 	 ) -- EXCLUI TIPOS DE ARMAS QUE NÃO SÃO RELEVANTES PARA A ANÁLISE
-    AND OCO.digitador_sigla_orgao = 'PM'  -- FILTRA OCORRÊNCIAS REGISTRADAS PELA POLÍCIA MILITAR
-    AND OCO.ocorrencia_uf = 'MG'  -- FILTRA OCORRÊNCIAS NO ESTADO DE MINAS GERAIS
-    AND OCO.ind_estado = 'F'  -- FILTRA SOMENTE OCORRÊNCIAS QUE ESTÃO FECHADAS
-	AND ENV.ind_militar_policial IS  DISTINCT FROM 'M'    -- FILTRA VALORES DISTINDO DE 'M', POLICIAL MILITAR.
-  	AND ENV.ind_militar_policial_servico IS  DISTINCT FROM 'S'  -- FILTRA VALORES DISTINDOS A 'S', POLICIAL MILITAR EM SERVIÇO. 
+     AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00'  AND '2025-02-01 00:00:00'-- FILTRA INTERVALO TEMPORAL DAS OCORRÊNCIAS
   -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
 	-- AND OCO.unidade_responsavel_registro_nome LIKE '%xx RPM%' -- Filtra pelo nome da unidade responsável pelo registro
 	-- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP. ORDER BY ANO DESC, nome_municipio;
-
