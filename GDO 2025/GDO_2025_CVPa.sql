@@ -133,43 +133,46 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '9 BPM%' or OCO.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
 		ELSE 'OUTROS' 
 	END AS UEOP_2025,		
-    OCO.unidade_area_militar_codigo,                                -- Código da unidade militar responsável pela área
-    OCO.unidade_area_militar_nome,                                  -- Nome da unidade militar responsável pela área
-    OCO.unidade_responsavel_registro_codigo,                        -- Código da unidade que registrou a ocorrência
-    OCO.unidade_responsavel_registro_nome,                          -- Nome da unidade que registrou a ocorrência					 
-	 ibge.tipo_descricao,                              -- Informações adicionais do IBGE 
-	  OCO.unidade_area_militar_nome,                    -- Nome da unidade da área militar 
-	  MUB.udi,                                          
-	  MUB.ueop,                                         
-	  MUB.cia,                                          
-	  MUB.codigo_espacial_pm AS setor_PM,      
-	 geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
+    OCO.unidade_area_militar_codigo,                              -- Código da unidade militar da área
+    OCO.unidade_area_militar_nome,                                -- Nome da unidade militar da área
+    OCO.unidade_responsavel_registro_codigo,                      -- Código da unidade que registrou a ocorrência
+    OCO.unidade_responsavel_registro_nome,                        -- Nome da unidade que registrou a ocorrência
+    geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
     geo.longitude_sirgas2000,				-- reprojeção da longitude de SAD69 para SIRGAS2000
-    CASE 	
+    CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN OCO.pais_codigo <> 1 AND OCO.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
-		WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'		-- trata erro - ocorrencia de fora de MG
-    	WHEN OCO.numero_latitude IS NULL THEN 'Invalido'		-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN 'Agua'			-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'	-- checa se restou alguma ocorrencia com erro
+	   WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
+    	WHEN OCO.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
+        WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
     	ELSE geo.situacao_zona
-	END AS situacao_zona,      -- se o território é Urbano ou Rural segundo o IBGE      
-    CAST(OCO.codigo_municipio AS INTEGER),                          -- Converte o código do município para número inteiro
-    OCO.nome_municipio,                                            -- Nome do município onde ocorreu o fato
+    END AS situacao_zona,
+    ibge.tipo_descricao,                              -- Informações adicionais do IBGE 
+    CAST(OCO.codigo_municipio AS INTEGER),                        -- Converte o código do município para número inteiro
+    OCO.nome_municipio,                                           -- Nome do município da ocorrência
     OCO.tipo_logradouro_descricao,                                -- Tipo do logradouro (Rua, Avenida, etc)
     OCO.logradouro_nome,                                          -- Nome do logradouro
     OCO.numero_endereco,                                          -- Número do endereço
-    OCO.nome_bairro,                                             -- Nome do bairro
-    OCO.ocorrencia_uf,                                           -- UF onde ocorreu o fato
-    OCO.numero_latitude,                                         -- Latitude do local da ocorrência
-    OCO.numero_longitude,                                        -- Longitude do local da ocorrência
-    OCO.data_hora_fato,                                         -- Data e hora em que ocorreu o fato
-    YEAR(OCO.data_hora_fato) AS ano,                            -- Extrai o ano da data do fato
-    MONTH(OCO.data_hora_fato) AS mes,                           -- Extrai o mês da data do fato
-    OCO.nome_tipo_relatorio,                                    -- Tipo do relatório (POLICIAL ou REFAP)
-    OCO.digitador_sigla_orgao                                   -- Sigla do órgão que registrou (PM ou PC)
+    OCO.nome_bairro,                                              -- Nome do bairro
+    OCO.ocorrencia_uf,                                            -- Estado da ocorrência
+    OCO.numero_latitude,                                          -- Latitude da localização
+    OCO.numero_longitude,                                         -- Longitude da localização
+    OCO.data_hora_fato,                                        -- Data e hora do fato
+    YEAR(OCO.data_hora_fato) AS ano,                           -- Ano do fato
+    MONTH(OCO.data_hora_fato) AS mes,                          -- Mês do fato
+    OCO.nome_tipo_relatorio,                                   -- Tipo do relatório
+    OCO.digitador_sigla_orgao,
+    COALESCE(MUB.udi, 'SEM INFORMAÇÃO') AS udi,
+    COALESCE(MUB.ueop, 'SEM INFORMAÇÃO') AS ueop,
+    COALESCE(MUB.cia, 'SEM INFORMAÇÃO') AS cia,
+    COALESCE(MUB.codigo_espacial_pm, 'SEM INFORMAÇÃO') AS codigo_espacial_pm,
+    CASE 
+        WHEN MUB.cia LIKE '% CIA PM IND' THEN CONCAT(RIGHT(MUB.codigo_espacial_pm, 1), ' PEL')
+        ELSE COALESCE(MUB.cia, 'SEM INFORMAÇÃO')
+    END AS cia_pel_final
 FROM db_bisp_reds_reporting.tb_ocorrencia AS OCO                    -- Tabela principal de ocorrências
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia AS ENV    ON OCO.numero_ocorrencia = ENV.numero_ocorrencia        -- Join com a tabela de envolvidos        -- Relaciona ocorrências com seus envolvidos
-LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia 	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
 LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
 WHERE 1=1                                                          
@@ -182,9 +185,7 @@ WHERE 1=1
     AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP')            -- Filtra tipos específicos de relatório (POLICIAL ou REFAP)
     AND OCO.local_imediato_codigo NOT IN('1302','1310')	   -- Filtra ocorrências cujo local imediato nâo seja UNIDADE PRISIONAL (CERESP/PRESIDIO/PENITENCIARIA) ou CAEDEIA PUBLICA
     AND ENV.natureza_ocorrencia_codigo IN ('C01157','C01158','C01159')  -- Filtra naturezas específicas das ocorrências (Roubo,Extorsão,Extorsão Mediante Sequestro)
-    AND YEAR(OCO.data_hora_fato) = :ANO                            -- Filtra pelo ano informado no parâmetro
-    AND MONTH(OCO.data_hora_fato) >= :MESINICIAL                   -- Filtra a partir do mês inicial informado
-    AND MONTH(OCO.data_hora_fato) <= :MESFINAL                     -- Filtra até o mês final informado
+    AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-02-01 00:00:00'    -- Filtra dentro do intervalo especificado
    -- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
    -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
 ORDER BY                                                           -- Ordenação dos resultados
