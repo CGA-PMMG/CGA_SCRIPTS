@@ -19,17 +19,14 @@ ATEND.natureza_codigo, -- Seleciona o código de natureza da chamada.
 ATEND.natureza_descricao, -- Seleciona a descrição da natureza da chamada.
 ATEND.recursos_empenhados_total, -- Seleciona o total de recursos empenhados no atendimento da chamada.
 HIST.texto_historico, -- Seleciona o texto histórico associado à chamada.
-ATEND.orgao_sigla -- Seleciona a sigla do órgão responsável pela chamada.
+ATEND.orgao_sigla -- Seleciona a sigla do órgão responsável pela ada.
 FROM db_bisp_cad_reporting.tb_chamada CHAMADA -- Especifica a tabela principal "tb_chamada", renomeada como CHAMADA, no banco "db_bisp_cad_reporting".
 INNER JOIN db_bisp_cad_reporting.tb_chamada_historico HIST ON CHAMADA.id_chamada = HIST.id_chamada -- Realiza um JOIN com a tabela "tb_chamada_historico", vinculando o histórico pelo identificador da chamada.
 INNER JOIN db_bisp_cad_reporting.tb_chamada_atendimento ATEND ON ATEND.chamada_id = CHAMADA.id_chamada -- Realiza um JOIN com a tabela "tb_chamada_atendimento", vinculando os dados do atendimento pelo identificador da chamada.
 WHERE 1=1 -- Condição inicial neutra, usada como base para adicionar filtros adicionais.
+AND ATEND.orgao_sigla ='PM'-- Filtra órgao responsável pela chamada.
+AND HIST.texto_historico LIKE '%xx%' -- Filtra chamadas cujo histórico contenha o termo "xx".
+AND CHAMADA.data_hora_inclusao BETWEEN '2025-01-01 00:00:00.000' AND '2025-01-01 00:00:00.000' -- Filtra as chamadas inseridas no sistema dentro do intervalo de tempo especificado.
 AND ATEND.local_municipio_id = 000000 -- Filtra os registros pelo codigo de município (substituir '000000' pelo ID desejado).
 AND ATEND.unidade_servico_nome LIKE '%X BPM%' -- Filtra as chamadas associadas à unidade de serviço.
-AND CHAMADA.data_hora_inclusao BETWEEN '2024-12-01 00:00:00.000' AND '2025-01-01 00:00:00.000' -- Filtra as chamadas inseridas no sistema dentro do intervalo de tempo especificado.
-AND ATEND.orgao_sigla ='PM'-- Filtra órgao responsável pela chamada.
-AND (HIST.texto_historico LIKE '%A%' -- Filtra chamadas cujo histórico contenha o termo "A".
-    OR HIST.texto_historico LIKE '%B%' -- Ou chamadas cujo histórico contenha o termo "B".
-    OR HIST.texto_historico LIKE '%C%' -- Ou chamadas cujo histórico contenha o termo "C".
-    )
 ORDER BY 1 -- Ordena os resultados pelo primeiro campo selecionado (CHAMADA.id_chamada).
