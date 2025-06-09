@@ -161,11 +161,11 @@ LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero
 LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
 LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB WHERE 1 = 1 
 WHERE    1 = 1 
-AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2024-01-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
 	AND OCO.ocorrencia_uf = 'MG'      -- Filtra apenas ocorrências do estado de Minas Gerais
-	AND OCO.digitador_sigla_orgao IN ('PM','PC')      -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
-    AND SUBSTRING(OCO.natureza_codigo,1,1) = 'B'  -- FILTRA OCORRÊNCIAS CUJO CÓDIGO DA NATUREZA COMEÇA COM 'B'
 	AND OCO.ind_estado = 'F'    -- Filtra apenas ocorrências fechadas
+	AND SUBSTRING(OCO.natureza_codigo,1,1) = 'B'  -- FILTRA OCORRÊNCIAS CUJO CÓDIGO DA NATUREZA COMEÇA COM 'B'
+	AND OCO.digitador_sigla_orgao IN ('PM','PC')      -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
+	AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2024-01-28 23:59:59.000' -- Filtra ocorrências por período específico
     -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
 	-- AND OCO.unidade_responsavel_registro_nome LIKE '%xx RPM%' -- Filtra pelo nome da unidade responsável pelo registro
 	-- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
