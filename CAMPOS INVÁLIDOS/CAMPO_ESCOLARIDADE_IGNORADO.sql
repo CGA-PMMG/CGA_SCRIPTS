@@ -25,6 +25,7 @@ WHERE 1 = 1
   AND ENV.condicao_fisica_codigo NOT IN ('0300', '0100') -- Exclui certas condições físicas
   AND OCO.nome_tipo_relatorio NOT IN ('RAT', 'BOS', 'BOS AMPLO') -- Exclui certos tipos de relatórios
   AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-05-01 00:00:00'  -- Filtra os dados para ocorrências dentro do intervalo especificado
+   -- AND OCO.unidade_responsavel_registro_nome LIKE '%/X BPM%' -- filtra ocorrências relacionadas à unidade de registro (opcional)
 -- agrupamento dos dados para estruturar os resultados
 GROUP BY OCO.digitador_matricula, RPM, BPM, CIA
 -- ordenação dos resultados pela hierarquia da unidade
