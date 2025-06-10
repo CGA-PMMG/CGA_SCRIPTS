@@ -7,9 +7,9 @@
 -- seleciona colunas específicas para identificação do digitador e da unidade responsávelpelo registro
 SELECT
     OCO.digitador_matricula AS MATRICULA_DIGITADOR, -- Seleciona a matrícula do digitador responsável pelo registro
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- Extrai o último segmento da unidade responsável pelo registro
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- Extrai o penúltimo segmento da unidade responsável pelo registro
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- Extrai o antepenúltimo segmento da unidade responsável pelo registro
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- Extrai o último segmento da unidade responsável pelo registro para identificar a RPM
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- Extrai o penúltimo segmento da unidade responsável pelo registro para identificar o BPM
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- Extrai o antepenúltimo da unidade responsável pelo registro segmento para identificar a CIA
     COUNT(ENV.numero_envolvido) AS total_envolvidos, -- Conta o total de envolvidos nas ocorrências
     SUM(CASE 
         WHEN ENV.escolaridade_codigo IS NULL OR ENV.escolaridade_codigo = '9800' -- Verifica ausência ou ESCOLARIDADE - IGNORADA
