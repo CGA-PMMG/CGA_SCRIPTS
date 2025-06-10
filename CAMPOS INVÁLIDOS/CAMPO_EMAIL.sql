@@ -9,11 +9,11 @@ SELECT
    TO_DATE(OCO.data_hora_inclusao) AS DATA_INCLUSAO, -- Data de inclusão da ocorrência convertida para o formato de data
    OCO.NOME_TIPO_RELATORIO,                        -- Tipo do relatório da ocorrência
    OCO.unidade_responsavel_registro_nome,          -- Nome completo da unidade responsável pelo registro
-		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS N1, -- Última parte do nome da unidade responsável pelo registro
-		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS N2, -- Penúltima parte do nome da unidade responsável pelo registro
-		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS N3, -- Terceira última parte do nome da unidade responsável pelo registro
-		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -4) AS N4, -- Quarta última parte do nome da unidade responsável pelo registro
-		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -5) AS N5, -- Quinta última parte do nome da unidade responsável pelo registro
+		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- Última parte do nome da unidade responsável pelo registro
+		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- Penúltima parte do nome da unidade responsável pelo registro
+		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- Terceira última parte do nome da unidade responsável pelo registro
+		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -4) AS PEL, -- Quarta última parte do nome da unidade responsável pelo registro
+		SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -5) AS GP, -- Quinta última parte do nome da unidade responsável pelo registro
    ENV.motivo_ausencia_telmail_codigo,            -- Código do motivo da ausência de telefone ou e-mail
    ENV.motivo_ausencia_telmail_descricao,         -- Descrição do motivo da ausência de telefone ou e-mail
    ENV.envolvimento_codigo,                       -- Código do tipo de envolvimento do indivíduo na ocorrência
@@ -29,11 +29,12 @@ SELECT
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia  
 -- Filtros aplicados para selecionar ocorrências específicas
-WHERE YEAR(OCO.data_hora_inclusao) = 2023                    -- Filtra ocorrências do ano 2023
- AND MONTH(OCO.data_hora_inclusao) BETWEEN 11 AND 12         -- Filtra ocorrências nos meses de novembro e dezembro
- AND OCO.relator_sigla_orgao = 'PM'                          -- Filtra ocorrências relatadas pela Polícia Militar
- AND OCO.descricao_estado = 'FECHADO'                        -- Filtra ocorrências que estão com status 'FECHADO'
- AND OCO.ocorrencia_uf = 'MG'                                -- Filtra ocorrências no estado de Minas Gerais
- AND OCO.nome_tipo_relatorio IN('POLICIAL', 'TRANSITO')      -- Filtra ocorrências com tipos de relatório 'POLICIAL' ou 'TRANSITO'
+WHERE 1 = 1 
+  AND OCO.digitador_sigla_orgao = 'PM' -- Apenas ocorrências digitadas pela polícia militar
+  AND OCO.ocorrencia_uf = 'MG' -- Filtra ocorrências no estado de Minas Gerais
+  AND OCO.descricao_estado = 'FECHADO' -- Filtra ocorrências que estão fechadas
+  AND ENV.condicao_fisica_codigo NOT IN ('0300', '0100') -- Exclui certas condições físicas
+  AND OCO.nome_tipo_relatorio IN('POLICIAL', 'TRANSITO')      -- Filtra ocorrências com tipos de relatório 'POLICIAL' ou 'TRANSITO'
+  AND OCO.data_hora_inclusao BETWEEN '2025-01-01 00:00:00' AND '2025-05-01 00:00:00'  -- Filtra os dados para ocorrências dentro do intervalo especificado
 -- Ordenação dos resultados pelo número da ocorrência
 ORDER BY 1;
