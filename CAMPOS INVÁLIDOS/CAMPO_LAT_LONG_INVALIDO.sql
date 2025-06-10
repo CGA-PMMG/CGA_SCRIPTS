@@ -5,9 +5,9 @@
  ﻿-----------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT
     OCO.digitador_matricula AS MATRICULA_DIGITADOR, -- Matrícula do digitador responsável pela entrada dos dados.
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- Extrai o último segmento da unidade responsável pelo registro  
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- Extrai o penúltimo segmento da unidade responsável pelo registro 
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- Extrai o antepenúltimo segmento da unidade responsável pelo registro 
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- Extrai o último segmento da unidade responsável pelo registro para identificar a RPM
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- Extrai o penúltimo segmento da unidade responsável pelo registro para identificar o BPM
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- Extrai o antepenúltimo da unidade responsável pelo registro segmento para identificar a CIA
     COUNT(DISTINCT OCO.numero_ocorrencia) AS Total_Registros, -- Conta o total de registros únicos de ocorrências.
     SUM(CASE
         WHEN OCO.numero_longitude IS NULL OR OCO.numero_latitude IS NULL THEN 1 ELSE 0
