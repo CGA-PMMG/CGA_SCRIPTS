@@ -1,10 +1,7 @@
 /*---------------------------------------------------------------------------------------------------------------------
  * Este código sql tem como objetivo calcular e apresentar informações detalhadas sobre o total de envolvidos nas 
- * ocorrências registradas pela polícia militar de minas gerais no ano de 2024 e, mais especificamente, quantificar 
- * quantos desses registros estão sem cpf ou cnpj informado. o foco é analisar ocorrências fechadas e filtrar por diversos 
- * critérios para garantir a relevância e precisão dos dados, especialmente visando a clareza na identificação das unidades 
- * responsáveis pelas ocorrências (rpm, bpm e cia) e garantindo que os dados sejam apresentados de forma organizada
- * e hierárquica.
+ * ocorrências  registradas pela Polícia Militar de Minas Gerais  no período especificado e, mais especificamente, 
+ * quantificar quantos desses registros estão sem CPF ou CNPJ informado. 
  ---------------------------------------------------------------------------------------------------------------------*/
 SELECT
     OCO.digitador_matricula AS MATRICULA_DIGITADOR, -- Extrai a matrícula do digitador responsável pelo registro
@@ -31,5 +28,4 @@ WHERE 1 = 1
   -- AND OCO.unidade_responsavel_registro_nome LIKE '%/X BPM%' -- filtra ocorrências relacionadas à unidade de registro
 -- agrupamento dos dados para estruturar os resultados
 GROUP BY MATRICULA_DIGITADOR, RPM, BPM, CIA
--- ordenação dos resultados pela hierarquia da unidade
 ORDER BY MATRICULA_DIGITADOR,RPM, BPM, CIA;
