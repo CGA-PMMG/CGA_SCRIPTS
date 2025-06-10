@@ -1,19 +1,17 @@
 /*---------------------------------------------------------------------------------------------------------------------------------
- * Este script SQL foi desenvolvido para analisar e quantificar os envolvidos em ocorrências registradas pela 
- * polícia militar de minas gerais no ano de 2024, com foco específico na identificação de registros que não possuem 
- * informação sobre a cor da pele ou que apresentam o código '9800' (ignorado). o objetivo é avaliar a integridade 
- * desses dados em ocorrências fechadas, considerando apenas vítimas com determinadas condições físicas. os resultados 
- * são apresentados de forma agrupada e ordenada com base na hierarquia das unidades responsáveis (cia, bpm e rpm).
+ * Este script SQL foi desenvolvido para analisar e quantificar os envolvidos em ocorrências registradas 
+ * pela Polícia Militar de Minas Gerais  no período especificado. O objetivo é a identificação de registros que não possuem 
+ * informação sobre a cor da pele ou que apresentam o código '9800' (IGNORADA). 
  ---------------------------------------------------------------------------------------------------------------------------------*/
 -- seleciona colunas específicas para identificação do digitador e da unidade responsável
 SELECT
-    OCO.digitador_matricula AS MATRICULA_DIGITADOR, -- Extrai a matrícula do digitador responsável pelo registro
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- Extrai o último segmento da unidade (rpm)
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- Extrai o penúltimo segmento da unidade (bpm)
-    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- Extrai o antepenúltimo segmento da unidade (cia)
+    OCO.digitador_matricula AS MATRICULA_DIGITADOR, -- Seleciona a matrícula do digitador responsável pelo registro
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -1) AS RPM, -- Extrai o último segmento para identificar a RPM
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -2) AS BPM, -- Extrai o penúltimo segmento para identificar o BPM
+    SPLIT_PART(OCO.unidade_responsavel_registro_nome, '/', -3) AS CIA, -- Extrai o antepenúltimo segmento para identificar a CIA
     COUNT(ENV.numero_envolvido) AS TOTAL_ENVOLVIDO, -- Conta o total de envolvidos nas ocorrências
     SUM(CASE 
-        WHEN ENV.cor_pele_codigo IS NULL OR ENV.cor_pele_codigo = '9800' -- Verifica ausência ou código específico de cor de pele
+        WHEN ENV.cor_pele_codigo IS NULL OR ENV.cor_pele_codigo = '9800' -- Verifica ausência ou código específico de cor de pele IGNORADA
         THEN 1 ELSE 0 
         END) AS Qtd_Null_9800 -- Soma os registros com cor de pele ausente ou código '9800'
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
@@ -29,5 +27,4 @@ WHERE 1 = 1
   -- AND OCO.unidade_responsavel_registro_nome LIKE '%/X BPM%' -- filtra ocorrências relacionadas à unidade de registro (opcional)
 -- agrupamento dos dados para estruturar os resultados
 GROUP BY 1, 2, 3, 4 -- utiliza os índices das colunas para simplificar
--- ordenação dos resultados pela hierarquia da unidade
 ORDER BY 2, 3, 4;
