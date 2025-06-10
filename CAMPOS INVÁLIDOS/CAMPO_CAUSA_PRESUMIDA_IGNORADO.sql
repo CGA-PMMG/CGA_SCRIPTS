@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------------------------------------------------------------------------
- * este código sql foi desenvolvido para fornecer uma visão detalhada sobre a integridade dos dados relacionados aos motivos presumidos 
+ * Este código sql foi desenvolvido para fornecer uma visão detalhada sobre a integridade dos dados relacionados aos motivos presumidos 
  * das ocorrências fechadas registradas pela polícia militar de minas gerais no ano de 2024. o foco principal está em identificar 
  * quantas dessas ocorrências não têm um motivo presumido registrado ou estão categorizadas com códigos específicos ('9800', '0133') 
  * que podem indicar categorias padrão ou dados genéricos. ao contabilizar o total de ocorrências e avaliar a frequência ou a falta desses códigos, 
