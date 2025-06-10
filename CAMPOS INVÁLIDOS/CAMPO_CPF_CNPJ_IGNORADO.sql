@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------------------------------
- * Este código sql tem como objetivo calcular e apresentar informações detalhadas sobre o total de envolvidos nas 
+ * Este script SQL tem como objetivo calcular e apresentar informações detalhadas sobre o total de envolvidos nas 
  * ocorrências  registradas pela Polícia Militar de Minas Gerais  no período especificado e, mais especificamente, 
  * quantificar quantos desses registros estão sem CPF ou CNPJ informado. 
  ---------------------------------------------------------------------------------------------------------------------*/
