@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------------------------------------------------------------
- * Este código sql foi desenvolvido para fornecer uma análise detalhada sobre a integridade dos dados de escolaridade dos envolvidos 
+ * Este script SQL foi desenvolvido para fornecer uma análise detalhada sobre a integridade dos dados de escolaridade dos envolvidos 
  * em ocorrências fechadas registradas pela Polícia Militar de Minas Gerais no período especificado. O objetivo está em identificar 
  * e quantificar os registros que não possuem informação sobre escolaridade ou que estão classificados com o código '9800' 
  * (ESCOLARIDADE - IGNORADA).
