@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------------------------------------------------------------------
- * este código sql foi desenvolvido para fornecer uma visão geral das ocorrências fechadas registradas pela Polícia Militar de Minas Gerais 
+ * Este script SQ foi desenvolvido para fornecer uma visão geral das ocorrências fechadas registradas pela Polícia Militar de Minas Gerais 
  * no período especificado, com foco na análise do uso de instrumentos utilizados. O objetivo +é contabilizar o total de ocorrências únicas 
  * e identificar quantas delas não possuem informação sobre o instrumento utilizado ou estão classificadas com o código '9800'(ignorado).
  -----------------------------------------------------------------------------------------------------------------------------------------*/
