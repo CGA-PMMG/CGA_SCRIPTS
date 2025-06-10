@@ -1,8 +1,7 @@
 /*-------------------------------------------------------------------------------------------------------------------------------
  * A finalidade deste código é identificar detalhes sobre as partes envolvidas em ocorrências
  *  policiais fechadas, avaliando se informações críticas, como identificação por CPF ou CNPJ, estão sendo 
- * adequadamente registradas. Isso pode ser útil para auditorias internas, garantindo a integridade 
- * e completude dos registros policiais.
+ * adequadamente registradas.
  * 
  * PARA FAZER A VERIFICAÇÃO DE OUTROS CAMPOS, APENAS TROQUE A CLAUSULA DO CASE WHEN 
  * EXEMPLO:
@@ -20,11 +19,11 @@ FROM
     db_bisp_reds_reporting.tb_ocorrencia OCO
     -- Junta a tabela de ocorrências com a tabela de envolvidos
     JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia
-WHERE 
-    YEAR(OCO.data_hora_fato) = 2024  -- Filtra ocorrências do ano de 2024
-    AND OCO.relator_sigla_orgao = 'PM'  -- Apenas ocorrências relatadas pela Polícia Militar
-    AND OCO.ocorrencia_uf = 'MG'  -- Apenas ocorrências no estado de Minas Gerais
-    AND OCO.descricao_estado = 'FECHADO'  -- Apenas ocorrências que estão com o estado fechado
-    AND OCO.nome_tipo_relatorio NOT IN ('RAT', 'BOS', 'BOS AMPLO')  -- Exclui tipos de relatório específicos
-    AND ENV.envolvimento_codigo IN ('1300','1301','1302','1303','1304','1305','1399') -- Filtra por códigos de envolvimento específicos
-    AND ENV.condicao_fisica_codigo NOT IN ('0300', '0100')  -- Exclui códigos de condição física 
+WHERE 1 = 1
+  AND OCO.digitador_sigla_orgao = 'PM' -- Apenas ocorrências digitadas pela polícia militar
+  AND OCO.ocorrencia_uf = 'MG' -- Filtra ocorrências no estado de Minas Gerais
+  AND OCO.descricao_estado = 'FECHADO' -- Filtra ocorrências que estão fechadas
+  AND ENV.envolvimento_codigo IN ('1300', '1301', '1302', '1303', '1304', '1305', '1399') -- Filtra pelos códigos de envolvimento: apenas vítimas
+  AND ENV.condicao_fisica_codigo NOT IN ('0300', '0100') -- Exclui certas condições físicas
+  AND OCO.nome_tipo_relatorio NOT IN ('RAT', 'BOS', 'BOS AMPLO') -- Exclui certos tipos de relatórios
+  AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-05-01 00:00:00'  -- Filtra os dados para ocorrências dentro do intervalo especificado
