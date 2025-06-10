@@ -1,9 +1,8 @@
 /*----------------------------------------------------------------------------------------------------------------------------------------------
- * Este código sql foi desenvolvido para fornecer uma visão detalhada sobre a integridade dos dados relacionados aos motivos presumidos 
- * das ocorrências fechadas registradas pela polícia militar de minas gerais no ano de 2024. o foco principal está em identificar 
- * quantas dessas ocorrências não têm um motivo presumido registrado ou estão categorizadas com códigos específicos ('9800', '0133') 
- * que podem indicar categorias padrão ou dados genéricos. ao contabilizar o total de ocorrências e avaliar a frequência ou a falta desses códigos, 
- * o relatório ajuda a entender a qualidade da documentação das motivações nas ocorrências.
+ * Este script SQL foi desenvolvido para fornecer uma visão detalhada sobre a integridade dos dados relacionados aos motivos presumidos 
+ * das ocorrências fechadas registradas pela Polícia Militar de Minas Gerais  no período especificado. O objetivo está em identificar 
+ * quantas dessas ocorrências não têm um motivo presumido registrado ou estão categorizadas com códigos '9800'(IGNORADO MOTIVACAO), 
+ * '0133'(CAUSA IGNORADA).
  ----------------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT
     OCO.digitador_matricula AS MATRICULA_DIGITADOR, -- Extrai a matrícula do digitador responsável pelo registro
@@ -15,7 +14,7 @@ SELECT
         WHEN OCO.motivo_presumido_codigo IS NULL 
              OR OCO.motivo_presumido_codigo IN ('9800', '0133') -- Verifica a ausência ou códigos específicos de motivo presumido(Nulo,IGNORADO MOTIVACAO OU CAUSA IGNORADA)
         THEN 1 ELSE 0 
-        END) AS Qtd_Null_9800_0133 -- Verifica a ausência ou códigos específicos de motivo presumido(Nulo,IGNORADO MOTIVACAO OU CAUSA IGNORADA). Se ausente, atribui valor 1, caso contrario 0, então soma os valores
+        END) AS Qtd_Null_9800_0133 -- Verifica a ausência ou códigos específicos de motivo presumido(Nulo, IGNORADO MOTIVACAO OU CAUSA IGNORADA). Se ausente, atribui valor 1, caso contrario 0, então soma os valores
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 WHERE 1 = 1 
   AND OCO.digitador_sigla_orgao = 'PM' -- Apenas ocorrências digitadas pela Polícia Militar
