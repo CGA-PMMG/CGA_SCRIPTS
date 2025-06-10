@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------------------------------------------------------------------
- * este código sql foi desenvolvido para extrair informações detalhadas sobre ocorrências registradas pela polícia militar de minas gerais 
- * no ano de 2024. a consulta tem como foco identificar o total de envolvidos por ocorrência e quantificar registros com estado civil 
- * ausente ou codificado como '9800, que representam dados ignorados. Os dados considerados se referem exclusivamente a 
+ * Este script SQL foi desenvolvido para extrair informações detalhadas sobre ocorrências registradas pela Polícia Militar de Minas Gerais 
+ * no período especificado. A consulta tem como foco identificar o total de envolvidos por ocorrência e quantificar registros 
+ * com estado civil ausente ou codificado como '9800'(Ignorado). Os dados considerados se referem exclusivamente a 
  * ocorrências fechadas, envolvendo vítimas com condições físicas diferentes de fatal e grave/inconsciente. 
  ---------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT
@@ -24,7 +24,8 @@ WHERE 1 = 1
   AND ENV.condicao_fisica_codigo NOT IN ('0300', '0100') -- Exclui certas condições físicas
   AND OCO.nome_tipo_relatorio NOT IN ('RAT', 'BOS', 'BOS AMPLO') -- Exclui certos tipos de relatórios
   AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-05-01 00:00:00'  -- Filtra os dados para ocorrências dentro do intervalo especificado
--- agrupamento dos resultados para que cada combinação única de matrícula, rpm, bpm e cia seja uma linha
+  -- AND OCO.unidade_responsavel_registro_nome LIKE '%/X BPM%' -- filtra ocorrências relacionadas à unidade de registro (opcional)
+  -- agrupamento dos resultados para que cada combinação única de matrícula, rpm, bpm e cia seja uma linha
 GROUP BY MATRICULA_DIGITADOR, RPM, BPM, CIA
 -- ordenação dos resultados por rpm, bpm e cia
 ORDER BY RPM, BPM, CIA;
