@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------------------------------------------------
- * este código sql tem como objetivo calcular e apresentar informações detalhadas sobre o total de envolvidos nas 
+ * Este código sql tem como objetivo calcular e apresentar informações detalhadas sobre o total de envolvidos nas 
  * ocorrências registradas pela polícia militar de minas gerais no ano de 2024 e, mais especificamente, quantificar 
  * quantos desses registros estão sem cpf ou cnpj informado. o foco é analisar ocorrências fechadas e filtrar por diversos 
  * critérios para garantir a relevância e precisão dos dados, especialmente visando a clareza na identificação das unidades 
