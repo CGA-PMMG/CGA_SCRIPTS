@@ -19,7 +19,7 @@ LETALIDADE AS                                                              -- De
         AND ENV.ind_militar_policial IS NOT DISTINCT FROM 'M'          -- Filtra apenas militares
         AND ENV.ind_militar_policial_servico IS NOT DISTINCT FROM 'S'  -- Filtra apenas militares em serviço
         AND ENV.orgao_lotacao_policial_sigla = 'PM' 				 -- Filtra sigla do órgão policial, PM
-        AND YEAR(ENV.data_hora_fato) BETWEEN 2020 AND 2024            -- Filtra pelo mês final informado no parâmetro
+        AND ENV.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-06-10 00:00:00'            -- Filtra pelo mês final informado no parâmetro
 )
 SELECT                                                           
     OCO.numero_ocorrencia,                                           -- Seleciona o número da ocorrência
@@ -103,7 +103,7 @@ CASE                                                                            
 		)
 	ELSE CAST(ENV.data_nascimento AS STRING)                                        -- Se data existir, converte para string e retorna
 END AS data_nascimento,                                                         -- Finaliza o CASE e nomeia o campo como data_nascimento
-LET.ind_militar_policial_servico,                             -- Seleciona o indicador de militar em serviço(CTE)
+CASE WHEN LET.NUMERO_OCORRENCIA IS NOT NULL THEN 'LET' ELSE 'NO LET' END AS LETALIDADE,                             -- Seleciona o indicador de militar em serviço(CTE)
     ENV.condicao_fisica_descricao,                                -- Seleciona a descrição da condição física do envolvido
     ENV.natureza_ocorrencia_codigo,                               -- Seleciona o código da natureza da ocorrência (envolvido)
     ENV.natureza_ocorrencia_descricao,                           -- Seleciona a descrição da natureza da ocorrência (envolvido)
@@ -280,7 +280,7 @@ WHERE 1=1
     AND OCO.digitador_sigla_orgao IN ('PM','PC')               -- Filtra registros feitos pela PM ou PC
     AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP')        -- Filtra tipos específicos de relatório (POLICIAL e REFAP)
     AND OCO.local_imediato_codigo NOT IN( '1302','1310')		-- Filtra ocorrências cujo local imediato nâo seja UNIDADE PRISIONAL (CERESP/PRESIDIO/PENITENCIARIA) ou CAEDEIA PUBLICA
-    AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-02-01 00:00:00'    -- Filtra dentro do intervalo especificado
+    AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-06-10 00:00:00'    -- Filtra dentro do intervalo especificado
     -- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
    -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
 ORDER BY RPM_2025, UEOP_2025, OCO.data_hora_fato,              -- Ordena por RPM, UEOP, data/hora
