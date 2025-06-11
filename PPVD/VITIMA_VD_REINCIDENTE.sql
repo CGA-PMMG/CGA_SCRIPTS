@@ -172,14 +172,14 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
     LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
  	LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
  	LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
-    WHERE 1=1 -- Condição padrão para facilitar a inclusão de outras cláusulas WHERE
-        AND OCO.data_hora_fato BETWEEN '2022-01-01 00:00:00' AND '2024-10-18 23:59:59' -- Filtro de data/hora do fato
-        AND ENV.codigo_sexo = 'F' -- Filtro para selecionar apenas vítimas do sexo feminino
-        AND ENV.id_relacao_vitima_autor IN (3,4,5,6,7,9,15,16,18,19,20,21,22) -- Filtro para selecionar as relações específicas entre a vítima e o autor
-        AND ENV.id_envolvimento IN (25,32,872) -- Filtro para selecionar tipos específicos de envolvimento do indivíduo
-        AND OCO.natureza_codigo NOT LIKE 'A20%' -- Exclui ocorrências cuja natureza comece com 'A20'
-        AND OCO.relator_sigla_orgao = 'PM' -- Filtra ocorrências registradas pela Polícia Militar
-        AND OCO.ocorrencia_uf = 'MG' -- Filtra ocorrências que ocorreram no estado de Minas Gerais
+   WHERE 1=1 -- Condição sempre verdadeira para facilitar a adição de condições subsequentes   
+        AND ENV.id_relacao_vitima_autor IN (3,4,5,6,7,9,15,16,18,19,20,21,22) -- Filtra com base na relação entre vítima e autor, especificando valores predeterminados
+        AND ENV.id_envolvimento IN (25,32,872) -- Filtra tipos específicos de envolvimento do indivíduo na ocorrência
+        AND ENV.codigo_sexo = 'F' -- Filtra para selecionar apenas vítimas do sexo feminino
+        AND OCO.relator_sigla_orgao = 'PM' -- Filtra apenas ocorrências relatadas pela Polícia Militar
+        AND OCO.ocorrencia_uf = 'MG' -- Filtra apenas ocorrências que ocorreram em Minas Gerais
+        AND OCO.natureza_codigo NOT LIKE 'A20%' -- Exclui ocorrências cuja natureza tenha código iniciado por 'A20'
+               AND OCO.data_hora_fato BETWEEN '2022-01-01 00:00:00' AND '2024-10-18 23:59:59' -- Filtra data/hora do fato dentro do período especificado
         --AND OCO.codigo_municipio IN (0,0,0,...) -- Filtre pelo código de município desejado
         --AND unidade_responsavel_registro_nome LIKE '%X BPM/X RPM%' --Filtre pelo nome da unidade responsável pelo registro desejada
 )
