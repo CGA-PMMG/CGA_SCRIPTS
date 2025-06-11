@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------------------------------------------
- * este script sql tem como objetivo principal extrair e organizar dados relevantes e detalhados sobre ocorrências 
- * relacionadas à patrulha de prevenção à violência doméstica (ppvd), considerando registros a partir do ano de 2023.
- * a consulta identifica a natureza da ocorrência com base em códigos específicos, destaca a natureza principal 
+ * Este script SQL tem como objetivo principal extrair e organizar dados relevantes e detalhados sobre ocorrências 
+ * relacionadas à Patrulha de Prevenção à Violência Doméstica (PPVD), dentro do período especificado.
+ * A consulta identifica a natureza da ocorrência com base em códigos específicos, destaca a natureza principal 
  * (violência doméstica, palestra ou segunda resposta), e apresenta informações completas sobre vítimas e autores,
  * filtrando por município e assegurando que vítima e autor não sejam a mesma pessoa.
  * 
- * contribuição: valfrido de novais santos, analista p3/19º bpm
+ * Contribuição: Valfrido de Novais Santos, Analista P3/19º BPM
  ---------------------------------------------------------------------------------------------------------------*/
 
 SELECT DISTINCT 
