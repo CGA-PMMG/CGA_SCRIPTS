@@ -17,7 +17,7 @@ BASE AS (  -- Define a CTE para extrair informações de ocorrências com númer
       WHEN oco.natureza_codigo IN ('A20000', 'A20001') THEN  -- Aplica somente para naturezas correspondentes ao VT e VT CV
         REGEXP_EXTRACT(oco.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0)  -- Extrai padrão numérico de BO (formato YYYY-NNNNNNNNN-NNN) do histórico
     END AS BO_HISTORICO                      -- Renomeia a coluna resultante como BO_HISTORICO
-  FROM tb_ocorrencia oco                    -- Define a tabela fonte como tb_ocorrencia com alias 'oco'
+  FROM db_bisp_reds_reporting.tb_ocorrencia oco                    -- Define a tabela fonte como tb_ocorrencia com alias 'oco'
   WHERE 
     digitador_sigla_orgao = 'PM'            -- Filtra apenas ocorrências digitadas pela Polícia Militar 
     AND ocorrencia_uf = 'MG'                -- Filtra apenas ocorrências no estado de Minas Gerais ('MG')
@@ -47,7 +47,7 @@ CASE                                           -- Inicia lógica condicional par
       WHEN natureza_codigo IN ('B01121','B01148','B02001','C01157','C01158','D01217','B01504')  -- Aplica para códigos específicos de crimes violentos
       THEN 'VALIDO' ELSE 'INVALIDO'                -- Atribui 'VALIDO' se a natureza for crime violento, caso contrário 'INVALIDO'
 END AS VALIDO_CV                               -- Renomeia resultado como VALIDO_CV  
-FROM tb_ocorrencia OCO                          -- Define a tabela fonte como tb_ocorrencia com alias 'OCO'
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO                          -- Define a tabela fonte como tb_ocorrencia com alias 'OCO'
 WHERE 
     natureza_codigo IN ('C01155','B01121','B01148','B02001','C01157','C01158','D01217','B01504')  -- Filtra apenas naturezas de Furto e CV  
     AND digitador_sigla_orgao IN ('PM','PC')       -- Filtra registros digitados pela Polícia Militar ('PM') ou Polícia Civil ('PC')
