@@ -44,12 +44,12 @@ NATUREZAS AS (  -- Define CTE para validar naturezas específicas de ocorrência
         ) THEN 'VALIDO' ELSE 'INVALIDO'             -- Atribui 'VALIDO' se as condições forem atendidas, caso contrário 'INVALIDO'
  END AS VALIDO_FURTO_RESIDCOM,                  -- Renomeia resultado como VALIDO_FURTO_RESIDCOM	
 CASE                                           -- Inicia lógica condicional para validar crimes violentos (CV)
-      WHEN natureza_codigo IN ('B01121','B01148','B02001','C01157','C01158','D01217','B01504')  -- Aplica para códigos específicos de crimes violentos
+      WHEN natureza_codigo IN ('B01121','B01148','B02001','C01157','C01158','C01159','B01504')  -- Aplica para códigos específicos de crimes violentos
       THEN 'VALIDO' ELSE 'INVALIDO'                -- Atribui 'VALIDO' se a natureza for crime violento, caso contrário 'INVALIDO'
 END AS VALIDO_CV                               -- Renomeia resultado como VALIDO_CV  
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO                          -- Define a tabela fonte como tb_ocorrencia com alias 'OCO'
 WHERE 
-    natureza_codigo IN ('C01155','B01121','B01148','B02001','C01157','C01158','D01217','B01504')  -- Filtra apenas naturezas de Furto e CV  
+    natureza_codigo IN ('C01155','B01121','B01148','B02001','C01157','C01158','C01159','B01504')  -- Filtra apenas naturezas de Furto e CV  
     AND digitador_sigla_orgao IN ('PM','PC')       -- Filtra registros digitados pela Polícia Militar ('PM') ou Polícia Civil ('PC')
     AND ocorrencia_uf = 'MG'                       -- Filtra ocorrências no estado de Minas Gerais
     AND ind_estado = 'F'                           -- Filtra apenas ocorrências fechadas
