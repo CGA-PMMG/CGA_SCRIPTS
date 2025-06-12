@@ -13,10 +13,10 @@ CRIME_VIOLENTO AS (
     oco.natureza_codigo                               -- Código da natureza da ocorrência
   FROM db_bisp_reds_reporting.tb_ocorrencia oco 
   WHERE oco.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-04-30 23:59:59.000'-- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
-    AND oco.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','D01217','B01504') -- Seleção de naturezas especifícas do CV
+    AND oco.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas especifícas do CV
     AND oco.ocorrencia_uf = 'MG'         -- Filtra apenas ocorrências do estado de Minas Gerais                        
     AND oco.digitador_sigla_orgao IN ('PM', 'PC')  -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
-    AND oco.ind_estado = 'F'                                                         -- Filtra apenas ocorrências fechadas
+    AND oco.ind_estado = 'F'        -- Filtra apenas ocorrências fechadas
 ),
 VISITAS_TRANQUILIZADORAS AS (
 SELECT 
