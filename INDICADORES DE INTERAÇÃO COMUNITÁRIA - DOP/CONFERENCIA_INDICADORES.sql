@@ -26,19 +26,19 @@ WITH
  SELECT 
     tb.REDS,
     oco.numero_ocorrencia as reds_no_historico,
-    natureza_codigo,
-    complemento_natureza_descricao,
-    complemento_natureza_codigo,
-    local_imediato_descricao,
-    local_imediato_codigo,
+    oco.natureza_codigo,
+    oco.complemento_natureza_descricao,
+    oco.complemento_natureza_codigo,
+    oco.local_imediato_descricao,
+    oco.local_imediato_codigo,
     CASE 
     	WHEN natureza_codigo = 'C01155' 
     	AND(
-    	SUBSTRING(OCO.local_imediato_codigo ,1,2) = '07' 
-    	OR SUBSTRING(OCO.local_imediato_codigo,1,2) = '10' 
-		OR SUBSTRING(OCO.local_imediato_codigo,1,2) = '14' 
-		OR OCO.local_imediato_codigo IN ('1501','1502','1503','1599')
-		OR OCO.complemento_natureza_codigo IN ('2002','2003','2004','2005','2015')
+    	SUBSTRING(oco.local_imediato_codigo ,1,2) = '07' 
+    	OR SUBSTRING(oco.local_imediato_codigo,1,2) = '10' 
+		OR SUBSTRING(oco.local_imediato_codigo,1,2) = '14' 
+		OR oco.local_imediato_codigo IN ('1501','1502','1503','1599')
+		OR oco.complemento_natureza_codigo IN ('2002','2003','2004','2005','2015')
 		) THEN 'VALIDO' ELSE 'INVALIDO'
     END AS VALIDO_FURTO_RESIDCOM,
    CASE
@@ -128,16 +128,23 @@ CASE
 OCO.ind_estado IN ('F','R') 
 THEN 'Estado Valido (Fechado/Pendente)'
 ELSE 'Estado Invalido (Não Fechado/Pendente)'
-END as ESTADO
+END as ESTADO,
+MUB.udi as RPM_AREA,								-- articulação RPM conforme Setor IBGE
+    MUB.ueop as UEOP_AREA,								-- articulação BPM conforme Setor IBGE
+    MUB.cia as CIA_AREA,								-- articulação CIA conforme Setor IBGE
+    MUB.codigo_espacial_pm AS SETOR_PM
   FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 LEFT JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON OCO.numero_ocorrencia = ENV.numero_ocorrencia
   LEFT JOIN
     db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo -- Tabela de apoio que compara as lat/long com os setores IBGE
     ON oco.numero_ocorrencia = geo.numero_ocorrencia
     AND oco.ocorrencia_uf = 'MG'
+LEFT JOIN
+    db_bisp_shared.tb_pmmg_setores_geodata AS MUB			-- Tabela de secundaria com dados do GeoPM MUB compatilizados com a malha censitária
+    ON geo.setor_codigo = MUB.setor_codigo
 WHERE 1=1
 AND oco.numero_ocorrencia in (SELECT numero_ocorrencia from OCORRENCIAS)
-GROUP BY 1,2,4,5,6,7,8,9,10,11,12
+GROUP BY 1,2,4,5,6,7,8,9,10,11,12,13,14,15,16
 )
 SELECT
 F.numero_ocorrencia,
@@ -176,7 +183,8 @@ UF,
 ORGAO,
 TIPO_RELATORIO,
 UNIDADE_REGISTRO,
-ESTADO
+ESTADO,
+RPM_AREA, UEOP_AREA, CIA_AREA, SETOR_PM
 FROM FILTRO F
 LEFT JOIN BASE B ON F.numero_ocorrencia = B.REDS
 ;
