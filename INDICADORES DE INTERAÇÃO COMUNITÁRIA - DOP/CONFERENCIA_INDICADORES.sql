@@ -1,8 +1,15 @@
 WITH 
  OCORRENCIAS AS (
- SELECT numero_ocorrencia
- FROM db_bisp_reds_reporting.tb_ocorrencia
- WHERE numero_ocorrencia in ('2025-000000000-001') -- COLOQUE AQUI OS REDS A SEREM TESTADOS
+ SELECT
+	numero_ocorrencia
+FROM
+	db_bisp_reds_reporting.tb_ocorrencia
+WHERE
+	numero_ocorrencia in (
+ '2025-000111222-001',
+ '2025-123456789-001',
+ '2025-000123456-001'
+ 	)-- COLOQUE AQUI OS NÚMEROS DE REDS A SEREM TESTADOS
  ),
 /*------------------------------------
  
