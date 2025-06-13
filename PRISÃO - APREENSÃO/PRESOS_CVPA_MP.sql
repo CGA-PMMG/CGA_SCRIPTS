@@ -45,8 +45,8 @@ PRESOS_MP_CVPA AS  -- Define uma CTE (Common Table Expression) chamada PRESOS_MP
 									AND vit.data_hora_fato BETWEEN  '2025-01-01 00:00:00.000' AND '2025-02-11 23:59:59.000' --- Filtra data/hora fato dentro do intervalo especificado 
 						)
 		AND ENV.digitador_id_orgao IN (0) --  Registro feito por órgãos específicos -PM
-        AND ENV.ind_militar_policial IS DISTINCT FROM 'M' 
-        AND ENV.ind_militar_policial_servico IS DISTINCT FROM 'S' 
+        AND ENV.ind_militar_policial IS DISTINCT FROM 'M'   --  Envolvido distinto de M (Militar)
+        AND ENV.ind_militar_policial_servico IS DISTINCT FROM 'S' -- Envolvido distinto de S - Em serviço
 )
 SELECT 
 	OCO.numero_ocorrencia, -- Número da ocorrência
