@@ -1,14 +1,10 @@
-/*﻿--------------------------------------------------------------------------------------------------------------
- * Gerais no ano de 2023, categorizando-as por Regiões de Polícia Militar RPM e UEOP com base no código
- *  do município onde ocorreram as prisões. O relatório é útil para análises criminológicas e avaliações
- *  operacionais, permitindo às autoridades policiais visualizar a distribuição geográfica das atividades 
- * de prisão e ajustar recursos e estratégias de acordo com a incidência de crimes em diferentes áreas.
-﻿--------------------------------------------------------------------------------------------------------------*/
-
--- SELEÇÃO DOS DADOS RELEVANTES COM ALOCAÇÃO DE CADA OCORRÊNCIA A UMA RPM ESPECÍFICA
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ *  Este SQL consolida prisões em MG no ano especificado, categorizando-as por RPM e UEOP com base no código do município e na unidade responsável.
+ *  A análise permite avaliar a distribuição geográfica das prisões, subsidiando diagnósticos operacionais e decisões estratégicas de alocação de recursos.
+ *
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 SELECT  
-    -- CLASSIFICAÇÃO DE OCORRÊNCIAS POR RPM BASEADA NO CÓDIGO DO MUNICÍPIO
-CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
+ CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
    		WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
 		WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
     	WHEN OCO.codigo_municipio IN (310150 , 310310 , 310370 , 310440 , 310460 , 310550 , 310610 , 310690 , 310870 , 311020 , 311170 , 311330 , 311530 , 311590 , 311620 , 311670 , 311960 , 312130 , 312190 , 312200 , 312290 , 312330 , 312400 , 312460 , 312490 , 312530 , 312595 , 312738 , 312840 , 312850 , 312880 , 312900 , 313260 , 313670 , 313800 , 313840 , 313860 , 313980 , 314020 , 314080 , 314160 , 314210 , 314220 , 314390 , 314540 , 314587 , 314670 , 314820 , 314830 , 314880 , 314900 , 314940 , 314950 , 315010 , 315110 , 315130 , 315410 , 315540 , 315580 , 315590 , 315620 , 315630 , 315645 , 315727 , 315840 , 315860 , 315930 , 316000 , 316140 , 316150 , 316290 , 316380 , 316443 , 316560 , 316570 , 316730 , 316750 , 316790 , 316850 , 316900 , 316920 , 316990 , 317130 , 317140 , 317200 , 317210) THEN '04 RPM'	
@@ -27,14 +23,14 @@ CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
 	    WHEN OCO.codigo_municipio IN (310120 , 310130 , 310140 , 310490 , 310720 , 310790 , 310830 , 310890 , 310910 , 310970 , 311050 , 311060 , 311360 , 311410 , 311480 , 311550 , 311720 , 311780 , 311790 , 311850 , 311900 , 311990 , 312050 , 312080 , 312110 , 312280 , 312440 , 312450 , 312510 , 312740 , 312920 , 313060 , 313240 , 313300 , 313310 , 313360 , 313490 , 313850 , 313990 , 314040 , 314190 , 314340 , 314380 , 314440 , 314600 , 314730 , 314760 , 314780 , 314910 , 315090 , 315100 , 315250 , 315260 , 315960 , 316200 , 316230 , 316320 , 316370 , 316440 , 316490 , 316540 , 316557 , 316580 , 316640 , 316700 , 316740 , 316780 , 316905 , 316910 , 316980 , 317170 , 317220) THEN'17 RPM'	
 	    WHEN OCO.codigo_municipio IN (310160 , 310190 , 310200 , 310260 , 310410 , 310430 , 310530 , 310760 , 310840 , 310950 , 311030 , 311100 , 311130 , 311160 , 311240 , 311280 , 311440 , 311470 , 311510 , 311640 , 311710 , 312120 , 312240 , 312340 , 312520 , 312630 , 312830 , 312870 , 312970 , 312990 , 313150 , 313290 , 313375 , 313480 , 313690 , 313900 , 314300 , 314320 , 314410 , 314510 , 314720 , 314790 , 315150 , 315170 , 315180 , 315290 , 315920 , 316220 , 316294 , 316390 , 316430 , 316470 , 316510 , 316690 , 317060) THEN '18 RPM'	
 	    WHEN OCO.codigo_municipio IN (316720 , 314930 , 314110 , 314740 , 315360 , 310990 , 310500 , 311250 , 313570 , 313100 , 310320 , 312720 , 311890 , 312640 , 310960 , 315850) THEN '19 RPM'	
-   	END AS RPM_2024,
+   	END AS RPM_2025,
 CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314020,314950,315010,315540,315620,316290) THEN '02 BPM'
 		WHEN OCO.codigo_municipio IN (310240,311750,311810,312010,312100,312160,312260,312540,312550,312760,314250,314370,315330,316020,316050,316480,316590,316650,316710) THEN '03 BPM'
 		WHEN OCO.codigo_municipio IN (312125) THEN '04 BPM'
 		WHEN OCO.codigo_municipio IN (312770,310180,311265,312370,312580,313320,314995,316770,316840,310220,312690,314010,317150,316160,316300) THEN '06 BPM'
 		WHEN OCO.codigo_municipio IN (310020,310700,310740,311560,311980,312320,312470,313530,313720,313880,314050,314240,314350,314640,314890,315200,315370,316040,316660) THEN '07 BPM'
 		WHEN OCO.codigo_municipio IN (310080,310800,311120,311190,311200,311400,311450,311460,312020,313000,313040,313080,313430,313450,313820,313870,314460,314560,314770,314990,315060,315470,315880,315990,316120) THEN '08 BPM'
-		WHEN OCO.codigo_municipio IN (310163,310210,310290,310330,310560,310680,311630,312150,312500,312940,314570,314660,315030,315440,315730,315870,315940,316070,316620) THEN '09 BPM'
+		WHEN OCO.codigo_municipio IN (310163,310210,310290,310330,310560,310680,311630,312150,312500,312940,314570,314660,315030,315440,315730,315870,315940,316070) THEN '09 BPM'
 		WHEN OCO.codigo_municipio IN (314480,315390,315480) THEN '1 CIA PM IND'
 		WHEN OCO.codigo_municipio IN (310730,311650,311880,312380,312660,312735,312825,312960,313200,313680,313730,314545,316225,316265) THEN '10 BPM'
 		WHEN OCO.codigo_municipio IN (310370,311020,311170,311670,312400,314830,314880,316380,316850,317130) THEN '10 CIA PM IND'
@@ -102,7 +98,7 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio IN (310810,312060,312600,313010,313220,313665,314070,315040,315530,316292) THEN '7 CIA PM IND'
 		WHEN OCO.codigo_municipio IN (310440,310460,311530,312290,313260,313840,314220,315410,315840,316443,315110,317210,310150,316000,312460) THEN '68 BPM'
 		WHEN OCO.codigo_municipio IN (313370,313380) THEN '9 CIA PM IND'
-		/* MUNIC PIOS COM MAIS DE 01 UEOP - 7 Munic pios*/
+		/* MUNIC PIOS COM MAIS DE 01 UEOP - 8 Munic pios*/
 		WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome LIKE '32 BPM%' or OCO.unidade_area_militar_nome LIKE '%/32 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '32 BPM'
 		WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome LIKE '17 BPM%' or OCO.unidade_area_militar_nome LIKE '%/17 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '17 BPM'
 		WHEN OCO.codigo_municipio =317010 AND (OCO.unidade_area_militar_nome LIKE '4 BPM%' or OCO.unidade_area_militar_nome LIKE '%/4 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '04 BPM'
@@ -123,23 +119,25 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '41 BPM%' or OCO.unidade_area_militar_nome LIKE '%/41 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '41 BPM'
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '49 BPM%' or OCO.unidade_area_militar_nome LIKE '%/49 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '49 BPM'
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '34 BPM%' or OCO.unidade_area_militar_nome LIKE '%/34 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '34 BPM'
+		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '31 BPM%' or OCO.unidade_area_militar_nome like '%/31 BPM%') THEN '31 BPM'
+		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '9 BPM%' or OCO.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
 		ELSE 'OUTROS' 
-	END AS UEOP_2024,
--- CONTAGEM DE INDIVÍDUOS ENVOLVIDOS NAS PRISÕES
-    COUNT(ENV.numero_envolvido) AS Total_Prisoes -- CONTABILIZA  O NUMERO ENVOLVIDOS
--- TABELAS E JUNÇÕES UTILIZADAS
+	END AS UEOP_2025,	
+    COUNT(ENV.numero_envolvido) AS Total_Prisoes -- Conta o número total de registros de envolvidos (prisões)
+-- Informa as tabelas utilizadas e realiza junção entre ocorrências e envolvidos
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV 
-ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
--- FILTROS APLICADOS PARA SELEÇÃO DOS DADOS
-WHERE YEAR(OCO.data_hora_fato) = 2023 -- FILTRA APENAS O ANO DE 2023
-AND OCO.relator_sigla_orgao = 'PM' -- OCORRÊNCIAS RELATADAS PELA POLÍCIA MILITAR
-AND OCO.ocorrencia_uf = 'MG'-- OCORRÊNCIAS DO ESTADO DE MINAS GERAIS 
-AND OCO.descricao_estado = 'FECHADO' -- ESTADO DA OCORRÊNCIA FECHADO
-AND ENV.tipo_prisao_apreensao_codigo IN ('9900','0400','0100','0300','0600','0200') -- DETERMINADO TIPO DE APREENSÃO
--- AND OCO.unidade_area_militar_nome LIKE '%XXX%' -- FILTRE RPM/BPM/CIA 
--- AND OCO.nome_municipio  LIKE '%BELO HOR%'-- FILTRE O MUNICIPIO
--- AGRUPAMENTO PARA CONSOLIDAR OS RESULTADOS POR RPM E UEOP
-GROUP BY RPM_2024, UEOP_2024
--- ORDENAMENTO DOS RESULTADOS
-ORDER BY RPM_2024, UEOP_2024;
+    ON OCO.numero_ocorrencia = ENV.numero_ocorrencia -- Relaciona envolvidos com suas ocorrências
+WHERE 1= 1 
+AND ENV.id_tipo_prisao_apreensao IN (1,2,3,6,4,7)
+AND OCO.relator_sigla_orgao = 'PM' -- Considera apenas ocorrências registradas pela PMMG
+AND OCO.ocorrencia_uf = 'MG' -- Restringe para o estado de Minas Gerais
+AND OCO.ind_estado = 'F'    -- Filtra apenas ocorrências fechadas
+AND ENV.id_tipo_prisao_apreensao IN (1,2,3,6,4,7) -- Filtra determinados tipo de apreensão (FLAGRANTE DE ATO INFRACIONAL, FLAGRANTE DE CRIME / CONTRAVEN, MANDADO JUDICIAL, OUTRAS - PRISAO / APREENSAO, RECAPTURA, TCO/FLAGRANTE INFRACAO DE MENOR POTENCIAL OFENSIVO)
+AND YEAR(OCO.data_hora_fato) = :ANO -- Prompt que filtra o relatório pelo ano do fato - digitado pelo usuário
+-- AND OCO.unidade_area_militar_nome LIKE '%XXX%' -- (Comentado) Filtro opcional por unidade
+-- AND OCO.nome_municipio  LIKE '%BELO HOR%' -- (Comentado) Filtro opcional por município
+GROUP BY RPM_2025, UEOP_2025 -- Agrupa os resultados pelas categorizações RPM e UEOP
+ORDER BY RPM_2025, UEOP_2025 -- Ordena os resultados de forma hierárquica por RPM e depois por UEOP
+
+;
