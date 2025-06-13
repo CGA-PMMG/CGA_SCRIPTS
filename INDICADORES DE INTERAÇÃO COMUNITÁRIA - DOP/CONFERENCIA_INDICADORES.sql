@@ -5,12 +5,11 @@ WITH
 FROM
 	db_bisp_reds_reporting.tb_ocorrencia
 WHERE
-	numero_ocorrencia in (
- '2025-000111222-001',
- '2025-123456789-001',
- '2025-000123456-001'
+numero_ocorrencia in (
+ '2025-010101010-001',
+ '2025-001100110-001',
+ '2025-000011110-001'
  	)-- COLOQUE AQUI OS NÚMEROS DE REDS A SEREM TESTADOS
- ),
 /*------------------------------------
  
  
