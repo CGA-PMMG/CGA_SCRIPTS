@@ -31,7 +31,7 @@ PRESOS_MV AS  -- Define uma CTE (Common Table Expression) chamada PRESOS_MV
 						        	AND vit.id_envolvimento IN (25,32,1097,26,27,28,872) -- Filtra por tipos de vítima
 									AND vit.natureza_ocorrencia_codigo IN ('B01121','B02001') -- A vítima deve ter a mesma natureza da ocorrência que o autor
 									AND vit.digitador_id_orgao IN(0,1) -- Registro feito por órgãos específicos
-									AND vit.data_hora_fato BETWEEN  '2024-01-01 00:00:00.000' AND '2024-12-31 00:00:00.000' -- Filtra pelo período desejado
+									AND vit.data_hora_fato BETWEEN  '2025-01-01 00:00:00.000' AND '2025-05-30 00:00:00.000' -- Filtra pelo período desejado
 						)
 		AND ENV.digitador_id_orgao IN (0,1) -- Registro realizado por determinados órgãos (PM,PC)
         AND ENV.ind_militar_policial IS DISTINCT FROM 'M' -- Exclui  policiais militares  
@@ -208,5 +208,5 @@ WHERE 1=1
 	AND OCO.ocorrencia_uf ='MG' -- Considera apenas ocorrências no estado de Minas Gerais
 	AND OCO.nome_tipo_relatorio IN ('POLICIAL','REFAP') -- Filtra tipos específicos de relatórios
 	AND PMV.natureza_ocorrencia_codigo IN ('B01121','B02001') -- Natureza da ocorrência
-	AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2024-05-30 00:00:00.000' -- Período de análise
+	AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-05-30 00:00:00.000' -- Período de análise
 ORDER BY 1,11,12 -- Ordenação pelo número da ocorrência e códigos associados
