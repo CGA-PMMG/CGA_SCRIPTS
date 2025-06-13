@@ -136,7 +136,7 @@ COUNT(ENV.numero_envolvido) qtde_envolvido,
         WHEN ENV.valor_idade_aparente < 18 THEN 'MENOR IDADE'
         ELSE 'MAIOR IDADE'
     END AS FAIXA_ETARIA
-FROM db_bisp_reds_reporting.tb_ocorrencia OCOa
+FROM db_bisp_reds_reporting.tb_ocorrencia OCO
  INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
  LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
  LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
