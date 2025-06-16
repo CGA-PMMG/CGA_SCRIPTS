@@ -7,7 +7,7 @@
  * Protocolo de Segunda Resposta (A20.014, A20.020 e A20.024).
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 WITH VITIMAS AS (                                                      -- CTE que identifica vítimas em ocorrências após possível revitimização
-    SELECT DISTINCT
+    SELECT 
         ENV.nome_completo_envolvido AS nome_vitima,                   -- Nome completo da vítima
         ENV.data_nascimento AS data_nascimento_vitima,                -- Data de nascimento da vítima
         OCO.numero_ocorrencia,                                        -- Número  da ocorrência
@@ -18,7 +18,11 @@ WITH VITIMAS AS (                                                      -- CTE qu
         OCO.natureza_secundaria1_codigo,                              -- Códigos da primeira natureza secundária
         OCO.natureza_secundaria2_codigo,							  -- Códigos da segunda natureza secundária
         OCO.natureza_secundaria3_codigo,								  -- Códigos da terceira natureza secundária
-CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
+        ROW_NUMBER() OVER (
+            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento
+            ORDER BY OCO.data_hora_fato DESC
+        ) AS ULTIMA_OCORRENCIA_REVITIMIZACAO, -- Ordena as ocorrências de revitimização em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
+        CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
    		WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
 		WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
     	WHEN OCO.codigo_municipio IN (310150 , 310310 , 310370 , 310440 , 310460 , 310550 , 310610 , 310690 , 310870 , 311020 , 311170 , 311330 , 311530 , 311590 , 311620 , 311670 , 311960 , 312130 , 312190 , 312200 , 312290 , 312330 , 312400 , 312460 , 312490 , 312530 , 312595 , 312738 , 312840 , 312850 , 312880 , 312900 , 313260 , 313670 , 313800 , 313840 , 313860 , 313980 , 314020 , 314080 , 314160 , 314210 , 314220 , 314390 , 314540 , 314587 , 314670 , 314820 , 314830 , 314880 , 314900 , 314940 , 314950 , 315010 , 315110 , 315130 , 315410 , 315540 , 315580 , 315590 , 315620 , 315630 , 315645 , 315727 , 315840 , 315860 , 315930 , 316000 , 316140 , 316150 , 316290 , 316380 , 316443 , 316560 , 316570 , 316730 , 316750 , 316790 , 316850 , 316900 , 316920 , 316990 , 317130 , 317140 , 317200 , 317210) THEN '04 RPM'	
@@ -259,7 +263,7 @@ ELSE 'OUTRAS' END AS CIA_PVD
         ) -- Qualquer natureza com a secundária U 33.004
 ),
 CASOS_ENCERRAMENTOS AS (         -- CTE que identifica ocorrências que indicam o encerramento do protocolo de segunda resposta
-    SELECT DISTINCT
+    SELECT 
         ENV.nome_completo_envolvido AS nome_vitima,                   -- Nome da vítima atendida
         ENV.data_nascimento AS data_nascimento_vitima,                -- Data de nascimento da vítima
         OCO.numero_ocorrencia AS registro_visita,                     -- Número da ocorrência de encerramento
@@ -267,7 +271,11 @@ CASOS_ENCERRAMENTOS AS (         -- CTE que identifica ocorrências que indicam 
         OCO.natureza_codigo AS natureza_visita,                       -- Código da natureza da ocorrência 
         OCO.natureza_secundaria1_codigo,                              -- Código da primeira natureza secundária
         OCO.natureza_secundaria2_codigo,							  -- Código da segunda natureza secundária
-        OCO.natureza_secundaria3_codigo								  -- Código da terceira natureza secundária
+        OCO.natureza_secundaria3_codigo,								  -- Código da terceira natureza secundária
+        ROW_NUMBER() OVER (
+            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento
+            ORDER BY OCO.data_hora_fato DESC
+        ) AS ULTIMO_ENCERRAMENTO 	-- Ordena as ocorrências de encerramento em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
     FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
     JOIN db_bisp_reds_reporting.tb_ocorrencia OCO 
         ON ENV.numero_ocorrencia = OCO.numero_ocorrencia              -- Junção padrão entre envolvido e ocorrência
@@ -275,11 +283,10 @@ CASOS_ENCERRAMENTOS AS (         -- CTE que identifica ocorrências que indicam 
         ENV.id_envolvimento IN (25, 26, 27, 28, 32, 872, 1097)        -- Apenas registros de vítimas
         AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600')) -- Sexo ou identidade de gênero compatível
         AND OCO.ocorrencia_uf = 'MG'                                  -- Ocorrências registradas no estado de Minas Gerais
-        AND YEAR(OCO.data_hora_fato) >= 2021                          -- Considera encerramentos do protocolo a partir de 2021
         AND OCO.natureza_codigo IN ('A20014', 'A20020', 'A20024')     -- Naturezas que indicam encerramento do protocolo
 )
-SELECT 
-   CONCAT(UPPER(V.nome_vitima),'-',V.numero_ocorrencia) AS chave_nome_bo,-- Identificador único da ocorrência
+SELECT  
+	CONCAT(UPPER(V.nome_vitima),'-',CAST(CAST(V.data_nascimento_vitima AS DATE) AS STRING)) AS chave_nome_nascimento,-- Chave única do envolvido, composta pelo nome da vitima e sua data de nascimento
     V.nome_vitima,                                                    -- Nome da vítima revitimizada
     V.data_nascimento_vitima,                                         -- Data de nascimento da vítima
     V.numero_ocorrencia,                                              -- Número da ocorrência de violência doméstica
@@ -296,9 +303,13 @@ SELECT
     V.RPM_2025,                                                       -- RPM 2025
     V.UEOP_2025,                                                      -- UEOP 2025
     V.CIA_PVD,                                                        -- CIA PPVD
-    V.CATEGORIA                                                       -- CATEGORIA
+    V.CATEGORIA ,                                                      -- CATEGORIA
+    FLOOR(MONTHS_BETWEEN(V.data_hora_fato, C.data_visita) / 12) AS anos_decorridos -- Anos decorridos desde a primeira visita até a revitimização
 FROM VITIMAS V
 JOIN CASOS_ENCERRAMENTOS C 
     ON V.nome_vitima = C.nome_vitima                                  -- Junta pelo nome da vítima
     AND V.data_nascimento_vitima = C.data_nascimento_vitima           -- Junta pela data de nascimento (identificação da mesma vítima)
-    AND C.data_visita < V.data_hora_fato;                              -- Garante que a nova ocorrência seja posterior ao encerramento
+    AND C.data_visita < V.data_hora_fato                              -- Garante que a nova ocorrência seja posterior ao encerramento
+    AND C.data_visita >= DATE_ADD(V.data_hora_fato, INTERVAL -3 YEAR) -- Considera revitimizações em até 3 anos após a visita
+ WHERE V.ULTIMA_OCORRENCIA_REVITIMIZACAO = 1  
+ AND C.ULTIMO_ENCERRAMENTO = 1  -- Considera apenas a ocorrência número 1(última) ocorrência de revitimização e a ocorrência número 1(última) de primeira visita;
