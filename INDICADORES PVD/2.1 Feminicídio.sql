@@ -252,9 +252,9 @@ WHERE 1 = 1
               OCO.natureza_secundaria2_codigo = 'B01504' OR
               OCO.natureza_secundaria3_codigo = 'B01504'
             )
-            AND 
-            (ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600'))  -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
-            AND ENV.envolvimento_codigo IN ('1300','1399','1301','1302','1303','1304','1305')    -- Papel do envolvido como vítima
+            AND ENV.condicao_fisica_descricao = 'FATAL'     -- Aplica-se apenas a casos com desfecho fatal
+            AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600'))-- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
+            AND ENV.envolvimento_codigo IN ('1300','1399','1301','1302','1303','1304','1305')   -- Papel do envolvido como vítima
         )
         OR
         (
