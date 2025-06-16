@@ -275,7 +275,7 @@ CASOS_PRIMEIRA_VISITA AS (                 -- CTE que identifica ocorrências de
         ROW_NUMBER() OVER (
             PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento
             ORDER BY OCO.data_hora_fato DESC
-        ) AS ULTIMO_PRIMEIRA_VISITA  							-- Ordena as ocorrências de primeira visita em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
+        ) AS ULTIMA_PRIMEIRA_VISITA  							-- Ordena as ocorrências de primeira visita em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
     FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
     JOIN db_bisp_reds_reporting.tb_ocorrencia OCO 
         ON ENV.numero_ocorrencia = OCO.numero_ocorrencia              -- Relacionamento padrão entre envolvidos e ocorrência
@@ -312,4 +312,4 @@ JOIN CASOS_PRIMEIRA_VISITA C
     AND C.data_visita < V.data_hora_fato                              -- Considera apenas revitimizações posteriores à visita
     AND C.data_visita >= DATE_ADD(V.data_hora_fato, INTERVAL -3 YEAR) -- Considera revitimizações em até 3 anos após a visita
  WHERE V.ULTIMA_REVITIMIZACAO = 1  
- AND C.ULTIMO_PRIMEIRA_VISITA = 1  -- Considera apenas a ocorrência número 1(última) ocorrência de revitimização e a ocorrência número 1(última) de primeira visita;
+ AND C.ULTIMA_PRIMEIRA_VISITA = 1  -- Considera apenas a ocorrência número 1(última) ocorrência de revitimização e a ocorrência número 1(última) de primeira visita;
