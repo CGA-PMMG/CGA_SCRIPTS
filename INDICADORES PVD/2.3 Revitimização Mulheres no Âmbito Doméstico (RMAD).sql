@@ -8,7 +8,7 @@
  * ambiente doméstico após primeiro contato da segunda resposta da PPVD (A 20.002, A 20.003 ou A 20.005).
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 WITH VITIMAS AS (                                                      -- CTE que isola vítimas de crimes com violência física ou sexual em âmbito doméstico
-    SELECT DISTINCT
+    SELECT 
         ENV.nome_completo_envolvido AS nome_vitima,                   -- Nome completo da vítima envolvida
         ENV.data_nascimento AS data_nascimento_vitima,                -- Data de nascimento da vítima
         OCO.numero_ocorrencia,                                        -- Número da ocorrência de revitimização
@@ -241,7 +241,11 @@ WHEN OCO.codigo_municipio IN (
 314590, 314600, 314730, 314740, 314760, 314860, 314870, 314980, 314990, 315150,
 315200, 315220, 315280, 315690, 315960, 315895, 316200, 316210, 316290, 316710,
 316880, 316935, 316940, 316960, 317080, 317200, 314310) THEN '3° CIA IND PVD'
-ELSE 'OUTRAS' END AS CIA_PVD
+ELSE 'OUTRAS' END AS CIA_PVD,
+ROW_NUMBER() OVER (
+            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento
+            ORDER BY OCO.data_hora_fato DESC
+        ) AS ULTIMA_REVITIMIZACAO -- Ordena as ocorrências de revitimização em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
     FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV           -- Tabela contendo dados dos envolvidos nas ocorrências
     JOIN db_bisp_reds_reporting.tb_ocorrencia OCO                     -- Tabela principal de ocorrências
         ON ENV.numero_ocorrencia = OCO.numero_ocorrencia              -- Relacionamento entre envolvido e ocorrência pela chave primária
@@ -259,7 +263,7 @@ ELSE 'OUTRAS' END AS CIA_PVD
             )   -- Filtra naturezas de Homicídio, Tortura, Lesão Corporal, Sequestro e Cárcere Privado, Feminicídio, Estupro
 ), 
 CASOS_PRIMEIRA_VISITA AS (                 -- CTE que identifica ocorrências de primeira resposta da PPVD
-    SELECT DISTINCT
+    SELECT 
         ENV.nome_completo_envolvido AS nome_vitima,                   -- Nome completo da vítima
         ENV.data_nascimento AS data_nascimento_vitima,                -- Data de nascimento da vítima
         OCO.numero_ocorrencia AS registro_visita,                     -- Número da ocorrência da visita
@@ -267,7 +271,11 @@ CASOS_PRIMEIRA_VISITA AS (                 -- CTE que identifica ocorrências de
         OCO.natureza_codigo AS natureza_visita,                       -- Código da natureza da ocorrência de visita (deve ser A20002, A20003 ou A20005)
         OCO.natureza_secundaria1_codigo,                              -- Código da primeira natureza secundária
         OCO.natureza_secundaria2_codigo,							  -- Código da segunda natureza secundária
-        OCO.natureza_secundaria3_codigo								  -- Código da terceira natureza secundária
+        OCO.natureza_secundaria3_codigo,								  -- Código da terceira natureza secundária
+        ROW_NUMBER() OVER (
+            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento
+            ORDER BY OCO.data_hora_fato DESC
+        ) AS ULTIMO_PRIMEIRA_VISITA  							-- Ordena as ocorrências de primeira visita em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
     FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
     JOIN db_bisp_reds_reporting.tb_ocorrencia OCO 
         ON ENV.numero_ocorrencia = OCO.numero_ocorrencia              -- Relacionamento padrão entre envolvidos e ocorrência
@@ -275,11 +283,10 @@ CASOS_PRIMEIRA_VISITA AS (                 -- CTE que identifica ocorrências de
         ENV.id_envolvimento IN (25, 26, 27, 28, 32, 872, 1097)        -- Considera apenas vítimas
         AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600'))  -- Filtro de sexo ou identidade de gênero correspondentes
         AND OCO.ocorrencia_uf = 'MG'                                   -- Filtro geográfico: somente ocorrências em Minas Gerais
-        AND YEAR(OCO.data_hora_fato) >= 2021                          -- Considera visitas desde 2021
         AND OCO.natureza_codigo IN ('A20002', 'A20003', 'A20005')     -- Filtra ocorrências que representem a primeira visita da PPVD
 )
 SELECT 
-   CONCAT(UPPER(V.nome_vitima),'-',V.numero_ocorrencia) AS chave_nome_bo,-- Identificador único da ocorrência
+	CONCAT(UPPER(V.nome_vitima),'-',CAST(CAST(V.data_nascimento_vitima AS DATE) AS STRING)) AS chave_nome_nascimento,-- Chave única do envolvido, composta pelo nome da vitima e sua data de nascimento
     V.nome_vitima,                                                    -- Nome da vítima revitimizada
     V.data_nascimento_vitima,                                         -- Data de nascimento da vítima
     V.numero_ocorrencia,                                              -- Número da ocorrência da revitimização
@@ -296,9 +303,13 @@ SELECT
     V.RPM_2025,                                                       -- RPM
     V.UEOP_2025,                                                      -- UEOP 
     V.CIA_PVD,                                                        -- CIA PPVD
-    V.CATEGORIA                                                       -- CATEGORIA
-FROM VITIMAS V
+    V.CATEGORIA,                                                       -- CATEGORIA
+    FLOOR(MONTHS_BETWEEN(V.data_hora_fato, C.data_visita) / 12) AS anos_decorridos -- Anos decorridos desde a primeira visita até a revitimização
+   FROM VITIMAS V
 JOIN CASOS_PRIMEIRA_VISITA C 
     ON UPPER(V.nome_vitima) = UPPER(C.nome_vitima)                     -- Junta registros da mesma vítima por nome
     AND V.data_nascimento_vitima = C.data_nascimento_vitima           -- Garante correspondência por data de nascimento (evita falsos positivos)
-    AND C.data_visita < V.data_hora_fato;                              -- Considera apenas revitimizações posteriores à visita
+    AND C.data_visita < V.data_hora_fato                              -- Considera apenas revitimizações posteriores à visita
+    AND C.data_visita >= DATE_ADD(V.data_hora_fato, INTERVAL -3 YEAR) -- Considera revitimizações em até 3 anos após a visita
+ WHERE V.ULTIMA_REVITIMIZACAO = 1  
+ AND C.ULTIMO_PRIMEIRA_VISITA = 1  -- Considera apenas a ocorrência número 1(última) ocorrência de revitimização e a ocorrência número 1(última) de primeira visita;
