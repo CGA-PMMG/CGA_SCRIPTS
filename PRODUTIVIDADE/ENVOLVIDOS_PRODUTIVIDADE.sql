@@ -1,7 +1,6 @@
 /*---------------------------------------------------------------------------------------------------------------------
  * O objetivo deste código SQL é extrair informações detalhadas sobre indivíduos envolvidos em ocorrências policiais
- * registradas entre os anos de 2018 e 2022. A consulta foca em ocorrências onde as unidades responsáveis pelo 
- * registro são especificamente relacionadas XXXX
+ * registradas entre o periodo especificado. 
  ---------------------------------------------------------------------------------------------------------------------*/
 -- Seleciona colunas relacionadas aos envolvidos nas ocorrências registradas
 SELECT 
@@ -22,9 +21,11 @@ FROM
 LEFT JOIN 
     db_bisp_reds_reporting.tb_ocorrencia OCO
     ON ENV.numero_ocorrencia = OCO.numero_ocorrencia  
-WHERE 
-    YEAR(OCO.data_hora_fato) BETWEEN 2018 AND 2022  -- Filtra ocorrências entre os anos de 2018 e 2022
-    AND (
-        OCO.unidade_responsavel_registro_nome LIKE '%XXXX%' OR  -- 
-        OCO.unidade_responsavel_registro_nome LIKE '%XXXX%'  -- Filtra ocorrências onde a unidade responsável contém 'XXXX' Ouunidade responsável contém 'XXXX'
-    	);
+WHERE 1 = 1 
+AND OCO.digitador_id_orgao IN (0, 1)  -- Filtra pelo ID do órgão digitador - PM e PC respectivamente  
+AND OCO.ocorrencia_uf ='MG'                  -- Filtra apenas ocorrências de Minas Gerais
+AND OCO.ind_estado = 'F'                     -- Filtra apenas ocorrências fechadas
+AND YEAR(OCO.data_hora_fato) BETWEEN 2018 AND 2022  -- Filtra ocorrências entre os anos de 2018 e 2022
+ -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
+	-- AND OCO.unidade_responsavel_registro_nome LIKE '%xx RPM%' -- Filtra pelo nome da unidade responsável pelo registro
+	-- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
