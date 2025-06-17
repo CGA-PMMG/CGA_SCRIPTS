@@ -24,7 +24,6 @@ LEFT JOIN
 WHERE 1 = 1 
 AND OCO.digitador_id_orgao = 0  -- Filtra pelo ID do órgão digitador - PM 
 AND OCO.ocorrencia_uf ='MG'                  -- Filtra apenas ocorrências de Minas Gerais
-AND OCO.ind_estado = 'F'                     -- Filtra apenas ocorrências fechadas
 AND YEAR(OCO.data_hora_fato) BETWEEN 2018 AND 2022  -- Filtra ocorrências entre os anos de 2018 e 2022
  -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar
 	-- AND OCO.unidade_responsavel_registro_nome LIKE '%xx RPM%' -- Filtra pelo nome da unidade responsável pelo registro
