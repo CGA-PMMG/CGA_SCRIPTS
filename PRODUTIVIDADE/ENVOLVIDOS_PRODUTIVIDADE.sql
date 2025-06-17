@@ -22,7 +22,7 @@ LEFT JOIN
     db_bisp_reds_reporting.tb_ocorrencia OCO
     ON ENV.numero_ocorrencia = OCO.numero_ocorrencia  
 WHERE 1 = 1 
-AND OCO.digitador_id_orgao IN (0, 1)  -- Filtra pelo ID do órgão digitador - PM e PC respectivamente  
+AND OCO.digitador_id_orgao = 0  -- Filtra pelo ID do órgão digitador - PM 
 AND OCO.ocorrencia_uf ='MG'                  -- Filtra apenas ocorrências de Minas Gerais
 AND OCO.ind_estado = 'F'                     -- Filtra apenas ocorrências fechadas
 AND YEAR(OCO.data_hora_fato) BETWEEN 2018 AND 2022  -- Filtra ocorrências entre os anos de 2018 e 2022
