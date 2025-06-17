@@ -189,10 +189,10 @@ FROM  db_bisp_reds_reporting.tb_ocorrencia as OCO-- Tabela de ocorrências
  LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata as geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
  LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata as ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
  LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata as MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
-WHERE 1 = 1
-    AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
-	AND OCO.ocorrencia_uf = 'MG'      -- Filtra apenas ocorrências do estado de Minas Gerais
-    AND OCO.digitador_sigla_orgao = 'PM'      -- Filtro por ocorrências Polícia Militar 
-	--    AND OCO.ind_estado = 'F'    -- Filtra apenas ocorrências fechadas
-	--  AND OCO.unidade_responsavel_registro_nome LIKE '%xx BPM/xx RPM%' -- Filtra pelo nome da unidade responsável pelo registro
-	--  AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIO
+WHERE 1 = 1 
+AND OCO.digitador_id_orgao = 0 -- Filtra pelo ID do órgão digitador - PM 
+AND OCO.ocorrencia_uf ='MG'                  -- Filtra apenas ocorrências de Minas Gerais
+--AND OCO.ind_estado = 'F'
+AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-02-01 00:00:00.000'  -- Filtra ocorrências entre o periodo especificado
+ --  AND OCO.unidade_responsavel_registro_nome LIKE '%xx BPM/xx RPM%' -- Filtra pelo nome da unidade responsável pelo registro
+	--  AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIOUEOP.
