@@ -61,7 +61,7 @@ numero_ocorrencia in (
     AND ocorrencia_uf = 'MG'
     AND ind_estado IN ('F','R')
     AND data_hora_fato >= '2024-01-01 00:00:00'
-	AND oco.natureza_codigo IN ('A20000', 'A20001')
+	AND oco.natureza_codigo IN ('A20000', 'A20001','A20028')
   )tb ON oco.numero_ocorrencia = tb.BO_HISTORICO 
 ),
 FILTRO AS (
@@ -77,7 +77,7 @@ COUNT(
   ) AS QTD_ENVOLVIDOS,
 CASE
 	WHEN OCO.natureza_codigo = 'A21000' THEN 'VCP'
-	WHEN OCO.natureza_codigo = 'A20000' THEN 'VT'
+	WHEN OCO.natureza_codigo IN('A20000','A20028') THEN 'VT'
 	WHEN OCO.natureza_codigo = 'A20001' THEN 'VTCV'
 	WHEN OCO.natureza_codigo in ('A19000', 'A19001','A19004','A19099') THEN 'RC / RCR'
 	WHEN OCO.natureza_codigo in ('A19006', 'A19007','A19008','A19009', 'A19010', 'A19011') THEN 'MRPP'
@@ -91,7 +91,7 @@ ELSE 'Data Invalida'
 END as DATA_FATO,
 CASE
 	WHEN 
-OCO.natureza_codigo IN ('A21000','A19000', 'A19001','A19004','A19099','A19006', 'A19007','A19008','A19009', 'A19010', 'A19011','A20000','A20001')
+OCO.natureza_codigo IN ('A21000','A19000', 'A19001','A19004','A19099','A19006', 'A19007','A19008','A19009', 'A19010', 'A19011','A20000','A20001','A20028')
 THEN 'Natureza Valida'
 ELSE 'Natureza Invalida'
 END AS NATUREZA,
