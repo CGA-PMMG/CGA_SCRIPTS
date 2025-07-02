@@ -70,7 +70,7 @@ FILTRO AS (  -- Define CTE para contar quantidade de envolvidos identificados po
   LEFT JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia  -- Faz join esquerdo com tabela de envolvidos para agregar informações
   WHERE 1=1  -- Condição sempre verdadeira para facilitar inclusão de múltiplos filtros
     AND OCO.data_hora_fato >= '2024-01-01 00:00:00.000'  -- Filtra ocorrências a partir de 1º de janeiro de 2024
-    AND OCO.natureza_codigo IN ('A21000','A19000','A19001','A19004','A19099','A19006','A19007','A19008','A19009','A19010','A19011','A20000','A20001') -- Filtra por conjunto de naturezas específicas do IC : MRPP-> 'A19006', 'A19007','A19008','A19009', 'A19010', 'A19011'; RC -> 'A19000', 'A19001','A19004','A19099'; VCP -> 'A21000'; VT -> 'A20000'; VT CV -> 'A20001'.
+    AND OCO.natureza_codigo IN ('A21000','A19000','A19001','A19004','A19099','A19006','A19007','A19008','A19009','A19010','A19011','A20000','A20001','A20028') -- Filtra por conjunto de naturezas específicas do IC : MRPP-> 'A19006', 'A19007','A19008','A19009', 'A19010', 'A19011'; RC -> 'A19000', 'A19001','A19004','A19099'; VCP -> 'A21000'; VT -> 'A20000'; VT CV -> 'A20001'.
     AND OCO.ocorrencia_uf = 'MG'  -- Filtra ocorrências no estado de Minas Gerais
     AND OCO.digitador_sigla_orgao = 'PM'  -- Filtra ocorrências digitadas pela Polícia Militar
     AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')  -- Filtra apenas relatórios BOS e BOS AMPLO
@@ -290,7 +290,7 @@ CASE WHEN OCO.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
     ELSE 0 
   END AS MRPP_TOTAL,      -- Atribui 1 se condição atendida, caso contrário 0
   CASE                                            -- Inicia cálculo de indicador VT_TOTAL 
-    WHEN OCO.natureza_codigo = 'A20000'  -- Natureza correspondente a VT
+    WHEN OCO.natureza_codigo IN ('A20000','A20028') -- Natureza correspondente a VT
       AND qtd_envolvidos_identificados >= 1  -- Exige pelo menos um envolvido identificado
       AND VALIDO_FURTO_RESIDCOM = 'VALIDO'  -- Exige que o furto seja validado pela CTE NATUREZAS
     THEN 1 
