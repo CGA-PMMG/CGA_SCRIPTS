@@ -264,38 +264,38 @@ CASE WHEN OCO.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
   N.local_imediato_descricao,                       -- Descrição do local imediato (CTE NATUREZAS)
   N.local_imediato_codigo,                          -- Código do local imediato (CTE NATUREZAS)
   N.VALIDO_FURTO_RESIDCOM,                          -- Indicador de validade para furto de residência/comércio (CTE NATUREZAS)
-  CASE                                            -- Inicia cálculo de indicador VCP_TOTAL
-    WHEN OCO.natureza_codigo = 'A21000'  -- Natureza correspondendo a VCP
-      AND qtd_envolvidos_identificados >= 1  -- Exige pelo menos um envolvido identificado
-    THEN 1 
-    ELSE 0 
-  END AS VCP_TOTAL,                                -- Atribui 1 se condição atendida, caso contrário 0
-  CASE                                            -- Inicia cálculo de indicador RC_TOTAL 
+CASE 
+	WHEN OCO.natureza_codigo = 'A21000' AND OCO.data_hora_fato BETWEEN '2025-01-01' AND '2025-07-31' AND qtd_envolvidos_identificados >= 1 THEN 1
+	WHEN OCO.natureza_codigo = 'A21007' AND qtd_envolvidos_identificados >= 1 THEN 1 ELSE 0
+END AS VCP_TOTAL,    -- Atribui 1 se condição atendida, caso contrário 0
+CASE                                            -- Inicia cálculo de indicador RC_TOTAL 
     WHEN OCO.natureza_codigo IN ('A19000', 'A19001','A19004','A19099')  -- Naturezas correspondentes a RC
       AND qtd_envolvidos_identificados >= 3  -- Exige pelo menos três envolvidos identificados
     THEN 1 
     ELSE 0 
-  END AS RC_TOTAL,   -- Atribui 1 se condição atendida, caso contrário 0
- CASE                                      -- Inicia cálculo de indicador RCR_TOTAL 
+END AS RC_TOTAL,   -- Atribui 1 se condição atendida, caso contrário 0
+CASE                                      -- Inicia cálculo de indicador RCR_TOTAL 
     WHEN OCO.natureza_codigo IN ('A19000', 'A19001','A19004','A19099')  -- Naturezas correspondentes a RCR
       AND qtd_envolvidos_identificados >= 3  -- Exige pelo menos três envolvidos identificados
       AND UPPER(geo.situacao_zona) = 'RURAL' -- A situação da zona deve ser igual a RURAL
     THEN 1 
     ELSE 0 
-  END AS RCR_TOTAL,   -- Atribui 1 se condição atendida, caso contrário 0
-  CASE                                            -- Inicia cálculo de indicador MRPP_TOTAL (Menores em Roubos e Outras Condutas)
+END AS RCR_TOTAL,   -- Atribui 1 se condição atendida, caso contrário 0
+CASE                                            -- Inicia cálculo de indicador MRPP_TOTAL (Menores em Roubos e Outras Condutas)
     WHEN OCO.natureza_codigo IN ('A19006', 'A19007','A19008','A19009', 'A19010', 'A19011')  -- Naturezas específicas a MRPP
       AND qtd_envolvidos_identificados >= 3  -- Exige pelo menos três envolvidos identificados
     THEN 1 
     ELSE 0 
-  END AS MRPP_TOTAL,      -- Atribui 1 se condição atendida, caso contrário 0
-  CASE                                            -- Inicia cálculo de indicador VT_TOTAL 
-    WHEN OCO.natureza_codigo IN ('A20000','A20028') -- Natureza correspondente a VT
-      AND qtd_envolvidos_identificados >= 1  -- Exige pelo menos um envolvido identificado
-      AND VALIDO_FURTO_RESIDCOM = 'VALIDO'  -- Exige que o furto seja validado pela CTE NATUREZAS
-    THEN 1 
-    ELSE 0 
-  END AS VT_TOTAL,      -- Atribui 1 se condição atendida, caso contrário 0
+END AS MRPP_TOTAL,      -- Atribui 1 se condição atendida, caso contrário 0
+ CASE 
+		WHEN OCO.natureza_codigo = 'A20000' 
+			AND OCO.data_hora_fato BETWEEN '2025-01-01' AND '2025-07-31' 
+			AND qtd_envolvidos_identificados >= 1  
+			AND VALIDO_FURTO_RESIDCOM = 'VALIDO' THEN 1
+		WHEN OCO.natureza_codigo = 'A20028' 
+			AND qtd_envolvidos_identificados >= 1  
+			AND VALIDO_FURTO_RESIDCOM = 'VALIDO' THEN 1 ELSE 0
+ END AS VT_TOTAL,      -- Atribui 1 se condição atendida, caso contrário 0
   CASE    -- Inicia cálculo de indicador VTCV_TOTAL 
     WHEN OCO.natureza_codigo = 'A20001'  -- Natureza correspondente a VT CV 
       AND qtd_envolvidos_identificados >= 1  -- Exige pelo menos um envolvido identificado
