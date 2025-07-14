@@ -14,7 +14,7 @@ BASE AS (  -- Define a CTE para extrair informações de ocorrências com númer
     oco.natureza_codigo,                    -- Seleciona o código da natureza da ocorrência
     oco.historico_ocorrencia,               -- Seleciona o texto completo do histórico da ocorrência
     CASE                                    -- Inicia lógica condicional para extrair código do BO no histórico
-      WHEN oco.natureza_codigo IN ('A20000', 'A20001') THEN  -- Aplica somente para naturezas correspondentes ao VT e VT CV
+      WHEN oco.natureza_codigo IN ('A20000','A20001','A20028') THEN  -- Aplica somente para naturezas correspondentes ao VT e VT CV
         REGEXP_EXTRACT(oco.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0)  -- Extrai padrão numérico de BO (formato YYYY-NNNNNNNNN-NNN) do histórico
     END AS BO_HISTORICO                      -- Renomeia a coluna resultante como BO_HISTORICO
   FROM db_bisp_reds_reporting.tb_ocorrencia oco                    -- Define a tabela fonte como tb_ocorrencia com alias 'oco'
@@ -70,7 +70,7 @@ FILTRO AS (  -- Define CTE para contar quantidade de envolvidos identificados po
   LEFT JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia  -- Faz join esquerdo com tabela de envolvidos para agregar informações
   WHERE 1=1  -- Condição sempre verdadeira para facilitar inclusão de múltiplos filtros
     AND OCO.data_hora_fato >= '2024-01-01 00:00:00.000'  -- Filtra ocorrências a partir de 1º de janeiro de 2024
-    AND OCO.natureza_codigo IN ('A21000','A19000','A19001','A19004','A19099','A19006','A19007','A19008','A19009','A19010','A19011','A20000','A20001','A20028') -- Filtra por conjunto de naturezas específicas do IC : MRPP-> 'A19006', 'A19007','A19008','A19009', 'A19010', 'A19011'; RC -> 'A19000', 'A19001','A19004','A19099'; VCP -> 'A21000'; VT -> 'A20000'; VT CV -> 'A20001'.
+    AND OCO.natureza_codigo IN ('A21000','A19000', 'A19001','A19004','A19099','A19006', 'A19007','A19008','A19009', 'A19010', 'A19011','A20000','A20001','A20028','A21007') -- Filtra por conjunto de naturezas específicas do IC : MRPP-> 'A19006', 'A19007','A19008','A19009', 'A19010', 'A19011'; RC -> 'A19000', 'A19001','A19004','A19099'; VCP -> 'A21000'; VT -> 'A20000'; VT CV -> 'A20001'.
     AND OCO.ocorrencia_uf = 'MG'  -- Filtra ocorrências no estado de Minas Gerais
     AND OCO.digitador_sigla_orgao = 'PM'  -- Filtra ocorrências digitadas pela Polícia Militar
     AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')  -- Filtra apenas relatórios BOS e BOS AMPLO
