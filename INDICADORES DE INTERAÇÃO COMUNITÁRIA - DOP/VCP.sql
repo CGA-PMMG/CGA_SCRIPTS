@@ -165,6 +165,24 @@ FROM db_bisp_reds_reporting.tb_ocorrencia OCO -- Tabela principal ( tabela ocorr
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 = 1   -- Condição sempre verdadeira que facilita adicionar ou remover condições durante o desenvolvimento
+AND OCO.ocorrencia_uf = 'MG'                                                           -- Filtra ocorrências do estado de Minas Gerais
+AND OCO.digitador_sigla_orgao = 'PM'                                                   -- Filtra ocorrências registradas pela Polícia Militar
+AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                                    -- Filtra ocorrências cujo tipo de relatório é BOS ou BOS AMPLO
+AND OCO.ind_estado IN ('F','R') 
+AND (
+    (OCO.natureza_codigo = 'A21000' AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-07-31 23:59:59.000')
+    OR OCO.natureza_codigo = 'A21007'
+)
+AND OCO.unidade_responsavel_registro_nome NOT LIKE '%IND PE%'
+AND OCO.unidade_responsavel_registro_nome NOT LIKE '%PVD%'
+AND (
+    OCO.unidade_responsavel_registro_nome NOT REGEXP '/[A-Za-z]'
+    OR OCO.unidade_responsavel_registro_nome LIKE '%/PEL TM%'
+)
+AND (
+    OCO.unidade_responsavel_registro_nome REGEXP '^(SG|PEL|GP)'
+    OR OCO.unidade_responsavel_registro_nome REGEXP '^[^A-Za-z]'
+) -- Filtra apenas unidades com responsabilidade territorial. 
 AND EXISTS (                            
     SELECT 1                                                                           -- Seleciona apenas um valor constante (otimização de performance)
     FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido                      -- Tabela que contém informações dos envolvidos nas ocorrências
@@ -176,22 +194,7 @@ AND EXISTS (
             AND envolvido.numero_documento_id IS NOT NULL                              -- E que tenham um número de documento de identificação preenchido
         )
     )
-) -- Verifica a existência de pelo menos um registro na subconsulta, garantindo que há ao menos envolvido cadastrado, com preenchimento do campo CPF ou RG
-AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Filtra ocorrências por período específico (de janeiro/2024 até fevereiro/2025)
-AND OCO.natureza_codigo = 'A21000'                                                     -- Filtra ocorrências de natureza A21000 
-AND OCO.ocorrencia_uf = 'MG'                                                           -- Filtra ocorrências do estado de Minas Gerais
-AND OCO.digitador_sigla_orgao = 'PM'                                                   -- Filtra ocorrências registradas pela Polícia Militar
-AND OCO.unidade_responsavel_registro_nome NOT LIKE '%IND PE%'
-AND OCO.unidade_responsavel_registro_nome NOT LIKE '%PVD%'
-AND (
-    OCO.unidade_responsavel_registro_nome NOT REGEXP '/[A-Za-z]'
-    OR OCO.unidade_responsavel_registro_nome LIKE '%/PEL TM%'
-)
-AND (
-    OCO.unidade_responsavel_registro_nome REGEXP '^(SG|PEL|GP)'
-    OR OCO.unidade_responsavel_registro_nome REGEXP '^[^A-Za-z]'
-) -- Filtra apenas unidades com responsabilidade territorial. 
-AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                                    -- Filtra ocorrências cujo tipo de relatório é BOS ou BOS AMPLO
-AND OCO.ind_estado IN ('F','R')                                                               -- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
+) -- Verifica a existência de pelo menos um registro na subconsulta, garantindo que há ao menos envolvido cadastrado, com preenchimento do campo CPF ou RG-- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
+AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-07-15 23:59:59.000' -- Filtra ocorrências por período específico (de janeiro/2024 até fevereiro/2025)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 ORDER BY OCO.numero_ocorrencia
