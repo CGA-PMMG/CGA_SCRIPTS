@@ -76,7 +76,7 @@ COUNT(
     END
   ) AS QTD_ENVOLVIDOS,
 CASE
-	WHEN OCO.natureza_codigo = 'A21000' THEN 'VCP'
+	WHEN OCO.natureza_codigo IN ('A21000','A21007') THEN 'VCP'
 	WHEN OCO.natureza_codigo IN('A20000','A20028') THEN 'VT'
 	WHEN OCO.natureza_codigo = 'A20001' THEN 'VTCV'
 	WHEN OCO.natureza_codigo in ('A19000', 'A19001','A19004','A19099') THEN 'RC / RCR'
@@ -91,8 +91,14 @@ ELSE 'Data Invalida'
 END as DATA_FATO,
 CASE
 	WHEN 
-OCO.natureza_codigo IN ('A21000','A19000', 'A19001','A19004','A19099','A19006', 'A19007','A19008','A19009', 'A19010', 'A19011','A20000','A20001','A20028')
+OCO.natureza_codigo IN ('A19000', 'A19001','A19004','A19099','A19006', 'A19007','A19008','A19009', 'A19010', 'A19011','A20000','A20001','A20028','A21007')
 THEN 'Natureza Valida'
+WHEN 
+OCO.natureza_codigo IN ('A21000','A20000') AND OCO.data_hora_fato BETWEEN '2025-01-01' AND '2025-07-31'
+THEN 'Natureza Valida (até julho)'
+WHEN
+OCO.natureza_codigo IN ('A21000','A20000') AND OCO.data_hora_fato >= '2025-08-01'
+THEN 'Natureza Invalida (após julho)'
 ELSE 'Natureza Invalida'
 END AS NATUREZA,
 CASE
