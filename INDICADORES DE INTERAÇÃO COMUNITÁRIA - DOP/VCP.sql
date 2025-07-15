@@ -172,7 +172,7 @@ AND OCO.ind_estado IN ('F','R')
 AND (
     (OCO.natureza_codigo = 'A21000' AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-07-31 23:59:59.000')
     OR OCO.natureza_codigo = 'A21007'
-)
+) -- Considera ocorrências com natureza A21007 em qualquer data, e A21000 apenas se estiver no intervalo entre 01/01/2025 e 31/07/2025
 AND OCO.unidade_responsavel_registro_nome NOT LIKE '%IND PE%'
 AND OCO.unidade_responsavel_registro_nome NOT LIKE '%PVD%'
 AND (
