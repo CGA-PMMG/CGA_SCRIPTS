@@ -265,7 +265,7 @@ CASE WHEN OCO.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
   N.local_imediato_codigo,                          -- Código do local imediato (CTE NATUREZAS)
   N.VALIDO_FURTO_RESIDCOM,                          -- Indicador de validade para furto de residência/comércio (CTE NATUREZAS)
 CASE 
-	WHEN OCO.natureza_codigo = 'A21000' AND OCO.data_hora_fato BETWEEN '2025-01-01' AND '2025-07-31' AND qtd_envolvidos_identificados >= 1 THEN 1
+	WHEN OCO.natureza_codigo = 'A21000' AND OCO.data_hora_fato BETWEEN '2025-01-01' AND '2025-07-31 23:59:59' AND qtd_envolvidos_identificados >= 1 THEN 1
 	WHEN OCO.natureza_codigo = 'A21007' AND qtd_envolvidos_identificados >= 1 THEN 1 ELSE 0
 END AS VCP_TOTAL,    -- Atribui 1 se condição atendida, caso contrário 0
 CASE                                            -- Inicia cálculo de indicador RC_TOTAL 
@@ -289,7 +289,7 @@ CASE                                            -- Inicia cálculo de indicador 
 END AS MRPP_TOTAL,      -- Atribui 1 se condição atendida, caso contrário 0
  CASE 
 		WHEN OCO.natureza_codigo = 'A20000' 
-			AND OCO.data_hora_fato BETWEEN '2025-01-01' AND '2025-07-31' 
+			AND OCO.data_hora_fato BETWEEN '2025-01-01' AND '2025-07-31 23:59:59' 
 			AND qtd_envolvidos_identificados >= 1  
 			AND VALIDO_FURTO_RESIDCOM = 'VALIDO' THEN 1
 		WHEN OCO.natureza_codigo = 'A20028' 
@@ -321,3 +321,4 @@ LEFT JOIN
 --WHERE 1 = 1
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 ;
+
