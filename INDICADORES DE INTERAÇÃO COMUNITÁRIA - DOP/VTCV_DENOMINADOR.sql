@@ -5,7 +5,9 @@
  *  visando: orientar os cidadãos quanto à adoção de medidas de autoproteção; prevenir a revitimização; aumentar a sensação de segurança; 
  * e buscar informações sobre a prática criminosa de forma a aperfeiçoar o planejamento de ações e operações preventivas e repressivas.
  ----------------------------------------------------------------------------------------------------------------------------------------------*/
-SELECT OCO.numero_ocorrencia,   -- Número da ocorrência                                      
+SELECT 
+DISTINCT
+OCO.numero_ocorrencia,   -- Número da ocorrência                                      
 OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
 OCO.natureza_descricao,                                      -- Descrição da natureza da ocorrência
     CASE
@@ -163,19 +165,22 @@ OCO.digitador_sigla_orgao,                                  -- Sigla do órgão 
 geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
 geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
-LEFT JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia
+INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia AND ((OCO.codigo_municipio = ENV.codigo_municipio) OR ENV.codigo_municipio IS NULL)
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 = 1      -- Condição sempre verdadeira que serve como ponto inicial para facilitar manutenção da query
-AND EXISTS (                                                           
+AND (
+EXISTS (                                                           
 -- Predicado que verifica a não existência de registros na subconsulta 
    SELECT 1                                                              
    FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido          
-   WHERE envolvido.numero_ocorrencia = OCO.numero_ocorrencia             
+   WHERE envolvido.numero_ocorrencia = OCO.numero_ocorrencia 
+   AND envolvido.codigo_municipio = OCO.codigo_municipio
    AND envolvido.id_envolvimento IN(25,1097, 27, 32, 28, 26, 872)        -- Filtro por códigos específicos de envolvimento -  vítimas
    AND envolvido.condicao_fisica_codigo <> '0100'                         -- Filtro por condição física difernte de fatal (código '0100')
    AND envolvido.natureza_ocorrencia_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas do envolvido correspondente ao CV
-)                                                                          -- Fim da subconsulta EXISTS - exclui vítima fatal
+)  
+)                                                                        -- Fim da subconsulta EXISTS - exclui vítima fatal
 AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-04-30 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
 AND OCO.ocorrencia_uf = 'MG'                                                     -- Filtra apenas ocorrências do estado de Minas Gerais
 AND OCO.digitador_sigla_orgao IN ('PM','PC')                              -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
