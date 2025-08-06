@@ -12,6 +12,7 @@ CRIME_VIOLENTO AS (
     oco.data_hora_fato,                                -- Data/hora do fato
     oco.natureza_codigo                               -- Código da natureza da ocorrência
   FROM db_bisp_reds_reporting.tb_ocorrencia oco 
+  INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia AND((ENV.codigo_municipio = OCO.codigo_municipio) OR ENV.codigo_municipio IS NULL)
   WHERE oco.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-04-30 23:59:59.000'-- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
     AND oco.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas especifícas do CV
     AND oco.ocorrencia_uf = 'MG'         -- Filtra apenas ocorrências do estado de Minas Gerais                        
@@ -234,8 +235,8 @@ AND EXISTS (
     AND (
         envolvido.numero_cpf_cnpj IS NOT NULL                                          -- Filtra envolvidos que possuem CPF/CNPJ preenchido
         OR (
-            envolvido.tipo_documento_codigo = '0801'                                   -- OU filtra por envolvidos com tipo de documento específico (RG)
-            AND envolvido.numero_documento_id IS NOT NULL                              -- E que tenham um número de documento de identificação preenchido
+           			envolvido.tipo_documento_codigo IN ('0801','0802', '0803', '0809')         -- OU filtra por envolvidos com tipos de documento: RG, Carteira de Trabalho, CNH, Carteira de Registro Profissional   
+		        	AND envolvido.numero_documento_id IS NOT NULL                           -- Filtra envolvidos com algum documento de identificação não nulo 
         )
     )
 ) -- Verifica a existência de pelo menos um registro na subconsulta, garantindo que há ao menos envolvido cadastrado, com preenchimento do campo CPF ou RG
