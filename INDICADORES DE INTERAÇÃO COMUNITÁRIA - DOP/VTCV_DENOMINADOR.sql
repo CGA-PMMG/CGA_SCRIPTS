@@ -175,7 +175,6 @@ EXISTS (
    SELECT 1                                                              
    FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido          
    WHERE envolvido.numero_ocorrencia = OCO.numero_ocorrencia 
-   AND envolvido.codigo_municipio = OCO.codigo_municipio
    AND envolvido.id_envolvimento IN(25,1097, 27, 32, 28, 26, 872)        -- Filtro por códigos específicos de envolvimento -  vítimas
    AND envolvido.condicao_fisica_codigo <> '0100'                         -- Filtro por condição física difernte de fatal (código '0100')
    AND envolvido.natureza_ocorrencia_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas do envolvido correspondente ao CV
