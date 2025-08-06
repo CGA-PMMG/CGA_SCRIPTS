@@ -13,7 +13,7 @@ CRIME_VIOLENTO AS (
     oco.data_hora_fato,                                -- Data/hora do fato
     oco.natureza_codigo                               -- Código da natureza da ocorrência
   FROM db_bisp_reds_reporting.tb_ocorrencia oco 
-  INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
+  INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia AND ((ENV.codigo_municipio = OCO.codigo_municipio) OR ENV.codigo_municipio IS NULL)
   WHERE oco.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'-- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
     AND oco.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas especifícas do CV
     AND oco.ocorrencia_uf = 'MG'         -- Filtra apenas ocorrências do estado de Minas Gerais                        
@@ -226,7 +226,7 @@ END AS situacao_zona,
   geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
   geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM VISITAS_TRANQUILIZADORAS VT                        -- Tabela base da consulta (visitas)
-INNER JOIN CRIME_VIOLENTO CV ON CV.numero_ocorrencia = VT.numero_reds_furto AND CV.data_hora_fato < VT.data_hora_fato  -- Junta com furtos e garante que a visita ocorreu após o CV
+INNER JOIN CRIME_VIOLENTO CV ON CV.numero_ocorrencia = VT.numero_reds_cv AND CV.data_hora_fato < VT.data_hora_fato  -- Junta com CV e garante que a visita ocorreu após o CV
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON VT.numero_ocorrencia = geo.numero_ocorrencia AND VT.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 =1 
 AND EXISTS (                            
