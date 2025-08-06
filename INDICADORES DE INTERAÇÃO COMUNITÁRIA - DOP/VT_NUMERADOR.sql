@@ -17,9 +17,12 @@ FURTOS AS (                                            -- CTE que define ocorrê
     oco.local_imediato_codigo,							-- Código do local imediato
     oco.local_imediato_descricao						-- Descrição do local imediato
   FROM db_bisp_reds_reporting.tb_ocorrencia oco                               -- Tabela base de ocorrências
-  WHERE oco.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-07-15 23:59:59.000' -- Filtra ocorrências por período específico (jan/2025  até jul/2025)
+  WHERE oco.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-06 23:59:59.000' -- Filtra ocorrências por período específico (jan/2025  até jul/2025)
     AND oco.natureza_codigo = 'C01155' --  Filtra pelo código de natureza - FURTO
-	AND  (SUBSTRING(oco.local_imediato_codigo ,1,2) = '07' OR SUBSTRING(oco.local_imediato_codigo,1,2) = '10' OR SUBSTRING(oco.local_imediato_codigo,1,2) = '14' OR oco.local_imediato_codigo IN ('1501','1502','1503','1599') OR oco.complemento_natureza_codigo IN ('2002','2003','2004','2005','2015'))
+	AND(
+    		((SUBSTRING(OCO.local_imediato_codigo , 1, 2) IN ('07', '10', '14', '15', '03')) OR OCO.local_imediato_codigo = '0512')
+		    AND OCO.complemento_natureza_codigo IN ('2002', '2004', '2005', '2015')
+	   )
     AND oco.ocorrencia_uf = 'MG'          -- Filtra apenas ocorrências do estado de Minas Gerais                                         
     AND oco.digitador_sigla_orgao IN ('PM', 'PC') -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
     AND oco.ind_estado = 'F'                                                         -- Filtra apenas ocorrências fechadas
@@ -251,8 +254,8 @@ AND EXISTS (
     AND (
         envolvido.numero_cpf_cnpj IS NOT NULL                                          -- Filtra envolvidos que possuem CPF/CNPJ preenchido
         OR (
-            envolvido.tipo_documento_codigo = '0801'                                   -- OU filtra por envolvidos com tipo de documento específico (RG)
-            AND envolvido.numero_documento_id IS NOT NULL                              -- E que tenham um número de documento de identificação preenchido
+           			envolvido.tipo_documento_codigo IN ('0801','0802', '0803', '0809')         -- OU filtra por envolvidos com tipos de documento: RG, Carteira de Trabalho, CNH, Carteira de Registro Profissional   
+		        	AND envolvido.numero_documento_id IS NOT NULL                           -- Filtra envolvidos com algum documento de identificação não nulo 
         )
     )
 ) -- Verifica a existência de pelo menos um registro na subconsulta, garantindo que há ao menos envolvido cadastrado, com preenchimento do campo CPF ou RG
