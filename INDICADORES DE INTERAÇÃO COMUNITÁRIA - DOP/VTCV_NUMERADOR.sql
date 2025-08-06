@@ -8,12 +8,13 @@
 WITH 
 CRIME_VIOLENTO AS (
   SELECT 
+  DISTINCT  
     oco.numero_ocorrencia,                             -- Número da ocorrência
     oco.data_hora_fato,                                -- Data/hora do fato
     oco.natureza_codigo                               -- Código da natureza da ocorrência
   FROM db_bisp_reds_reporting.tb_ocorrencia oco 
-  INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia AND((ENV.codigo_municipio = OCO.codigo_municipio) OR ENV.codigo_municipio IS NULL)
-  WHERE oco.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-04-30 23:59:59.000'-- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
+  INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia 
+  WHERE oco.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'-- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
     AND oco.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas especifícas do CV
     AND oco.ocorrencia_uf = 'MG'         -- Filtra apenas ocorrências do estado de Minas Gerais                        
     AND oco.digitador_sigla_orgao IN ('PM', 'PC')  -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
@@ -43,11 +44,11 @@ SELECT
 	OCO.nome_tipo_relatorio,                                   -- Tipo do relatório
 	OCO.digitador_sigla_orgao,                                  -- Sigla do órgão que registrou
 	OCO.ind_estado,
-    REGEXP_EXTRACT(OCO.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS numero_reds_furto, 
+    REGEXP_EXTRACT(OCO.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS numero_reds_cv, 
     OCO.pais_codigo
   FROM db_bisp_reds_reporting.tb_ocorrencia OCO
   LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
-  WHERE OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-04-30 23:59:59.000'
+  WHERE OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'
     AND OCO.natureza_codigo = 'A20001'
     AND OCO.ocorrencia_uf = 'MG'                                
     AND OCO.digitador_sigla_orgao = 'PM'
@@ -67,7 +68,7 @@ SELECT
 )
 SELECT 
   VT.numero_ocorrencia,                                 -- Número da ocorrência da visita
-  VT.numero_reds_furto,                                 -- Número da ocorrência de furto relacionada                               
+  VT.numero_reds_cv,                                 -- Número da ocorrência de CV relacionada                               
   VT.natureza_codigo,                                   -- Código da natureza da visita
   VT.natureza_descricao,                                -- Descrição da natureza da visita
 CASE
