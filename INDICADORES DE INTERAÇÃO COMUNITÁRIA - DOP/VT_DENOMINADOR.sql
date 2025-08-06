@@ -169,13 +169,12 @@ FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1 = 1   -- Condição invariavelmente verdadeira que serve como ponto de partida para a cláusula WHERE, facilitando adições ou remoções futuras
-AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000' -- Delimitação temporal das ocorrências, selecionando fatos ocorridos entre janeiro/2024 e fevereiro/2025
+AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-01 23:59:59.000' -- Delimitação temporal das ocorrências, selecionando fatos ocorridos entre janeiro/2024 e fevereiro/2025
 AND OCO.natureza_codigo = 'C01155'                                         -- Filtragem por ocorrência  de natureza C01155 - Furto
-AND (SUBSTRING(OCO.local_imediato_codigo ,1,2) = '07'                      -- Início de condição composta para filtrar local imediato, extraindo os dois primeiros caracteres do código, 07
-	   OR SUBSTRING(OCO.local_imediato_codigo,1,2) = '10'                     -- Filtro por local imediato, extraindo os dois primeiros caracteres do código,'10' 
-	   OR SUBSTRING(OCO.local_imediato_codigo,1,2) = '14'                     -- Filtro por local imediato, extraindo os dois primeiros caracteres do código,'14' 
-	   OR OCO.local_imediato_codigo IN ('1501','1502','1503','1599')          -- Filtro por local imediato
-	   OR OCO.complemento_natureza_codigo IN ('2002','2003','2004','2005','2015')) -- Filtro por códigos de complemento da natureza 
+AND (
+      ((SUBSTRING(OCO.local_imediato_codigo , 1, 2) IN ('07', '10', '14', '15', '03')) OR OCO.local_imediato_codigo = '0512')
+		AND OCO.complemento_natureza_codigo IN ('2002', '2004', '2005', '2015')
+	)
 AND OCO.ocorrencia_uf = 'MG'          -- Filtra apenas ocorrências do estado de Minas Gerais                         
 AND OCO.digitador_sigla_orgao  IN ('PM','PC') -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
 AND OCO.ind_estado = 'F'                                -- Filtra apenas ocorrências fechadas
