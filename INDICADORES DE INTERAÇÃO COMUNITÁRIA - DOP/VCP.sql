@@ -169,7 +169,10 @@ AND OCO.ocorrencia_uf = 'MG'                                                    
 AND OCO.digitador_sigla_orgao = 'PM'                                                   -- Filtra ocorrências registradas pela Polícia Militar
 AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                                    -- Filtra ocorrências cujo tipo de relatório é BOS ou BOS AMPLO
 AND OCO.ind_estado IN ('F','R') 
-AND  OCO.natureza_codigo = 'A21007' -- Considera ocorrências com natureza A21007 
+AND (
+    (OCO.natureza_codigo = 'A21000' AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-07-31 23:59:59.000')
+    OR OCO.natureza_codigo = 'A21007'
+) -- Considera ocorrências com natureza A21007 em qualquer data, e A21000 apenas se estiver no intervalo entre 01/01/2025 e 31/07/2025
 AND OCO.unidade_responsavel_registro_nome NOT LIKE '%IND PE%'
 AND OCO.unidade_responsavel_registro_nome NOT LIKE '%PVD%'
 AND (
@@ -184,12 +187,12 @@ AND EXISTS (
     SELECT 1                                                                           -- Seleciona apenas um valor constante (otimização de performance)
     FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido                      -- Tabela que contém informações dos envolvidos nas ocorrências
     WHERE envolvido.numero_ocorrencia = OCO.numero_ocorrencia                          -- Correlaciona os envolvidos com a ocorrência principal
-    AND (
-        envolvido.numero_cpf_cnpj IS NOT NULL                                          -- Filtra envolvidos que possuem CPF/CNPJ preenchido
-        OR (
-            envolvido.tipo_documento_codigo IN ('0801','0802', '0803', '0809')         -- OU filtra por envolvidos com tipos de documento: RG, Carteira de Trabalho, CNH, Carteira de Registro Profissional
-            AND envolvido.numero_documento_id IS NOT NULL                              -- E que tenham um número de documento de identificação preenchido
-        )
+   	AND (                                                                        -- Inicia uma condição composta para filtrar apenas envolvidos identificados
+       		 envolvido.numero_cpf_cnpj IS NOT NULL                                   -- Filtra cpf/cnpj não nulo
+		     OR (                                                                     -- OU alternativa para identificação
+		         	envolvido.tipo_documento_codigo IN ('0801','0802', '0803', '0809')         -- OU filtra por envolvidos com tipos de documento: RG, Carteira de Trabalho, CNH, Carteira de Registro Profissional   
+		        	AND envolvido.numero_documento_id IS NOT NULL                           -- Filtra envolvidos com algum documento de identificação não nulo 
+		        )
     )
 ) -- Verifica a existência de pelo menos um registro na subconsulta, garantindo que há ao menos envolvido cadastrado, com preenchimento do campo CPF ou RG-- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
 AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-15 23:59:59.000' -- Filtra ocorrências por período específico (de janeiro/2024 até fevereiro/2025)
