@@ -168,11 +168,11 @@ AND (
     SELECT COUNT(DISTINCT envolvido.numero_envolvido)                           -- Conta o número de envolvidos distintos (evitando duplicatas)
     FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia envolvido               
     WHERE envolvido.numero_ocorrencia = OCO.numero_ocorrencia                   
-    AND (                                                                        -- Inicia uma condição composta para filtrar apenas envolvidos identificados
+     AND (                                                                        -- Inicia uma condição composta para filtrar apenas envolvidos identificados
         envolvido.numero_cpf_cnpj IS NOT NULL                                   -- Filtra cpf/cnpj não nulo
         OR (                                                                     -- OU alternativa para identificação
-            envolvido.numero_documento_id IS NOT NULL                           -- Filtra envolvidos com algum documento de identificação não nulo
-            AND envolvido.tipo_documento_codigo IN ('0801','0802', '0803', '0809')         -- OU filtra por envolvidos com tipos de documento: RG, Carteira de Trabalho, CNH, Carteira de Registro Profissional
+         	envolvido.tipo_documento_codigo IN ('0801','0802', '0803', '0809')         -- OU filtra por envolvidos com tipos de documento: RG, Carteira de Trabalho, CNH, Carteira de Registro Profissional   
+        	AND envolvido.numero_documento_id IS NOT NULL                           -- Filtra envolvidos com algum documento de identificação não nulo 
         )
     )
 ) >= 3                                                                           -- Exige que existam pelo menos 3 envolvidos identificados na ocorrência
