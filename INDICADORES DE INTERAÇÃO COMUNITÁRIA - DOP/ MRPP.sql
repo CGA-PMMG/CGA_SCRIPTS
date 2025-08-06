@@ -170,8 +170,8 @@ AND (
     AND (                                                                        -- Inicia uma condição composta para filtrar apenas envolvidos identificados
         envolvido.numero_cpf_cnpj IS NOT NULL                                   -- Filtra cpf/cnpj não nulo
         OR (                                                                     -- OU alternativa para identificação
-            envolvido.numero_documento_id IS NOT NULL                           -- Filtra envolvidos com algum documento de identificação não nulo
-            AND envolvido.tipo_documento_codigo = '0801'                        -- E que esse documento seja do tipo específico '0801' (RG)
+           envolvido.tipo_documento_codigo IN ('0801','0802', '0803', '0809')         -- OU filtra por envolvidos com tipos de documento: RG, Carteira de Trabalho, CNH, Carteira de Registro Profissional   
+        	AND envolvido.numero_documento_id IS NOT NULL                           -- Filtra envolvidos com algum documento de identificação não nulo 
         )
     )
 ) >= 3                                                                           -- Exige que existam pelo menos 3 envolvidos identificados na ocorrência
