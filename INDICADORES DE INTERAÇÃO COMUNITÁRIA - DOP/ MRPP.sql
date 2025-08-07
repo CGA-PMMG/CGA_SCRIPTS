@@ -175,7 +175,7 @@ AND (
         )
     )
 ) >= 3                                                                           -- Exige que existam pelo menos 3 envolvidos identificados na ocorrência
-AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-02-28 23:59:59.000'  -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
+AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'  -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
 AND OCO.natureza_codigo IN ('A19006', 'A19007','A19008','A19009', 'A19010', 'A19011') -- Filtra ocorrências de naturezas A 19.006 - Reunião com os cadastrados na Rede de Vizinhos Protegidos; A 19.007 - Reunião com os cadastrados na Rede de Comerciantes Protegidos; A 19.008 - Reunião com os cadastrados na Rede de Bancos Protegidos; A 19.009 - Reunião com os cadastrados Rede Propriedades Rurais Protegidas; A 19.010 - Reunião com os cadastrados na Rede de Indústrias Protegidas; A 19.011 - Reunião com outras Redes de Proteção.
 AND OCO.ocorrencia_uf = 'MG'                                                     -- Filtra apenas ocorrências do estado de Minas Gerais
 AND OCO.digitador_sigla_orgao = 'PM'                                            -- Filtra ocorrências registradas pela Polícia Militar
