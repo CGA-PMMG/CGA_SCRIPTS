@@ -176,7 +176,7 @@ AND (
         )
     )
 ) >= 3                                                                           -- Exige que existam pelo menos 3 envolvidos identificados na ocorrência
-AND OCO.data_hora_fato BETWEEN '2025-05-01 00:00:00.000' AND '2025-05-27 23:59:59.000'  -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
+AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'  -- Filtra ocorrências por período específico (todo o ano de 2025 até ago/2025)
 AND OCO.natureza_codigo IN ('A19000', 'A19001','A19004','A19099')               -- Filtra ocorrências de naturezas A19000 - Reunião Comunitária ou com entidades diversas, A19001 - Reunião com CONSEP ,A19004 -Reunião com associação de moradores ,A19099 - Reunião com outros tipos de entidades.
 AND OCO.ocorrencia_uf = 'MG'                                                     -- Filtra apenas ocorrências do estado de Minas Gerais
 AND OCO.digitador_sigla_orgao = 'PM'                                            -- Filtra ocorrências registradas pela Polícia Militar
@@ -194,3 +194,4 @@ AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                             
 AND OCO.ind_estado IN ('F','R')                                                               -- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 order by OCO.numero_ocorrencia
+
