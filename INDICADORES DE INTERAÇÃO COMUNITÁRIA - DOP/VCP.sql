@@ -195,6 +195,7 @@ AND EXISTS (
 		        )
     )
 ) -- Verifica a existência de pelo menos um registro na subconsulta, garantindo que há ao menos envolvido cadastrado, com preenchimento do campo CPF ou RG-- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
-AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-15 23:59:59.000' -- Filtra ocorrências por período específico (de janeiro/2024 até fevereiro/2025)
+AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'  -- Filtra ocorrências por período específico (jan/2025 até ago/2025)25)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 ORDER BY OCO.numero_ocorrencia
+
