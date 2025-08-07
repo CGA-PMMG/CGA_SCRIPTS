@@ -176,7 +176,7 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
         AND ENV.id_relacao_vitima_autor IN (3,4,5,6,7,9,15,16,18,19,20,21,22) -- Filtra com base na relação entre vítima e autor, especificando valores predeterminados
         AND ENV.id_envolvimento IN (25,32,872) -- Filtra tipos específicos de envolvimento do indivíduo na ocorrência
         AND ENV.codigo_sexo = 'F' -- Filtra para selecionar apenas vítimas do sexo feminino
-        AND OCO.digitador_sigla_orgao IN ('PM','PC') -- Filtra apenas ocorrências relatadas pela Polícia Militar
+        AND OCO.digitador_sigla_orgao IN ('PM','PC') -- Filtra apenas ocorrências registradas pela Polícia Militar ou Polícia Civil
         AND OCO.ocorrencia_uf = 'MG' -- Filtra apenas ocorrências que ocorreram em Minas Gerais
         AND OCO.natureza_codigo NOT LIKE 'A20%' -- Exclui ocorrências cuja natureza tenha código iniciado por 'A20'
                AND OCO.data_hora_fato BETWEEN '2022-01-01 00:00:00' AND '2024-10-18 23:59:59' -- Filtra data/hora do fato dentro do período especificado
