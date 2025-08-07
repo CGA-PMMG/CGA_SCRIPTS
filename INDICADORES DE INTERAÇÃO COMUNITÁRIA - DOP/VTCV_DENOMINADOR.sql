@@ -180,10 +180,11 @@ EXISTS (
    AND envolvido.natureza_ocorrencia_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas do envolvido correspondente ao CV
 )  
 )                                                                        -- Fim da subconsulta EXISTS - exclui vítima fatal
-AND OCO.data_hora_fato BETWEEN '2024-01-01 00:00:00.000' AND '2025-04-30 23:59:59.000' -- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
+AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'  -- Filtra ocorrências por período específico (jan/2025 até ago/2025)
 AND OCO.ocorrencia_uf = 'MG'                                                     -- Filtra apenas ocorrências do estado de Minas Gerais
 AND OCO.digitador_sigla_orgao IN ('PM','PC')                              -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
 AND OCO.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas do CV
 AND OCO.ind_estado = 'F'                                                         -- Filtra apenas ocorrências fechadas
 --AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%'   -- FILTRE PELO NOME DA UNIDADE AREA MILITAR
 ORDER BY  OCO.numero_ocorrencia
+
