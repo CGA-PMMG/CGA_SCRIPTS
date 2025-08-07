@@ -28,9 +28,9 @@ numero_ocorrencia in (
  
  
  --------------------------------------*/
- BASE AS(
+BASE AS(
  SELECT 
- distinct 
+ DISTINCT 
     tb.REDS,
     oco.numero_ocorrencia as reds_no_historico,
     oco.natureza_codigo,
@@ -42,17 +42,17 @@ numero_ocorrencia in (
     	WHEN natureza_codigo = 'C01155' 
     	AND(
     		((SUBSTRING(oco.local_imediato_codigo , 1, 2) IN ('07', '10', '14', '15', '03')) OR oco.local_imediato_codigo = '0512')
-		AND oco.complemento_natureza_codigo IN ('2002', '2004', '2005', '2015')
-		) THEN 'VALIDO'
-	ELSE 'INVALIDO'
+				AND oco.complemento_natureza_codigo IN ('2002', '2004', '2005', '2015')
+			) THEN 'VALIDO'
+			ELSE 'INVALIDO'
     END AS VALIDO_FURTO_RESIDCOM,
    CASE
    	WHEN natureza_codigo IN ('B01121','B01148','B02001','C01157','C01158','C01159','B01504') 
-   	AND  (ENV.numero_ocorrencia IS NOT NULL AND ENV.id_envolvimento IN(25,1097, 27, 32, 28, 26, 872) )       -- Filtro por códigos específicos de      -- Filtro por códigos específicos de
+   	AND  (ENV.condicao_fisica_codigo <> '0100' AND ENV.id_envolvimento IN(25,1097, 27, 32, 28, 26, 872) )   
    	THEN 'VALIDO' ELSE 'INVALIDO'
    	END AS VALIDO_CV   
    FROM db_bisp_reds_reporting.tb_ocorrencia oco
-   INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = oco.numero_ocorrencia AND ((oco.codigo_municipio = ENV.codigo_municipio) OR ENV.codigo_municipio IS NULL)
+   INNER  JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = oco.numero_ocorrencia   AND ((oco.codigo_municipio = ENV.codigo_municipio) OR ENV.codigo_municipio IS NULL)
   INNER JOIN (
 			    			SELECT numero_ocorrencia as REDS, 
 			           		       REGEXP_EXTRACT(oco.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS BO_HISTORICO
@@ -61,8 +61,11 @@ numero_ocorrencia in (
 						    digitador_sigla_orgao = 'PM'
 						    AND ocorrencia_uf = 'MG'
 						    AND ind_estado IN ('F','R')
-						    AND data_hora_fato >= '2024-01-01 00:00:00'
-							AND oco.natureza_codigo IN ('A20000', 'A20001','A20028')
+						    AND data_hora_fato >= '2025-01-01 00:00:00'
+							    AND (
+									    (oco.natureza_codigo = 'A20000' AND oco.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-07-31 23:59:59.000')
+									    OR oco.natureza_codigo = 'A20028'
+									) 
 			  )tb 
 ON oco.numero_ocorrencia = tb.BO_HISTORICO 
 ),
@@ -203,4 +206,5 @@ ESTADO,
 RPM_AREA, UEOP_AREA, CIA_AREA, SETOR_PM
 FROM FILTRO F
 LEFT JOIN BASE B ON F.numero_ocorrencia = B.REDS
+ORDER BY NUMERO_OCORRENCIA
 ;
