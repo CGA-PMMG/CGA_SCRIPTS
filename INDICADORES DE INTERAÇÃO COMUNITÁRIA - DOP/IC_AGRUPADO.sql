@@ -45,11 +45,11 @@ END AS VALIDO_FURTO_RESIDCOM,
    	WHEN natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') THEN 'VALIDO' ELSE 'INVALIDO'
    END AS VALIDO_CV   
   FROM db_bisp_reds_reporting.tb_ocorrencia OCO
-  WHERE natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Filtra apenas naturezas de Furto e CV  
+  WHERE natureza_codigo IN('C01155','B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Filtra apenas naturezas de Furto e CV  
     AND digitador_sigla_orgao IN ('PM','PC')       -- Filtra registros digitados pela Polícia Militar ('PM') ou Polícia Civil ('PC')
     AND ocorrencia_uf = 'MG'                       -- Filtra ocorrências no estado de Minas Gerais
     AND ind_estado = 'F'                           -- Filtra apenas ocorrências fechadas
-    AND data_hora_fato >= '2023-06-01'             -- Filtra ocorrências a partir de 1º de junho de 2023
+    AND data_hora_fato >= '2024-06-01'             -- Filtra ocorrências a partir de 1º de junho de 2023
   ),  
 FILTRO AS (
 SELECT OCO.numero_ocorrencia, -- Seleciona o número da ocorrência
@@ -296,3 +296,4 @@ LEFT JOIN
 --WHERE 1 = 1
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 ;
+
