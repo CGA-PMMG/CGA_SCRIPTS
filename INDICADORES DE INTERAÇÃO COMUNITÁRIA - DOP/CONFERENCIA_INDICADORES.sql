@@ -65,6 +65,7 @@ BASE AS(
 							    AND (
 									    (oco.natureza_codigo = 'A20000' AND oco.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-07-31 23:59:59.000')
 									    OR oco.natureza_codigo = 'A20028'
+									    OR oco.natureza_codigo = 'A20001'
 									) 
 			  )tb 
 ON oco.numero_ocorrencia = tb.BO_HISTORICO 
@@ -99,7 +100,7 @@ CASE
 OCO.natureza_codigo IN ('A19000', 'A19001','A19004','A19099','A19006', 'A19007','A19008','A19009', 'A19010', 'A19011','A20000','A20001','A20028','A21007')
 THEN 'Natureza Valida'
 WHEN 
-OCO.natureza_codigo IN ('A21000','A20000') AND OCO.data_hora_fato BETWEEN '2025-01-01' AND '2025-07-31'
+OCO.natureza_codigo IN ('A21000','A20000') AND OCO.data_hora_fato BETWEEN '2025-01-01' AND '2025-07-31 23:59:59'
 THEN 'Natureza Valida (até julho)'
 WHEN
 OCO.natureza_codigo IN ('A21000','A20000') AND OCO.data_hora_fato >= '2025-08-01'
