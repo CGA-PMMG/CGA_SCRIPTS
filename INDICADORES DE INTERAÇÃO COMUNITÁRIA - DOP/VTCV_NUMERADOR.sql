@@ -15,7 +15,7 @@ CRIME_VIOLENTO AS (
   FROM db_bisp_reds_reporting.tb_ocorrencia oco 
   INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia AND ((ENV.codigo_municipio = OCO.codigo_municipio) OR ENV.codigo_municipio IS NULL)
   WHERE oco.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'-- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
-    AND oco.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas especifícas do CV
+    AND oco.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','B01504') -- Seleção de naturezas especifícas do CV
     AND oco.ocorrencia_uf = 'MG'         -- Filtra apenas ocorrências do estado de Minas Gerais                        
     AND oco.digitador_sigla_orgao IN ('PM', 'PC')  -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
     AND oco.ind_estado = 'F'        -- Filtra apenas ocorrências fechadas
