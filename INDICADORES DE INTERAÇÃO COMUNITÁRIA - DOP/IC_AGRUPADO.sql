@@ -73,7 +73,7 @@ SELECT '310800810000009' AS setor_codigo, 'Rural'  AS zona_agua UNION ALL
     SELECT '315050505000027', 'Rural'  UNION ALL
     SELECT '315160205000036', 'Rural'  UNION ALL
     SELECT '317010705000100', 'Rural'
-),
+), -- !!!!!  ESTA CTE NÃO DEVE SER ALTERADA !!!!!
 BASE AS (  -- Define a CTE para extrair informações de ocorrências com número do BO no histórico
   SELECT 
     oco.numero_ocorrencia,                  -- Seleciona o número da ocorrência
@@ -363,3 +363,4 @@ LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
 --WHERE 1 = 1
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 ;
+
