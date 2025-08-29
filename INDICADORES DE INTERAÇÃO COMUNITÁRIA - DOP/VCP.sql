@@ -70,7 +70,7 @@ SELECT '310800810000009' AS setor_codigo, 'Rural'  AS zona_agua UNION ALL
     SELECT '315050505000027', 'Rural'  UNION ALL
     SELECT '315160205000036', 'Rural'  UNION ALL
     SELECT '317010705000100', 'Rural'
-)
+) -- !!!!!  ESTA CTE NÃO DEVE SER ALTERADA !!!!!
 SELECT  
 OCO.numero_ocorrencia,                                      -- Número da ocorrência 
 OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
@@ -267,3 +267,4 @@ AND EXISTS (
 AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'  -- Filtra ocorrências por período específico (jan/2025 até ago/2025)25)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 ORDER BY OCO.numero_ocorrencia
+
