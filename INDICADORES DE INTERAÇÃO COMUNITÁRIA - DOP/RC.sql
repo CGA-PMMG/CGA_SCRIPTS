@@ -71,7 +71,7 @@ SELECT '310800810000009' AS setor_codigo, 'Rural'  AS zona_agua UNION ALL
     SELECT '315050505000027', 'Rural'  UNION ALL
     SELECT '315160205000036', 'Rural'  UNION ALL
     SELECT '317010705000100', 'Rural'
-)
+) -- !!!!!  ESTA CTE NÃO DEVE SER ALTERADA !!!!!
 SELECT 
 OCO.numero_ocorrencia, -- Número da ocorrência
 CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
@@ -262,3 +262,4 @@ AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                             
 AND OCO.ind_estado IN ('F','R')                                                               -- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 order by OCO.numero_ocorrencia
+
