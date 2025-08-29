@@ -6,6 +6,73 @@
  * aumentar a sensação de segurança; e buscar informações sobre a prática criminosa de forma a aperfeiçoar o planejamento de ações e 
  * operações preventivas e repressivas.
  ----------------------------------------------------------------------------------------------------------------------------------------------*/
+WITH 
+AGUAS AS (
+SELECT '310800810000009' AS setor_codigo, 'Rural'  AS zona_agua UNION ALL
+    SELECT '311440205000086', 'Rural'  UNION ALL
+    SELECT '312520005000014', 'Rural'  UNION ALL
+    SELECT '312570510000021', 'Rural'  UNION ALL
+    SELECT '312610910000009', 'Rural'  UNION ALL
+    SELECT '315180005000418', 'Rural'  UNION ALL
+    SELECT '315430905000031', 'Urbana' UNION ALL
+    SELECT '315690810000020', 'Rural'  UNION ALL
+    SELECT '316225205000015', 'Urbana' UNION ALL
+    SELECT '316720205010026', 'Urbana' UNION ALL
+    SELECT '316935605000093', 'Urbana' UNION ALL
+    SELECT '310160705000238', 'Rural'  UNION ALL
+    SELECT '310160705000241', 'Rural'  UNION ALL
+    SELECT '310430405000063', 'Rural'  UNION ALL
+    SELECT '310430405000071', 'Rural'  UNION ALL
+    SELECT '311130905000043', 'Rural'  UNION ALL
+    SELECT '311860105280029', 'Urbana' UNION ALL
+    SELECT '312570508000008', 'Rural'  UNION ALL
+    SELECT '312700805000039', 'Urbana' UNION ALL
+    SELECT '313760105000244', 'Urbana' UNION ALL
+    SELECT '314330205000733', 'Urbana' UNION ALL
+    SELECT '314350005000030', 'Rural'  UNION ALL
+    SELECT '315050510000006', 'Rural'  UNION ALL
+    SELECT '316720205010022', 'Urbana' UNION ALL
+    SELECT '310160710000006', 'Rural'  UNION ALL
+    SELECT '310430405000056', 'Rural'  UNION ALL
+    SELECT '310430405000058', 'Rural'  UNION ALL
+    SELECT '310430405000065', 'Rural'  UNION ALL
+    SELECT '310710905000056', 'Rural'  UNION ALL
+    SELECT '314990305000064', 'Rural'  UNION ALL
+    SELECT '316130405000021', 'Rural'  UNION ALL
+    SELECT '316935610000016', 'Rural'  UNION ALL
+    SELECT '310110205000035', 'Urbana' UNION ALL
+    SELECT '312520005000012', 'Rural'  UNION ALL
+    SELECT '312710705000131', 'Rural'  UNION ALL
+    SELECT '313115805000020', 'Urbana' UNION ALL
+    SELECT '314350010000007', 'Rural'  UNION ALL
+    SELECT '316250030000015', 'Rural'  UNION ALL
+    SELECT '316720205020024', 'Urbana' UNION ALL
+    SELECT '310070805000015', 'Rural'  UNION ALL
+    SELECT '312700805000037', 'Rural'  UNION ALL
+    SELECT '312700820000008', 'Urbana' UNION ALL
+    SELECT '313000205000017', 'Rural'  UNION ALL
+    SELECT '313450905000031', 'Urbana' UNION ALL
+    SELECT '314460720000006', 'Rural'  UNION ALL
+    SELECT '315180005000419', 'Rural'  UNION ALL
+    SELECT '310430405000068', 'Rural'  UNION ALL
+    SELECT '310670505090031', 'Urbana' UNION ALL
+    SELECT '311160605000065', 'Rural'  UNION ALL
+    SELECT '311160610000011', 'Rural'  UNION ALL
+    SELECT '311460005000033', 'Rural'  UNION ALL
+    SELECT '312070605000007', 'Urbana' UNION ALL
+    SELECT '312570505000047', 'Rural'  UNION ALL
+    SELECT '316250010000008', 'Rural'  UNION ALL
+    SELECT '311440210000014', 'Rural'  UNION ALL
+    SELECT '312570510000030', 'Rural'  UNION ALL
+    SELECT '312610925000020', 'Rural'  UNION ALL
+    SELECT '313040805000023', 'Rural'  UNION ALL
+    SELECT '313430120000010', 'Rural'  UNION ALL
+    SELECT '313450905000023', 'Rural'  UNION ALL
+    SELECT '313820305000223', 'Rural'  UNION ALL
+    SELECT '315050505000027', 'Rural'  UNION ALL
+    SELECT '315160205000036', 'Rural'  UNION ALL
+    SELECT '317010705000100', 'Rural'
+) -- !!!!!  ESTA CTE NÃO DEVE SER ALTERADA !!!!!
 SELECT OCO.numero_ocorrencia,   -- Número da ocorrência                                      
 OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
 OCO.natureza_descricao,                                      -- Descrição da natureza da ocorrência
@@ -139,13 +206,13 @@ OCO.unidade_responsavel_registro_nome,                        -- Nome da unidade
 SPLIT_PART(OCO.unidade_responsavel_registro_nome,'/',-1) RPM_REGISTRO, 
 SPLIT_PART(OCO.unidade_responsavel_registro_nome,'/',-2) UEOP_REGISTRO, 
 CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
-    	WHEN OCO.pais_codigo <> 1 AND OCO.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
-		WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
-    	WHEN OCO.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
+    	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
+		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
+    	WHEN oco.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
+        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
        	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
     	ELSE geo.situacao_zona
-END AS situacao_zona,  
+END AS situacao_zona, 
 CAST(OCO.codigo_municipio AS INTEGER) codigo_municipio,                        -- Converte o código do município para número inteiro
 OCO.nome_municipio,                                           -- Nome do município da ocorrência
 OCO.tipo_logradouro_descricao,                                -- Tipo do logradouro (Rua, Avenida, etc)
@@ -168,6 +235,7 @@ OCO.digitador_sigla_orgao                                  -- Sigla do órgão q
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
 WHERE 1 = 1   -- Condição invariavelmente verdadeira que serve como ponto de partida para a cláusula WHERE, facilitando adições ou remoções futuras
 AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-01 23:59:59.000' -- Delimitação temporal das ocorrências, selecionando fatos ocorridos entre janeiro/2024 e fevereiro/2025
 AND OCO.natureza_codigo = 'C01155'                                         -- Filtragem por ocorrência  de natureza C01155 - Furto
