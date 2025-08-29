@@ -5,16 +5,83 @@
  * os cidadãos quanto à adoção de medidas de autoproteção, identificar e buscar soluções para problemas de segurança pública, e transmitir 
  * informações relevantes sobre a atuação da PMMG.
  -------------------------------------------------------------------------------------------------------------------------------------------*/
+WITH 
+AGUAS AS (
+SELECT '310800810000009' AS setor_codigo, 'Rural'  AS zona_agua UNION ALL
+    SELECT '311440205000086', 'Rural'  UNION ALL
+    SELECT '312520005000014', 'Rural'  UNION ALL
+    SELECT '312570510000021', 'Rural'  UNION ALL
+    SELECT '312610910000009', 'Rural'  UNION ALL
+    SELECT '315180005000418', 'Rural'  UNION ALL
+    SELECT '315430905000031', 'Urbana' UNION ALL
+    SELECT '315690810000020', 'Rural'  UNION ALL
+    SELECT '316225205000015', 'Urbana' UNION ALL
+    SELECT '316720205010026', 'Urbana' UNION ALL
+    SELECT '316935605000093', 'Urbana' UNION ALL
+    SELECT '310160705000238', 'Rural'  UNION ALL
+    SELECT '310160705000241', 'Rural'  UNION ALL
+    SELECT '310430405000063', 'Rural'  UNION ALL
+    SELECT '310430405000071', 'Rural'  UNION ALL
+    SELECT '311130905000043', 'Rural'  UNION ALL
+    SELECT '311860105280029', 'Urbana' UNION ALL
+    SELECT '312570508000008', 'Rural'  UNION ALL
+    SELECT '312700805000039', 'Urbana' UNION ALL
+    SELECT '313760105000244', 'Urbana' UNION ALL
+    SELECT '314330205000733', 'Urbana' UNION ALL
+    SELECT '314350005000030', 'Rural'  UNION ALL
+    SELECT '315050510000006', 'Rural'  UNION ALL
+    SELECT '316720205010022', 'Urbana' UNION ALL
+    SELECT '310160710000006', 'Rural'  UNION ALL
+    SELECT '310430405000056', 'Rural'  UNION ALL
+    SELECT '310430405000058', 'Rural'  UNION ALL
+    SELECT '310430405000065', 'Rural'  UNION ALL
+    SELECT '310710905000056', 'Rural'  UNION ALL
+    SELECT '314990305000064', 'Rural'  UNION ALL
+    SELECT '316130405000021', 'Rural'  UNION ALL
+    SELECT '316935610000016', 'Rural'  UNION ALL
+    SELECT '310110205000035', 'Urbana' UNION ALL
+    SELECT '312520005000012', 'Rural'  UNION ALL
+    SELECT '312710705000131', 'Rural'  UNION ALL
+    SELECT '313115805000020', 'Urbana' UNION ALL
+    SELECT '314350010000007', 'Rural'  UNION ALL
+    SELECT '316250030000015', 'Rural'  UNION ALL
+    SELECT '316720205020024', 'Urbana' UNION ALL
+    SELECT '310070805000015', 'Rural'  UNION ALL
+    SELECT '312700805000037', 'Rural'  UNION ALL
+    SELECT '312700820000008', 'Urbana' UNION ALL
+    SELECT '313000205000017', 'Rural'  UNION ALL
+    SELECT '313450905000031', 'Urbana' UNION ALL
+    SELECT '314460720000006', 'Rural'  UNION ALL
+    SELECT '315180005000419', 'Rural'  UNION ALL
+    SELECT '310430405000068', 'Rural'  UNION ALL
+    SELECT '310670505090031', 'Urbana' UNION ALL
+    SELECT '311160605000065', 'Rural'  UNION ALL
+    SELECT '311160610000011', 'Rural'  UNION ALL
+    SELECT '311460005000033', 'Rural'  UNION ALL
+    SELECT '312070605000007', 'Urbana' UNION ALL
+    SELECT '312570505000047', 'Rural'  UNION ALL
+    SELECT '316250010000008', 'Rural'  UNION ALL
+    SELECT '311440210000014', 'Rural'  UNION ALL
+    SELECT '312570510000030', 'Rural'  UNION ALL
+    SELECT '312610925000020', 'Rural'  UNION ALL
+    SELECT '313040805000023', 'Rural'  UNION ALL
+    SELECT '313430120000010', 'Rural'  UNION ALL
+    SELECT '313450905000023', 'Rural'  UNION ALL
+    SELECT '313820305000223', 'Rural'  UNION ALL
+    SELECT '315050505000027', 'Rural'  UNION ALL
+    SELECT '315160205000036', 'Rural'  UNION ALL
+    SELECT '317010705000100', 'Rural'
+)
 SELECT 
 OCO.numero_ocorrencia, -- Número da ocorrência
 CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
-    	WHEN OCO.pais_codigo <> 1 AND OCO.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
-		WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
-    	WHEN OCO.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN 'Agua'									-- trata erro - ocorrencia dentro de curso d'água
+    	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
+		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
+    	WHEN oco.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
+        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
        	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
     	ELSE geo.situacao_zona
-END AS situacao_zona,                  							
+    END AS situacao_zona,                          							
 OCO.natureza_codigo,                                         -- Código da natureza da ocorrência
 OCO.natureza_descricao,                                      -- Descrição da natureza da ocorrência
 CASE  WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
@@ -163,6 +230,7 @@ geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS200
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
 LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
 WHERE 1 = 1         -- Condição sempre verdadeira que facilita o desenvolvimento da query, permitindo adicionar/remover condições sem preocupação com a sintaxe
 AND (                                                                            
     SELECT COUNT(DISTINCT envolvido.numero_envolvido)                           -- Conta o número de envolvidos distintos (evitando duplicatas)
@@ -194,6 +262,3 @@ AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                             
 AND OCO.ind_estado IN ('F','R')                                                               -- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 order by OCO.numero_ocorrencia
-
-
-
