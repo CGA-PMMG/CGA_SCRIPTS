@@ -31,7 +31,7 @@ WHERE 1 = 1
 AND EMP.unidade_servico_codigo_tipo  = 'PM' 
 AND EMP.tipo_recurso_codigo = 'x'
 AND EMP.viatura_numero_prefixo IN ('123a', '123b',' 123c')
---AND CA.unidade_servico_nome LIKE '%22 BPM%'-- FILTRA PELAS UNIDADES ESPECÍFICAS DA PM
---AND LO.unidade_area_militar_nome LIKE '%22 BPM%'-- FILTRA PELAS UNIDADES ESPECÍFICAS DA PM
-AND EMP.empenho_data_hora_inicio  BETWEEN '2025-01-01 00:00:00' AND '2025-08-24 23:59:59'
+--AND CA.unidade_servico_nome LIKE '%22 BPM%'-- FILTRA PELA UNIDADE DE SERVIÇO
+--AND LO.unidade_area_militar_nome LIKE '%22 BPM%'-- FILTRA PELA UNIDADE DE AREA
+AND EMP.empenho_data_hora_inicio  BETWEEN '2025-01-01 00:00:00' AND '2025-08-24 23:59:59' -- DATA HORA DO INICIO DO EMPENHO
 ORDER BY EMP.viatura_numero_prefixo, EMP.empenho_data_hora_inicio
