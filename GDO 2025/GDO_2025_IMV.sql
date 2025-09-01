@@ -68,7 +68,7 @@ SELECT '310800810000009' AS setor_codigo, 'Rural'  AS zona_agua UNION ALL
     SELECT '315050505000027', 'Rural'  UNION ALL
     SELECT '315160205000036', 'Rural'  UNION ALL
     SELECT '317010705000100', 'Rural'
-), -- !!!!!  ESTA CTE NÃO DEVE SER ALTERADA !!!!!-- Início da definição da Common Table Expression (CTE)
+), -- !!!!!  ESTA CTE NÃO DEVE SER ALTERADA !!!!!
 LETALIDADE AS                                                              -- Define uma CTE chamada LETALIDADE que será usada para filtrar ocorrências
 ( 
     SELECT                                                                 
@@ -353,3 +353,4 @@ WHERE 1=1
 ORDER BY RPM_2025, UEOP_2025, OCO.data_hora_fato,              -- Ordena por RPM, UEOP, data/hora
          OCO.numero_ocorrencia, ENV.nome_completo_envolvido,    -- Número da ocorrência, nome do envolvido
          ENV.nome_mae, ENV.data_nascimento;                     -- Nome da mãe e data de nascimento
+
