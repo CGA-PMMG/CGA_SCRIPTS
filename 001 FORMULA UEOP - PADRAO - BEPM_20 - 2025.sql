@@ -94,3 +94,4 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '49 BPM%' or OCO.unidade_area_militar_nome LIKE '%/49 BPM%') THEN '49 BPM'
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '34 BPM%' or OCO.unidade_area_militar_nome LIKE '%/34 BPM%') THEN '34 BPM'
 		END AS UEOP_2025
+
