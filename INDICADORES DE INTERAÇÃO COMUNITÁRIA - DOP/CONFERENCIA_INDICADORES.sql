@@ -94,6 +94,16 @@ SELECT '310800810000009' AS setor_codigo, 'Rural'  AS zona_agua UNION ALL
     SELECT '315160205000036', 'Rural'  UNION ALL
     SELECT '317010705000100', 'Rural'
 ),
+VITIMA_CV AS (
+SELECT DISTINCT ENV.numero_ocorrencia, 1 AS VITIMA_VALIDA
+FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
+LEFT JOIN db_bisp_reds_reporting.tb_ocorrencia oco on ENV.numero_ocorrencia = oco.numero_ocorrencia   AND ((oco.codigo_municipio = ENV.codigo_municipio) OR ENV.codigo_municipio IS NULL)
+WHERE 1=1
+AND ENV.data_hora_fato >= '2025-01-01 00:00:00'
+AND ENV.condicao_fisica_codigo <> '0100'
+AND ENV.id_envolvimento IN (25,1097,27,32,28,26,872)
+AND (oco.codigo_municipio = ENV.codigo_municipio OR ENV.codigo_municipio IS NULL)
+),
  BASE AS(
  SELECT 
  DISTINCT 
@@ -114,11 +124,13 @@ SELECT '310800810000009' AS setor_codigo, 'Rural'  AS zona_agua UNION ALL
     END AS VALIDO_FURTO_RESIDCOM,
    CASE
    	WHEN natureza_codigo IN ('B01121','B01148','B02001','C01157','C01158','C01159','B01504') 
-   	AND  (ENV.condicao_fisica_codigo <> '0100' AND ENV.id_envolvimento IN(25,1097, 27, 32, 28, 26, 872) )   
+   	 AND VCV.VITIMA_VALIDA = 1
    	THEN 'VALIDO' ELSE 'INVALIDO'
    	END AS VALIDO_CV   
    FROM db_bisp_reds_reporting.tb_ocorrencia oco
-   INNER  JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON ENV.numero_ocorrencia = oco.numero_ocorrencia   AND ((oco.codigo_municipio = ENV.codigo_municipio) OR ENV.codigo_municipio IS NULL)
+   LEFT JOIN VITIMA_CV VCV ON oco.numero_ocorrencia = VCV.numero_ocorrencia
+   INNER  JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON 
+   ENV.numero_ocorrencia = oco.numero_ocorrencia   AND ((oco.codigo_municipio = ENV.codigo_municipio) OR ENV.codigo_municipio IS NULL)
   INNER JOIN (
 			    			SELECT numero_ocorrencia as REDS, 
 			           		       REGEXP_EXTRACT(oco.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS BO_HISTORICO
