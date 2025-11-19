@@ -703,7 +703,7 @@ SCORE_FINAL,                                                                    
 SCORE_FORM                                                                         -- Score FONAR calculado a partir do formulário
 FROM VIT_FORM_E_RISCO_ALTO
 INNER JOIN db_bisp_reds_reporting.tb_ocorrencia OCO 
-ON VIT_FORM_E_RISCO_ALTO.numero_ocorrencia = OCO.numero_ocorrencia AND VIT_FORM_E_RISCO_ALTO.ordem_form IN (0,1) AND VIT_FORM_E_RISCO_ALTO.ANALISE = 'VIVO'
+ON VIT_FORM_E_RISCO_ALTO.numero_ocorrencia = OCO.numero_ocorrencia /*AND VIT_FORM_E_RISCO_ALTO.ordem_form IN (0,1)*/ AND VIT_FORM_E_RISCO_ALTO.ANALISE = 'VIVO'
 LEFT JOIN VIT_GERAL
 ON VIT_FORM_E_RISCO_ALTO.nome_completo_envolvido_padrao = VIT_GERAL.nome_completo_envolvido_padrao 
    AND VIT_FORM_E_RISCO_ALTO.data_nascimento = VIT_GERAL.data_nascimento
@@ -732,3 +732,4 @@ ON VIT_FORM_E_RISCO_ALTO.nome_completo_envolvido_padrao = RECUSA_PROTOCOLO_2.nom
    AND RECUSA_PROTOCOLO_2.ORDEM_OCORRENCIA = 1
 WHERE 1=1
 AND OCO.ocorrencia_uf = 'MG'            -- Restringe às ocorrências registradas em Minas Gerais
+
