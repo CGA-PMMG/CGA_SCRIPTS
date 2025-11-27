@@ -27,7 +27,7 @@ Registro AS (
             OCO.natureza_secundaria2_codigo = 'U33004' OR
             OCO.natureza_secundaria3_codigo = 'U33004'
             )-- Inclusão por natureza principal
-        AND YEAR(OCO.data_hora_fato) >= 2023            -- Data do fato a partir de 2021
+        AND YEAR(OCO.data_hora_fato) >= 2023            -- Data do fato a partir de 2023
         AND OCO.nome_tipo_relatorio IN ('POLICIAL', 'REFAP')    -- Tipos de relatório Polical, Bos e Bos Amplo
 ),
 -- CTE Atendimento : Segunda Resposta
@@ -170,7 +170,7 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
         ON OCO.numero_ocorrencia = ENV.numero_ocorrencia
     WHERE 
         OCO.natureza_codigo     IN ('A20002','A20003','A20005','U33025')  -- Naturezas de início de Segunda Resposta
-        AND YEAR(OCO.data_hora_fato) >= 2023          -- Data do fato a partir de 2021
+        AND YEAR(OCO.data_hora_fato) >= 2023          -- Data do fato a partir de 2023
         AND ( ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600') AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
        AND OCO.ocorrencia_uf = 'MG'      -- Restrito ao estado de Minas Gerais
    	   AND OCO.digitador_sigla_orgao ='PM'         -- Registros digitados por PM 
@@ -229,3 +229,4 @@ ORDER BY
     I.ano_atendimento, 
     I.mes_atendimento, 
     I.nome_completo_envolvido;
+
