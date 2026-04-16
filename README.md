@@ -16,8 +16,8 @@ Neste repositório, você encontrará scripts prontos e comentados, além de ori
 
 ## 📚 Conteúdo
 - [GDO 2026](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/GDO%202026)
-- [Indicadores de Interação Comunitária](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/INDICADORES%20DE%20INTERA%C3%87%C3%83O%20COMUNIT%C3%81RIA%20-%20DOP)
 - [Indicadores de Prevenção à Violência Doméstica 2026](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/INDICADORES%20PPVD)
+- [Indicadores de Interação Comunitária](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/INDICADORES%20DE%20INTERA%C3%87%C3%83O%20COMUNIT%C3%81RIA%20-%20DOP)
 - [GDO 2025](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/GDO%202025)
 - [GDO 2024](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/GDO%202024)
 - [SIGOP](https://github.com/CGA-PMMG/CGA_SCRIPTS/tree/main/SIGOP)
