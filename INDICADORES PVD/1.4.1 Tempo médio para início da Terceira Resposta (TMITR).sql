@@ -1,7 +1,7 @@
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------
  *  ================================================================================================================================================
- *  ============================================= 1.4 TEMPO MÉDIO PARA INÍCIO DA TERCEIRA RESPOSTA (TMITR) ==========================================
+ *  ============================================= 1.4.1 TEMPO MÉDIO PARA INÍCIO DA TERCEIRA RESPOSTA (TMITR) ==========================================
  *  ================================================================================================================================================
  * 
  * O Indicador tem por finalidade avaliar a eficiência na resposta rápida das PPVD em relação aos registros dos boletins de ocorrência de Terceira Resposta. 
@@ -193,7 +193,8 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
     WHERE 
         OCO.natureza_codigo     IN ('A20003','A20005')  -- Naturezas de início de Terceira Resposta
         AND YEAR(OCO.data_hora_fato) >= 2025          -- Data do fato a partir de 2024
-        AND ( ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600') AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
+        AND ( (ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600')) 
+        AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
        AND OCO.ocorrencia_uf = 'MG'      -- Restrito ao estado de Minas Gerais
    	   AND OCO.digitador_sigla_orgao ='PM'         -- Registros digitados por PM 
 ),
