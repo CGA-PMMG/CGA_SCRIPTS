@@ -148,6 +148,7 @@ WHERE 1 = 1
 	 AND OCO.natureza_codigo IN ('A20003','A20005')  -- Naturezas de início de Terceira Resposta
      AND YEAR(OCO.data_hora_fato) >= 2025 -- Data do fato a partir de 2025
      AND OCO.ocorrencia_uf = 'MG'      -- Restrito ao estado de Minas Gerais
-     AND ( ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600') AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
+     AND ( (ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600')) 
+     AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
    	 AND OCO.digitador_sigla_orgao ='PM'         -- Registros digitados por PM 
 ORDER BY OCO.numero_ocorrencia;
