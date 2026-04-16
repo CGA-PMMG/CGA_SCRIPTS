@@ -1,5 +1,4 @@
 SELECT 
-
 	OCO.numero_ocorrencia, 
 	OCO.data_hora_fato,
     YEAR(OCO.data_hora_fato) AS ano_fato,
