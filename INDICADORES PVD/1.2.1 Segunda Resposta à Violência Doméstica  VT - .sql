@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------------------
  *  ================================================================================================================================================
- *  ====================================== 1.2 VT -> SEGUNDA RESPOSTA À VIOLÊNCIA DOMÉSTICA (SRVD) ====================================
+ *  ====================================== 1.2.1 VT -> SEGUNDA RESPOSTA À VIOLÊNCIA DOMÉSTICA (SRVD) ====================================
  *  ================================================================================================================================================
  * 
  *  Os itens PPVD sendo o número de inclusões no Protocolo de Segunda Resposta
@@ -145,7 +145,8 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 FROM  db_bisp_reds_reporting.tb_ocorrencia AS OCO              -- Fonte principal: tabela de ocorrências, apelidada de OCO
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia AS ENV ON ENV.numero_ocorrencia = OCO.numero_ocorrencia
 WHERE 1 = 1
-     AND ( ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600') AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
+     AND ( (ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600')) 
+     AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
   	AND YEAR(OCO.data_hora_fato) >= 2025                    -- Considera apenas ocorrências a partir de 2025
 	AND ENV.envolvimento_codigo IN ('1300', '1399', '1301', '1302', '1303', '1304', '1305')-- Filtra apenas vítimas   	
     AND OCO.ocorrencia_uf = 'MG'                            -- Restringe as ocorrências ao estado de Minas Gerais
