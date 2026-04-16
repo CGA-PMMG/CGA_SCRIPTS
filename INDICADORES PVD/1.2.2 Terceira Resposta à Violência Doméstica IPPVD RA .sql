@@ -151,13 +151,3 @@ WHERE 1 = 1
      AND ( ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600') AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
    	 AND OCO.digitador_sigla_orgao ='PM'         -- Registros digitados por PM 
 ORDER BY OCO.numero_ocorrencia;
-
-310340
-
-SELECT DISTINCT
-id_envolvimento,
-envolvimento_descricao
-
-FROM
-db_bisp_reds_reporting.tb_envolvido_ocorrencia
-ORDER BY envolvimento_descricao asc
