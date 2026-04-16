@@ -1,74 +1,68 @@
+SELECT 
 
-/* -------------------------------------------------------------------------------------------------------------------------------------------------------
- *  ================================================================================================================================================
- *  ============================================= 1.4 TEMPO MÉDIO PARA INÍCIO DA SEGUNDA RESPOSTA (TMISR) ==========================================
- *  ================================================================================================================================================
- * 
- * O Indicador tem por finalidade avaliar a eficiência na resposta rápida das PPVD em relação aos registros dos boletins de ocorrência de Segunda Resposta. 
- *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
-WITH 
--- CTE Registro: capta o registro inicial (Primeira Resposta) 
-Registro AS (
-    SELECT 
-        ENV.nome_completo_envolvido,                     -- Nome completo do envolvido 
-        ENV.data_nascimento,                             -- Data de nascimento do envolvido 
-        OCO.codigo_municipio,                            -- Código do município de registro
-        OCO.data_hora_inclusao AS data_registro,             -- Data/hora do primeiro registro
-        OCO.numero_ocorrencia AS numero_ocorrencia_primeira_resposta    -- Número da ocorrência
-    FROM 
-        db_bisp_reds_reporting.tb_ocorrencia OCO         -- Tabela de ocorrências
-    INNER JOIN 
-        db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  -- Tabela de envolvidos
-        ON OCO.numero_ocorrencia = ENV.numero_ocorrencia -- Junção pelo número da ocorrência
-    WHERE 1=1
-           AND (
-    OCO.natureza_codigo = 'U33004'
-    OR OCO.natureza_secundaria1_codigo = 'U33004'
-    OR OCO.natureza_secundaria2_codigo = 'U33004'
-    OR OCO.natureza_secundaria3_codigo = 'U33004'
-)
-AND (
-    (
-        OCO.natureza_codigo = 'A02000'
-        OR SUBSTRING(OCO.natureza_codigo, 1, 1) IN ('B','C','D','E','F','G','H','I','J','K','L','M','N','T')
-    )
-    OR (
-        OCO.natureza_secundaria1_codigo = 'A02000'
-        OR SUBSTRING(OCO.natureza_secundaria1_codigo, 1, 1) IN ('B','C','D','E','F','G','H','I','J','K','L','M','N','T')
-    )
-    OR (
-        OCO.natureza_secundaria2_codigo = 'A02000'
-        OR SUBSTRING(OCO.natureza_secundaria2_codigo, 1, 1) IN ('B','C','D','E','F','G','H','I','J','K','L','M','N','T')
-    )
-    OR (
-        OCO.natureza_secundaria3_codigo = 'A02000'
-        OR SUBSTRING(OCO.natureza_secundaria3_codigo, 1, 1) IN ('B','C','D','E','F','G','H','I','J','K','L','M','N','T')
-    )
-)
-AND COALESCE(OCO.natureza_codigo, '') NOT IN ('T00007','T00008','T00009','T10161','T99000')
-AND COALESCE(OCO.natureza_secundaria1_codigo, '') NOT IN ('T00007','T00008','T00009','T10161','T99000')
-AND COALESCE(OCO.natureza_secundaria2_codigo, '') NOT IN ('T00007','T00008','T00009','T10161','T99000')
-AND COALESCE(OCO.natureza_secundaria3_codigo, '') NOT IN ('T00007','T00008','T00009','T10161','T99000')
-        AND YEAR(OCO.data_hora_inclusao) >= 2025            -- Data do fato a partir de 2024
-        AND OCO.nome_tipo_relatorio IN ('POLICIAL', 'REFAP')    -- Tipos de relatório Polical, Bos e Bos Amplo
-),
--- CTE Atendimento : Segunda Resposta
-Atendimento AS (
-    SELECT 
-        ENV.nome_completo_envolvido,                     -- Nome completo do envolvido 
-        ENV.data_nascimento,                             -- Data de nascimento do envolvido 
-        OCO.codigo_municipio,                            -- Código do município de registro
-        OCO.numero_ocorrencia AS numero_ocorrencia_atendimento_segunda_resposta,  -- Número da ocorrência de atendimento (Segunda Resposta)
-        OCO.data_hora_fato AS data_atendimento,          -- Data/hora de início da ocorrência de atendimento (Segunda Resposta)
-        YEAR(OCO.data_hora_fato) AS ano_atendimento,     -- Ano do atendimento (Segunda Resposta)
-        MONTH(OCO.data_hora_fato) AS mes_atendimento,    -- Mês do atendimento (Segunda Resposta)
-        ROW_NUMBER() OVER (                              -- Numera atendimentos por vítima para escolher o primeiro (Segunda Resposta)
-            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento 
-            ORDER BY OCO.data_hora_fato
-        ) AS rn,         
- CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
-   		WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
-		WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
+	OCO.numero_ocorrencia, 
+	OCO.data_hora_fato,
+    YEAR(OCO.data_hora_fato) AS ano_fato,
+    MONTH(OCO.data_hora_fato) AS mes_num,
+    CASE 
+        WHEN DAYOFWEEK(OCO.data_hora_fato) = 1 THEN 'Dom'
+        WHEN DAYOFWEEK(OCO.data_hora_fato) = 2 THEN 'Seg'
+        WHEN DAYOFWEEK(OCO.data_hora_fato) = 3 THEN 'Ter'
+        WHEN DAYOFWEEK(OCO.data_hora_fato) = 4 THEN 'Qua'
+        WHEN DAYOFWEEK(OCO.data_hora_fato) = 5 THEN 'Qui'
+        WHEN DAYOFWEEK(OCO.data_hora_fato) = 6 THEN 'Sex'
+        WHEN DAYOFWEEK(OCO.data_hora_fato) = 7 THEN 'Sáb'
+    END AS dia_semana_abrev, -- Seg, Ter, Qua...
+    CASE 
+        WHEN DAYOFWEEK(OCO.data_hora_fato) = 1 THEN 7
+        ELSE DAYOFWEEK(OCO.data_hora_fato) - 1
+    END AS dia_semana_num, -- Segunda-feira como 1
+    CASE 
+        WHEN MONTH(OCO.data_hora_fato) = 1 THEN 'Jan'
+        WHEN MONTH(OCO.data_hora_fato) = 2 THEN 'Fev'
+        WHEN MONTH(OCO.data_hora_fato) = 3 THEN 'Mar'
+        WHEN MONTH(OCO.data_hora_fato) = 4 THEN 'Abr'
+        WHEN MONTH(OCO.data_hora_fato) = 5 THEN 'Mai'
+        WHEN MONTH(OCO.data_hora_fato) = 6 THEN 'Jun'
+        WHEN MONTH(OCO.data_hora_fato) = 7 THEN 'Jul'
+        WHEN MONTH(OCO.data_hora_fato) = 8 THEN 'Ago'
+        WHEN MONTH(OCO.data_hora_fato) = 9 THEN 'Set'
+        WHEN MONTH(OCO.data_hora_fato) = 10 THEN 'Out'
+        WHEN MONTH(OCO.data_hora_fato) = 11 THEN 'Nov'
+        WHEN MONTH(OCO.data_hora_fato) = 12 THEN 'Dez'
+    END AS mes_abrev, -- Jan, Fev, Mar...
+    MONTH(OCO.data_hora_fato) AS mes_num, -- Número do mês
+    CHAMADA.descricao_evento as Descricao_Chamada,
+    CASE 
+    WHEN CHAMADA.id_evento IN (2205, 2666) THEN 'SIM'
+    ELSE 'NAO'
+	END AS Evento_de_Violencia_domestica,
+    OCO.natureza_descricao, 
+    OCO.natureza_codigo, 
+    OCO.natureza_secundaria1_codigo, 
+    OCO.natureza_secundaria2_codigo,
+    OCO.natureza_secundaria3_codigo,
+    ENV.envolvimento_descricao,
+    CASE 
+    WHEN ENV.envolvimento_codigo IN ('1300', '1399', '1301', '1302', '1303', '1304', '1305') THEN 'SIM'
+    ELSE 'NAO'
+END AS Vitima,
+    CASE 
+       WHEN (
+       OCO.natureza_secundaria1_codigo = 'U33004'
+       OR OCO.natureza_secundaria2_codigo = 'U33004'
+       OR OCO.natureza_secundaria3_codigo = 'U33004' )
+       AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600'))
+       AND ENV.envolvimento_codigo IN ('1300', '1399', '1301', '1302', '1303', '1304', '1305')
+    THEN 'SIM'
+    ELSE 'NÃO'
+    END AS Vitima_VD_U33004,
+    ENV.envolvimento_codigo, 
+    OCO.motivo_presumido_descricao,
+    OCO.motivo_presumido_codigo, 
+CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
+   	WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
+	WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
     	WHEN OCO.codigo_municipio IN (310150 , 310310 , 310370 , 310440 , 310460 , 310550 , 310610 , 310690 , 310870 , 311020 , 311170 , 311330 , 311530 , 311590 , 311620 , 311670 , 311960 , 312130 , 312190 , 312200 , 312290 , 312330 , 312400 , 312460 , 312490 , 312530 , 312595 , 312738 , 312840 , 312850 , 312880 , 312900 , 313260 , 313670 , 313800 , 313840 , 313860 , 313980 , 314020 , 314080 , 314160 , 314210 , 314220 , 314390 , 314540 , 314587 , 314670 , 314820 , 314830 , 314880 , 314900 , 314940 , 314950 , 315010 , 315110 , 315130 , 315410 , 315540 , 315580 , 315590 , 315620 , 315630 , 315645 , 315727 , 315840 , 315860 , 315930 , 316000 , 316140 , 316150 , 316290 , 316380 , 316443 , 316560 , 316570 , 316730 , 316750 , 316790 , 316850 , 316900 , 316920 , 316990 , 317130 , 317140 , 317200 , 317210) THEN '04 RPM'	
     	WHEN OCO.codigo_municipio IN (310070 , 310400 , 311110 , 311140 , 311150 , 311455 , 311690 , 311730 , 311820 , 312125 , 312700 , 312710 , 312950 , 313340 , 313440 , 313862 , 314500 , 314920 , 314980 , 315070 , 315160 , 315300 , 315690 , 315770  , 315970 , 316130 , 316810 , 317010 , 317043 , 317110) THEN '05 RPM'
     	WHEN OCO.codigo_municipio IN (310080 , 310710 , 310800 , 311070 , 311090 , 311120 , 311190 , 311200 , 311390 , 311400 , 311450 , 311460 , 311770 , 311870 , 312020 , 312360 , 312810 , 313000 , 313040 , 313050 , 313080 , 313430 , 313450 , 313590 , 313780 , 313820 , 313870 , 314260 , 314460 , 314550 , 314560 , 314770 , 314990 , 315060 , 315470 , 315830 , 315880 , 315990 , 316080 , 316120 , 316520 , 316930 , 316940 , 317070) THEN '06 RPM'
@@ -81,11 +75,11 @@ Atendimento AS (
     	WHEN OCO.codigo_municipio IN (310163 , 310210 , 310280 , 310290 , 310330 , 310360 , 310560 , 310590 , 310640 , 310680 , 310750 , 311220 , 311310 , 311320 , 311490 , 311520 , 311540 , 311630 , 311800 , 311830 , 311970 , 312040 , 312140 , 312150 , 312300 , 312390 , 312500 , 312940 , 313390 , 313540 , 313740 , 313790 , 313910 , 314230 , 314450 , 314570 , 314590 , 314660 , 315030 , 315080 , 315230 , 315270 , 315310 , 315380 , 315420 , 315440 , 315520 , 315610 , 315730 , 315733 , 315870 , 315910 , 315940 , 316070 , 316090 , 316250 , 316500 , 316530 , 316600 , 316620 , 316880) THEN'13 RPM'	
     	WHEN OCO.codigo_municipio IN (310060 , 310240 , 310285 , 310445 , 310480 , 310650 , 310920 , 310940 , 311230 , 311350 , 311610 , 311750 , 311810 , 311910 , 312010 , 312090 , 312100 , 312160 , 312260 , 312540 , 312550 , 312570 , 312650 , 312760 , 313110 , 313250 , 313545 , 313560 , 313640 , 313652 , 313810 , 313835 , 314180 , 314250 , 314360 , 314370 , 315120 , 315320 , 315330 , 315760 , 316020 , 316050 , 316060 , 316420 , 316480 , 316590 , 316650 , 316710 , 316935 , 316970 , 317080 , 317107) THEN '14 RPM'
     	WHEN OCO.codigo_municipio IN (310090 , 310100 , 310170 , 310270 , 310340 , 310470 , 310520 , 310660 , 311080 , 311300 , 311370 , 311545 , 311700 , 311950 , 312015 , 312235 , 312245 , 312560 , 312675 , 312680 , 312705 , 313230 , 313270 , 313330 , 313400 , 313470 , 313507 , 313580 , 313600 , 313650 , 313700 , 313890 , 313920 , 314055 , 314140 , 314315 , 314430 , 314490 , 314530 , 314535 , 314620 , 314630 , 314675 , 314850 , 314870 , 315000 , 315217 , 315240 , 315510 , 315660 , 315710 , 315765 , 315810 , 316030 , 316330 , 316555 , 316670 , 316860 , 317030 , 317160) THEN '15 RPM'	
-	    WHEN OCO.codigo_municipio IN (310450 , 310820 , 310855 , 310930 , 310945 , 311615 , 312247 , 312620 , 312860 , 313630 , 314437 , 314700 , 315445 , 317040 , 317047 , 317052 , 317100) THEN '16 RPM'	
-	    WHEN OCO.codigo_municipio IN (310120 , 310130 , 310140 , 310490 , 310720 , 310790 , 310830 , 310890 , 310910 , 310970 , 311050 , 311060 , 311360 , 311410 , 311480 , 311550 , 311720 , 311780 , 311790 , 311850 , 311900 , 311990 , 312050 , 312080 , 312110 , 312280 , 312440 , 312450 , 312510 , 312740 , 312920 , 313060 , 313240 , 313300 , 313310 , 313360 , 313490 , 313850 , 313990 , 314040 , 314190 , 314340 , 314380 , 314440 , 314600 , 314730 , 314760 , 314780 , 314910 , 315090 , 315100 , 315250 , 315260 , 315960 , 316200 , 316230 , 316320 , 316370 , 316440 , 316490 , 316540 , 316557 , 316580 , 316640 , 316700 , 316740 , 316780 , 316905 , 316910 , 316980 , 317170 , 317220) THEN'17 RPM'	
-	    WHEN OCO.codigo_municipio IN (310160 , 310190 , 310200 , 310260 , 310410 , 310430 , 310530 , 310760 , 310840 , 310950 , 311030 , 311100 , 311130 , 311160 , 311240 , 311280 , 311440 , 311470 , 311510 , 311640 , 311710 , 312120 , 312240 , 312340 , 312520 , 312630 , 312830 , 312870 , 312970 , 312990 , 313150 , 313290 , 313375 , 313480 , 313690 , 313900 , 314300 , 314320 , 314410 , 314510 , 314720 , 314790 , 315150 , 315170 , 315180 , 315290 , 315920 , 316220 , 316294 , 316390 , 316430 , 316470 , 316510 , 316690 , 317060) THEN '18 RPM'	
-	    WHEN OCO.codigo_municipio IN (316720 , 314930 , 314110 , 314740 , 315360 , 310990 , 310500 , 311250 , 313570 , 313100 , 310320 , 312720 , 311890 , 312640 , 310960 , 315850) THEN '19 RPM'	
-   	END AS RPM_2025,
+	WHEN OCO.codigo_municipio IN (310450 , 310820 , 310855 , 310930 , 310945 , 311615 , 312247 , 312620 , 312860 , 313630 , 314437 , 314700 , 315445 , 317040 , 317047 , 317052 , 317100) THEN '16 RPM'	
+	WHEN OCO.codigo_municipio IN (310120 , 310130 , 310140 , 310490 , 310720 , 310790 , 310830 , 310890 , 310910 , 310970 , 311050 , 311060 , 311360 , 311410 , 311480 , 311550 , 311720 , 311780 , 311790 , 311850 , 311900 , 311990 , 312050 , 312080 , 312110 , 312280 , 312440 , 312450 , 312510 , 312740 , 312920 , 313060 , 313240 , 313300 , 313310 , 313360 , 313490 , 313850 , 313990 , 314040 , 314190 , 314340 , 314380 , 314440 , 314600 , 314730 , 314760 , 314780 , 314910 , 315090 , 315100 , 315250 , 315260 , 315960 , 316200 , 316230 , 316320 , 316370 , 316440 , 316490 , 316540 , 316557 , 316580 , 316640 , 316700 , 316740 , 316780 , 316905 , 316910 , 316980 , 317170 , 317220) THEN'17 RPM'	
+	WHEN OCO.codigo_municipio IN (310160 , 310190 , 310200 , 310260 , 310410 , 310430 , 310530 , 310760 , 310840 , 310950 , 311030 , 311100 , 311130 , 311160 , 311240 , 311280 , 311440 , 311470 , 311510 , 311640 , 311710 , 312120 , 312240 , 312340 , 312520 , 312630 , 312830 , 312870 , 312970 , 312990 , 313150 , 313290 , 313375 , 313480 , 313690 , 313900 , 314300 , 314320 , 314410 , 314510 , 314720 , 314790 , 315150 , 315170 , 315180 , 315290 , 315920 , 316220 , 316294 , 316390 , 316430 , 316470 , 316510 , 316690 , 317060) THEN '18 RPM'	
+	WHEN OCO.codigo_municipio IN (316720 , 314930 , 314110 , 314740 , 315360 , 310990 , 310500 , 311250 , 313570 , 313100 , 310320 , 312720 , 311890 , 312640 , 310960 , 315850) THEN '19 RPM'	
+END AS RPM_2025,
 CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314020,314950,315010,315540,315620,316290) THEN '02 BPM'
 		WHEN OCO.codigo_municipio IN (310240,311750,311810,312010,312100,312160,312260,312540,312550,312760,314250,314370,315330,316020,316050,316480,316590,316650,316710) THEN '03 BPM'
 		WHEN OCO.codigo_municipio IN (312125) THEN '04 BPM'
@@ -160,94 +154,129 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio IN (310810,312060,312600,313010,313220,313665,314070,315040,315530,316292) THEN '7 CIA PM IND'
 		WHEN OCO.codigo_municipio IN (310440,310460,311530,312290,313260,313840,314220,315410,315840,316443,315110,317210,310150,316000,312460) THEN '68 BPM'
 		WHEN OCO.codigo_municipio IN (313370,313380) THEN '9 CIA PM IND'
-		/* MUNIC PIOS COM MAIS DE 01 UEOP - 8 Munic pios*/
-		WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome LIKE '32 BPM%' or OCO.unidade_area_militar_nome LIKE '%/32 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '32 BPM'
-		WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome LIKE '17 BPM%' or OCO.unidade_area_militar_nome LIKE '%/17 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '17 BPM'
-		WHEN OCO.codigo_municipio =317010 AND (OCO.unidade_area_militar_nome LIKE '4 BPM%' or OCO.unidade_area_militar_nome LIKE '%/4 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '04 BPM'
-		WHEN OCO.codigo_municipio =317010 AND (OCO.unidade_area_militar_nome LIKE '67 BPM%' or OCO.unidade_area_militar_nome LIKE '%/67 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '67 BPM'
-		WHEN OCO.codigo_municipio =314330 AND (OCO.unidade_area_militar_nome LIKE '50 BPM%' or OCO.unidade_area_militar_nome LIKE '%/50 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '50 BPM'
-		WHEN OCO.codigo_municipio =314330 AND (OCO.unidade_area_militar_nome LIKE '10 BPM%' or OCO.unidade_area_militar_nome LIKE '%/10 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '10 BPM'
-		WHEN OCO.codigo_municipio =313670 AND (OCO.unidade_area_militar_nome LIKE '27 BPM%' or OCO.unidade_area_militar_nome LIKE '%/27 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '27 BPM'
-		WHEN OCO.codigo_municipio =313670 AND (OCO.unidade_area_militar_nome LIKE '2 BPM%' or OCO.unidade_area_militar_nome LIKE '%/2 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '02 BPM'
-		WHEN OCO.codigo_municipio =311860 AND (OCO.unidade_area_militar_nome LIKE '39 BPM%' or OCO.unidade_area_militar_nome LIKE '%/39 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '39 BPM'
-		WHEN OCO.codigo_municipio =311860 AND (OCO.unidade_area_militar_nome LIKE '18 BPM%' or OCO.unidade_area_militar_nome LIKE '%/18 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '18 BPM'
-		WHEN OCO.codigo_municipio =310670 AND (OCO.unidade_area_militar_nome LIKE '66 BPM%' or OCO.unidade_area_militar_nome LIKE '%/66 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '66 BPM'
-		WHEN OCO.codigo_municipio =310670 AND (OCO.unidade_area_militar_nome LIKE '33 BPM%' or OCO.unidade_area_militar_nome LIKE '%/33 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '33 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '1 BPM%' or OCO.unidade_area_militar_nome LIKE '%/1 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '01 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '5 BPM%' or OCO.unidade_area_militar_nome LIKE '%/5 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%') THEN '05 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '13 BPM%' or OCO.unidade_area_militar_nome LIKE '%/13 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%') THEN '13 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '16 BPM%' or OCO.unidade_area_militar_nome LIKE '%/16 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%') THEN '16 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '22 BPM%' or OCO.unidade_area_militar_nome LIKE '%/22 BPM%' ) AND (OCO.unidade_area_militar_nome not LIKE '%TM%') THEN '22 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '41 BPM%' or OCO.unidade_area_militar_nome LIKE '%/41 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '41 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '49 BPM%' or OCO.unidade_area_militar_nome LIKE '%/49 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '49 BPM'
-		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '34 BPM%' or OCO.unidade_area_militar_nome LIKE '%/34 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '34 BPM'
+		/* MUNICIPIOS COM MAIS DE 01 UEOP - 8 Municipios - A unidade de área das Operações é obtida pelo id_local da tabela db_bisp_reds_master.tb_local_unidade_area_pmmg */
+WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome like '32 BPM%' or OCO.unidade_area_militar_nome like '%/32 BPM%') THEN '32 BPM'
+		WHEN OCO.codigo_municipio =317020 AND (OCO.unidade_area_militar_nome like '17 BPM%' or OCO.unidade_area_militar_nome like '%/17 BPM%') THEN '17 BPM'
+		WHEN OCO.codigo_municipio =317010 AND (OCO.unidade_area_militar_nome like '4 BPM%' or OCO.unidade_area_militar_nome like '%/4 BPM%') THEN '04 BPM'
+		WHEN OCO.codigo_municipio =317010 AND (OCO.unidade_area_militar_nome like '67 BPM%' or OCO.unidade_area_militar_nome like '%/67 BPM%') THEN '67 BPM'
+		WHEN OCO.codigo_municipio =314330 AND (OCO.unidade_area_militar_nome like '50 BPM%' or OCO.unidade_area_militar_nome like '%/50 BPM%') THEN '50 BPM'
+		WHEN OCO.codigo_municipio =314330 AND (OCO.unidade_area_militar_nome like '10 BPM%' or OCO.unidade_area_militar_nome like '%/10 BPM%') THEN '10 BPM'
+		WHEN OCO.codigo_municipio =313670 AND (OCO.unidade_area_militar_nome like '27 BPM%' or OCO.unidade_area_militar_nome like '%/27 BPM%') THEN '27 BPM'
+		WHEN OCO.codigo_municipio =313670 AND (OCO.unidade_area_militar_nome like '2 BPM%' or OCO.unidade_area_militar_nome like '%/2 BPM%') THEN '02 BPM'
+		WHEN OCO.codigo_municipio =311860 AND (OCO.unidade_area_militar_nome like '39 BPM%' or OCO.unidade_area_militar_nome like '%/39 BPM%') THEN '39 BPM'
+		WHEN OCO.codigo_municipio =311860 AND (OCO.unidade_area_militar_nome like '18 BPM%' or OCO.unidade_area_militar_nome like '%/18 BPM%') THEN '18 BPM'
+		WHEN OCO.codigo_municipio =310670 AND (OCO.unidade_area_militar_nome like '66 BPM%' or OCO.unidade_area_militar_nome like '%/66 BPM%') THEN '66 BPM'
+		WHEN OCO.codigo_municipio =310670 AND (OCO.unidade_area_militar_nome like '33 BPM%' or OCO.unidade_area_militar_nome like '%/33 BPM%') THEN '33 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome like '1 BPM%' or OCO.unidade_area_militar_nome like '%/1 BPM%') THEN '01 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome like '5 BPM%' or OCO.unidade_area_militar_nome like '%/5 BPM%')  THEN '05 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome like '13 BPM%' or OCO.unidade_area_militar_nome like '%/13 BPM%')  THEN '13 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome like '16 BPM%' or OCO.unidade_area_militar_nome like '%/16 BPM%')  THEN '16 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome like '22 BPM%' or OCO.unidade_area_militar_nome like '%/22 BPM%' )  THEN '22 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome like '41 BPM%' or OCO.unidade_area_militar_nome like '%/41 BPM%') THEN '41 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome like '49 BPM%' or OCO.unidade_area_militar_nome like '%/49 BPM%') THEN '49 BPM'
+		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome like '34 BPM%' or OCO.unidade_area_militar_nome like '%/34 BPM%') THEN '34 BPM'	
 		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '31 BPM%' or OCO.unidade_area_militar_nome like '%/31 BPM%') THEN '31 BPM'
 		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '9 BPM%' or OCO.unidade_area_militar_nome like '%/9 BPM%') THEN '09 BPM'
 		ELSE 'OUTROS' 
-	END AS UEOP_2025
-    FROM 
-        db_bisp_reds_reporting.tb_ocorrencia OCO
-    INNER JOIN 
-        db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
-        ON OCO.numero_ocorrencia = ENV.numero_ocorrencia
+	END AS UEOP_2025,
+	
+	CASE WHEN OCO.codigo_municipio IN (310620) THEN '1° CIA IND PVD'
+WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553
+) THEN '2° CIA IND PVD'
+WHEN OCO.codigo_municipio IN (
+311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '3° CIA IND PVD'
+ELSE 'OUTRAS' END AS CIA_PVD,
+    OCO.codigo_municipio as Cod_Municipio_Fato, 
+    OCO.nome_municipio as Municipio_Fato,  
+    OCO.logradouro_nome as Rua_Fato,
+    OCO.numero_endereco as numero_End_Fato,
+    OCO.nome_bairro as Bairro_Fato,
+    ENV.nome_completo_envolvido,
+    ENV.data_nascimento, 
+    ENV.valor_idade_aparente,
+    ENV.cor_pele_descricao,
+    ENV.estado_civil_descricao,
+    ENV.codigo_sexo, 
+    ENV.condicao_fisica_descricao,
+    ENV.nome_mae, 
+    OCO.nome_tipo_relatorio,
+    CASE 
+    WHEN OCO.nome_tipo_relatorio IN ('POLICIAL') THEN 'SIM'
+    ELSE 'NAO'
+END AS ocorrencia_policia,
+    CASE 
+           WHEN (
+        (
+            OCO.natureza_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
+            OR OCO.natureza_secundaria1_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
+            OR OCO.natureza_secundaria2_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
+            OR OCO.natureza_secundaria3_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
+        )
+        AND
+        (
+            OCO.natureza_codigo IN ('U33004')
+            OR OCO.natureza_secundaria1_codigo IN ('U33004')
+            OR OCO.natureza_secundaria2_codigo IN ('U33004')
+            OR OCO.natureza_secundaria3_codigo IN ('U33004')
+        )
+    )
+        AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600'))
+       AND ENV.envolvimento_codigo IN ('1300', '1399', '1301', '1302', '1303', '1304', '1305')
+       AND ENV.id_relacao_vitima_autor IN (3,4,9,15,16,18,22)
+    THEN 'SIM'
+    ELSE 'NÃO'
+    END AS "VITIMAS DE VIOLENCIA COM CONJUGALIDADE",
+    CASE 
+       WHEN natureza_codigo IN ('A20002', 'A20003', 'A20005')
+    THEN 'SIM'
+    ELSE 'NÃO'
+    END AS "VITIMA INCLUIDA",
+CASE 
+    WHEN (
+        (
+            (OCO.natureza_codigo = 'B01504' OR 
+             OCO.natureza_secundaria1_codigo = 'B01504' OR 
+             OCO.natureza_secundaria2_codigo = 'B01504' OR 
+             OCO.natureza_secundaria3_codigo = 'B01504')
+        )
+        AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600'))
+        AND ENV.envolvimento_codigo IN ('1300', '1399', '1301', '1302', '1303', '1304', '1305')
+    )
+    OR (
+        (
+            OCO.natureza_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'D01213') OR 
+            OCO.natureza_secundaria1_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'D01213') OR 
+            OCO.natureza_secundaria2_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'D01213') OR 
+            OCO.natureza_secundaria3_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'D01213')
+        )
+        AND ENV.condicao_fisica_descricao = 'FATAL'
+        AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600'))
+        AND ENV.envolvimento_codigo IN ('1300', '1399', '1301', '1302', '1303', '1304', '1305')
+        AND ENV.id_relacao_vitima_autor IN (3,4,9,15,16,18,22)
+    )
+    THEN '1'
+    ELSE '0'
+END AS "VITIMAS DE FEMINICIDIO COM CONJUGALIDADE"
+	
+    FROM db_bisp_reds_reporting.tb_ocorrencia OCO
+	LEFT JOIN 
+    db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia
+    FULL JOIN 
+    (SELECT DISTINCT numero_chamada, descricao_evento, id_evento FROM db_bisp_cad_reporting.vw_chamada_evento) CHAMADA ON OCO.numero_chamada_cad = CHAMADA.numero_chamada
+	    
     WHERE 
-        OCO.natureza_codigo     IN ('A20002')  -- Naturezas de início de Segunda Resposta
-        AND YEAR(OCO.data_hora_fato) >= 2025          -- Data do fato a partir de 2024
-        AND ( ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600') AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
-       AND OCO.ocorrencia_uf = 'MG'      -- Restrito ao estado de Minas Gerais
-   	   AND OCO.digitador_sigla_orgao ='PM'         -- Registros digitados por PM 
-),
--- CTE PrimeiroAtendimento: isola o primeiro atendimento por vítima
-PrimeiroAtendimento AS (
-    SELECT * 
-    FROM Atendimento
-    WHERE rn = 1                                    -- Seleciona somente o primeiro registro de atendimento
-),
--- CTE RegistroUnico: une o registro inicial ao primeiro atendimento subsequente
-RegistroUnico AS (
-    SELECT 
-        R.nome_completo_envolvido,                   -- Nome da vítima 
-        R.data_nascimento,                           -- Data de nascimento
-        A.codigo_municipio,                          -- Município de ocorrência
-        R.data_registro,                             -- Data do registro de Primeira Resposta
-        R.numero_ocorrencia_primeira_resposta,           -- Número da ocorrência da Primeira Resposta
-        A.data_atendimento,                          -- Data do atendimento (Segunda Resposta)
-        A.ano_atendimento,                           -- Ano do atendimento (Segunda Resposta)
-        A.mes_atendimento,                           -- Mês do atendimento (Segunda Resposta)
-        A.numero_ocorrencia_atendimento_segunda_resposta,             -- Número da ocorrência da Segunda Resposta
-        A.RPM_2025,
-        A.UEOP_2025,
-        ROW_NUMBER() OVER (                          -- Numera pares registro-atendimento para escolher o mais recente (Segunda Resposta)
-            PARTITION BY R.nome_completo_envolvido, R.data_nascimento
-            ORDER BY R.data_registro DESC
-        ) AS row_num
-    FROM 
-        Registro R
-    JOIN 
-        PrimeiroAtendimento A
-        ON R.nome_completo_envolvido = A.nome_completo_envolvido
-       AND R.data_nascimento        = A.data_nascimento
-       AND R.data_registro < A.data_atendimento   -- Garante que o atendimento (Segunda Resposta) seja posterior ao registro (Primeira Resposta)
+	YEAR(OCO.data_hora_fato) >= 2023
+	AND (
+    OCO.natureza_codigo IN ('U33004', 'B01121', 'D01213', 'B02001', 'B01129', 'B01148', 'B01504',
+                            'A20002', 'A20003', 'A20004', 'A20005', 'A20006', 'A20007', 'A20008', 
+                            'A20009', 'A20010', 'A20011', 'A20012', 'A20013', 'A20014', 'A20015', 
+                            'A20016', 'A20017', 'A20018', 'A20019', 'A20020', 'A20021', 'A20022', 
+                            'A20023', 'A20024', 'A20025', 'A20026', 'Q02011', 'Q04010', 'Q04009', 
+                            'U33025', 'Y10011', 'Y07012')
+    OR OCO.natureza_secundaria1_codigo IN ('B01121', 'U33004', 'D01213', 'B02001', 'B01129', 'B01148', 'B01504')
+    OR OCO.natureza_secundaria2_codigo IN ('B01121', 'U33004', 'D01213', 'B02001', 'B01129', 'B01148', 'B01504')
+    OR OCO.natureza_secundaria3_codigo IN ('B01121', 'U33004', 'D01213', 'B02001', 'B01129', 'B01148', 'B01504')
 )
--- Seleciona o tempo em dias entre registro e início da Segunda Resposta
-SELECT DISTINCT
-	CONCAT(UPPER(I.nome_completo_envolvido),'-',I.numero_ocorrencia_atendimento_segunda_resposta) AS chave_nome_bo, -- Concatena o nome completo do envolvido e o número do registro, criando uma chave única para cada um dos envolvidos no registro
-    I.nome_completo_envolvido,                       -- Nome da vítima
-    I.data_registro,								-- Data do registro(data do fato)
-    I.data_atendimento,								--Data do segundo antendimento (data fato)
-    DATEDIFF(I.data_atendimento, I.data_registro) AS dias_atendimento_seg_resposta,  -- Dias de espera entre a Primeira Resposta e a Segunda Resposta
-    I.ano_atendimento,                               -- Ano de início da Segunda Resposta
-    I.mes_atendimento,                               -- Mês de início da Segunda Resposta
-    I.numero_ocorrencia_primeira_resposta,  -- Número da ocorrência da Primeira resposta
-    I.numero_ocorrencia_atendimento_segunda_resposta,      -- Número da ocorrência da Segunda resposta
-    I.RPM_2025, 
-    I.UEOP_2025, 
-    I.codigo_municipio
-FROM 
-    RegistroUnico I
-WHERE 
-    I.row_num = 1                                    -- Apenas o valor mais recente por vítima
-ORDER BY 
-    I.ano_atendimento, 
-    I.mes_atendimento, 
-    I.nome_completo_envolvido;
+AND OCO.ocorrencia_uf = 'MG'
+    AND OCO.digitador_sigla_orgao IN ('PM', 'PC')
+;

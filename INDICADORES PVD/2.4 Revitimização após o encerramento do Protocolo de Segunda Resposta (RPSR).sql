@@ -254,7 +254,7 @@ ELSE 'OUTRAS' END AS CIA_PVD
         AND ENV.id_relacao_vitima_autor IN (3, 4, 5, 6, 7, 9, 15, 16, 18, 19, 20, 21, 22) -- Relação vitima/autor 
         AND OCO.nome_tipo_relatorio IN ('POLICIAL', 'REFAP')          -- Tipos de relatórios Policial e REFAP
         AND OCO.ocorrencia_uf = 'MG'                                  -- Ocorrências registradas no estado de Minas Gerais
-        AND YEAR(OCO.data_hora_fato) >= 2023                          -- Considera ocorrências a partir do ano de 2023
+        AND YEAR(OCO.data_hora_fato) >= 2024                          -- Considera ocorrências a partir do ano de 2024
         AND (                                                       
             OCO.natureza_codigo = 'U33004'
             OR OCO.natureza_secundaria1_codigo = 'U33004'
@@ -312,4 +312,4 @@ JOIN CASOS_ENCERRAMENTOS C
     AND C.data_visita < V.data_hora_fato                              -- Garante que a nova ocorrência seja posterior ao encerramento
     AND C.data_visita >= DATE_ADD(V.data_hora_fato, INTERVAL -3 YEAR) -- Considera revitimizações em até 3 anos após a visita
  WHERE V.ULTIMA_OCORRENCIA_REVITIMIZACAO = 1  
- AND C.ULTIMO_ENCERRAMENTO = 1  -- Considera apenas a ocorrência número 1(última) ocorrência de revitimização e a ocorrência número 1(última) de primeira visita;
+ AND C.ULTIMO_ENCERRAMENTO = 1;

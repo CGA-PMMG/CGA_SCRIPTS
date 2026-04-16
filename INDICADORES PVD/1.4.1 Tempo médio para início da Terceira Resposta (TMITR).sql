@@ -1,25 +1,72 @@
 
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------
  *  ================================================================================================================================================
- *  =============================================== 2.3 REVITIMIZAÇÃO MULHERES NO ÂMBITO DOMÉSTICO =================================================
+ *  ============================================= 1.4 TEMPO MÉDIO PARA INÍCIO DA TERCEIRA RESPOSTA (TMITR) ==========================================
  *  ================================================================================================================================================
  * 
- * O Indicador tem por finalidade avaliar a revitimização de mulheres em âmbito doméstico com relação a Crimes com Violência Física ou Sexual em 
- * ambiente doméstico após primeiro contato da segunda resposta da PPVD (A 20.002, A 20.003 ou A 20.005).
+ * O Indicador tem por finalidade avaliar a eficiência na resposta rápida das PPVD em relação aos registros dos boletins de ocorrência de Terceira Resposta. 
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
-WITH VITIMAS AS (                                                      -- CTE que isola vítimas de crimes com violência física ou sexual em âmbito doméstico
+WITH 
+-- CTE Registro: capta o registro inicial (Primeira Resposta) 
+Registro AS (
     SELECT 
-        ENV.nome_completo_envolvido AS nome_vitima,                   -- Nome completo da vítima envolvida
-        ENV.data_nascimento AS data_nascimento_vitima,                -- Data de nascimento da vítima
-        OCO.numero_ocorrencia,                                        -- Número da ocorrência de revitimização
-        OCO.data_hora_fato,                                           -- Data e hora do fato da ocorrência
-        OCO.natureza_codigo,                                          -- Código da natureza principal 
-        OCO.nome_municipio,                                           -- Nome do município onde ocorreu o fato
-        OCO.codigo_municipio,                                         -- Código do município
-        OCO.natureza_secundaria1_codigo,                              -- Código da primeira natureza secundária
-        OCO.natureza_secundaria2_codigo,                              -- Código da segunda natureza secundária
-        OCO.natureza_secundaria3_codigo,                               -- Código da terceira natureza secundária
-        CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
+        ENV.nome_completo_envolvido,                     -- Nome completo do envolvido 
+        ENV.data_nascimento,                             -- Data de nascimento do envolvido 
+        OCO.codigo_municipio,                            -- Código do município de registro
+        OCO.data_hora_inclusao AS data_registro,             -- Data/hora do primeiro registro
+        OCO.numero_ocorrencia AS numero_ocorrencia_primeira_resposta    -- Número da ocorrência
+    FROM 
+        db_bisp_reds_reporting.tb_ocorrencia OCO         -- Tabela de ocorrências
+    INNER JOIN 
+        db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  -- Tabela de envolvidos
+        ON OCO.numero_ocorrencia = ENV.numero_ocorrencia -- Junção pelo número da ocorrência
+    WHERE 1=1
+           AND (
+    OCO.natureza_codigo = 'U33004'
+    OR OCO.natureza_secundaria1_codigo = 'U33004'
+    OR OCO.natureza_secundaria2_codigo = 'U33004'
+    OR OCO.natureza_secundaria3_codigo = 'U33004'
+)
+AND (
+    (
+        OCO.natureza_codigo = 'A02000'
+        OR SUBSTRING(OCO.natureza_codigo, 1, 1) IN ('B','C','D','E','F','G','H','I','J','K','L','M','N','T')
+    )
+    OR (
+        OCO.natureza_secundaria1_codigo = 'A02000'
+        OR SUBSTRING(OCO.natureza_secundaria1_codigo, 1, 1) IN ('B','C','D','E','F','G','H','I','J','K','L','M','N','T')
+    )
+    OR (
+        OCO.natureza_secundaria2_codigo = 'A02000'
+        OR SUBSTRING(OCO.natureza_secundaria2_codigo, 1, 1) IN ('B','C','D','E','F','G','H','I','J','K','L','M','N','T')
+    )
+    OR (
+        OCO.natureza_secundaria3_codigo = 'A02000'
+        OR SUBSTRING(OCO.natureza_secundaria3_codigo, 1, 1) IN ('B','C','D','E','F','G','H','I','J','K','L','M','N','T')
+    )
+)
+AND COALESCE(OCO.natureza_codigo, '') NOT IN ('T00007','T00008','T00009','T10161','T99000')
+AND COALESCE(OCO.natureza_secundaria1_codigo, '') NOT IN ('T00007','T00008','T00009','T10161','T99000')
+AND COALESCE(OCO.natureza_secundaria2_codigo, '') NOT IN ('T00007','T00008','T00009','T10161','T99000')
+AND COALESCE(OCO.natureza_secundaria3_codigo, '') NOT IN ('T00007','T00008','T00009','T10161','T99000')
+        AND YEAR(OCO.data_hora_inclusao) >= 2025            -- Data do fato a partir de 2024
+        AND OCO.nome_tipo_relatorio IN ('POLICIAL', 'REFAP')    -- Tipos de relatório Polical, Bos e Bos Amplo
+),
+-- CTE Atendimento : Terceira Resposta
+Atendimento AS (
+    SELECT 
+        ENV.nome_completo_envolvido,                     -- Nome completo do envolvido 
+        ENV.data_nascimento,                             -- Data de nascimento do envolvido 
+        OCO.codigo_municipio,                            -- Código do município de registro
+        OCO.numero_ocorrencia AS numero_ocorrencia_atendimento_terceira_resposta,  -- Número da ocorrência de atendimento (Terceira Resposta)
+        OCO.data_hora_fato AS data_atendimento,          -- Data/hora de início da ocorrência de atendimento (Terceira Resposta)
+        YEAR(OCO.data_hora_fato) AS ano_atendimento,     -- Ano do atendimento (Terceira Resposta)
+        MONTH(OCO.data_hora_fato) AS mes_atendimento,    -- Mês do atendimento (Terceira Resposta)
+        ROW_NUMBER() OVER (                              -- Numera atendimentos por vítima para escolher o primeiro (Terceira Resposta)
+            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento 
+            ORDER BY OCO.data_hora_fato
+        ) AS rn,         
+ CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
    		WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
 		WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
     	WHEN OCO.codigo_municipio IN (310150 , 310310 , 310370 , 310440 , 310460 , 310550 , 310610 , 310690 , 310870 , 311020 , 311170 , 311330 , 311530 , 311590 , 311620 , 311670 , 311960 , 312130 , 312190 , 312200 , 312290 , 312330 , 312400 , 312460 , 312490 , 312530 , 312595 , 312738 , 312840 , 312850 , 312880 , 312900 , 313260 , 313670 , 313800 , 313840 , 313860 , 313980 , 314020 , 314080 , 314160 , 314210 , 314220 , 314390 , 314540 , 314587 , 314670 , 314820 , 314830 , 314880 , 314900 , 314940 , 314950 , 315010 , 315110 , 315130 , 315410 , 315540 , 315580 , 315590 , 315620 , 315630 , 315645 , 315727 , 315840 , 315860 , 315930 , 316000 , 316140 , 316150 , 316290 , 316380 , 316443 , 316560 , 316570 , 316730 , 316750 , 316790 , 316850 , 316900 , 316920 , 316990 , 317130 , 317140 , 317200 , 317210) THEN '04 RPM'	
@@ -135,181 +182,72 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '49 BPM%' or OCO.unidade_area_militar_nome LIKE '%/49 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '49 BPM'
 		WHEN OCO.codigo_municipio =310620 AND (OCO.unidade_area_militar_nome LIKE '34 BPM%' or OCO.unidade_area_militar_nome LIKE '%/34 BPM%') AND (OCO.unidade_area_militar_nome not LIKE '%TM%')THEN '34 BPM'
 		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '31 BPM%' or OCO.unidade_area_militar_nome like '%/31 BPM%') THEN '31 BPM'
-		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '9 BPM%' or OCO.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
+		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '9 BPM%' or OCO.unidade_area_militar_nome like '%/9 BPM%') THEN '09 BPM'
 		ELSE 'OUTROS' 
-	END AS UEOP_2025,
-	CASE WHEN OCO.codigo_municipio IN (
-310110,310160,310170,310340,310350,310400,310560,310620,310620,310620,310620,
-310620,310620,310620,310620,310670,310670,310740,310900,311120,311230,311330,
-311340,311530,311800,311830,311860,311860,311940,312090,312160,312230,312410,
-312510,312610,312710,312770,312800,312870,312980,313010,313130,313170,313240,
-313380,313420,313440,313510,313520,313620,313630,313670,313670,313760,313820,
-313840,313940,313960,314330,314330,314390,314430,314480,314520,314610,
-314710,314700,314790,314800,314810,314930,315120,315180,315210,315250,315460,
-315670,315780,316070,316110,316250,316370,316470,316720,316800,316860,316870,
-316930,316990,317010,317010,317020,317020,317040,317070,317120,317130
-) THEN 'Sede Ueop'
-WHEN OCO.codigo_municipio IN (
-310090, 310120, 310190, 310210, 310230, 310375, 310430, 310450, 310460, 310470, 
-310490, 310500, 310510, 310590, 310630, 310640, 310690, 310780, 310800, 310810, 
-310820, 310830, 310855, 310860, 310890, 310920, 310950, 311030, 311050, 311090, 
-311100, 311110, 311150, 311180, 311200, 311260, 311280, 311300, 311370, 311400, 
-311410, 311420, 311440, 311450, 311455, 311580, 311660, 311670, 311750, 311770, 
-311787, 311820, 311840, 311880, 311920, 312050, 312080, 312110, 312125, 312200, 
-312235, 312320, 312360, 312370, 312390, 312400, 312420, 312480, 312490, 312570, 
-312590, 312595, 312690, 312700, 312730, 312760, 312780, 312810, 312830, 312970, 
-313020, 313115, 313120, 313180, 313210, 313220, 313250, 313300, 313310, 313320, 
-313340, 313350, 313375, 313390, 313430, 313460, 313470, 313490, 313540, 313550, 
-313600, 313665, 313750, 313770, 313780, 313860, 313862, 313880, 313890, 313920, 
-313980, 314015, 314050, 314070, 314090, 314100, 314110, 314140, 314180, 314210, 
-314220, 314270, 314280, 314290, 314320, 314340, 314350, 314400, 314410, 314450, 
-314460, 314470, 314500, 314505, 314510, 314630, 314690, 314720, 314910, 314970, 
-315080, 315110, 315140, 315160, 315170, 315270, 315340, 315360, 315390, 315400, 
-315420, 315430, 315440, 315490, 315540, 315550, 315560, 315570, 315580, 315590, 
-315600, 315680, 315700, 315720, 315733, 315770, 315800, 315820, 315980, 315900, 
-315990, 316040, 316100, 316190, 316240, 316270, 316280, 316292, 316295, 316420, 
-316520, 316553, 316570, 316680, 316740, 316760, 316840, 316850, 316900, 316920, 
-316970, 317005, 317100, 317180
-) THEN 'Sede Pel. Dest.'
-WHEN OCO.codigo_municipio IN (
-310020, 310030, 310150, 310260, 310280, 310290, 310420, 310540, 310710, 310730,
-310840, 310930, 310940, 311000, 311060, 311160, 311320, 311430, 311510, 311550,
-311730, 311910, 311930, 312430, 312670, 312950, 313090, 313190, 313270, 313330,
-313505, 313580, 313720, 313900, 313930, 313950, 314000, 314080, 314530, 314560,
-314590, 314600, 314730, 314740, 314760, 314860, 314870, 314980, 314990, 315150,
-315200, 315220, 315280, 315690, 315960, 315895, 316200, 316210, 316290, 316710,
-316880, 316935, 316940, 316960, 317080, 317200, 314310
-) THEN 'Sede Cia. Dest.'
-WHEN OCO.codigo_municipio IN (
-310010, 310040, 310050, 310060, 310070, 310080, 310100, 310130, 310140, 310163, 310180, 
-310200, 310205, 315350, 310220, 310240, 310250, 310285, 310300, 310310, 310320, 310330, 
-310360, 310370, 310380, 310390, 310410, 310440, 310445, 310480, 310520, 310530, 310550, 
-310570, 310600, 310610, 310650, 310665, 310660, 310680, 310700, 310720, 310750, 310760, 
-310770, 310790, 310825, 310850, 310870, 310880, 310910, 310925, 310945, 310960, 310970, 
-310270, 310980, 310990, 311010, 311020, 311040, 311070, 311080, 311115, 311130, 311140, 
-311190, 311170, 311205, 311210, 311220, 311240, 311250, 311265, 311270, 311290, 311310, 
-311350, 311360, 311380, 311390, 311460, 311470, 311480, 311490, 311500, 311535, 311540, 
-311545, 311547, 311560, 311570, 311590, 311600, 311610, 311615, 311620, 311630, 311640, 
-311650, 311680, 311690, 311700, 311710, 311520, 311720, 311740, 311760, 311780, 311783, 
-311790, 311810, 311850, 311870, 311890, 311900, 311950, 311960, 311970, 311980, 311990, 
-311995, 312000, 312010, 312015, 312020, 312030, 312040, 312060, 312070, 312083, 312087, 
-312100, 312120, 312130, 312140, 312150, 312170, 312180, 312190, 312210, 312220, 312240, 
-312245, 312247, 312250, 312260, 312270, 312280, 312290, 312300, 312310, 312330, 312340, 
-312350, 312352, 312380, 312385, 312440, 312450, 312460, 312470, 312500, 312520, 312530, 
-312540, 312560, 312580, 312600, 312620, 312630, 312640, 312650, 312660, 312675, 312680, 
-312695, 312705, 312707, 312720, 312733, 312735, 312737, 312738, 312740, 312750, 312790, 
-312820, 312825, 312840, 312850, 312860, 312880, 312890, 312900, 312910, 312920, 312930, 
-312940, 312960, 312965, 312990, 313000, 313005, 313030, 313040, 313050, 313055, 313060, 
-313065, 313070, 313080, 313100, 313110, 313140, 313150, 313160, 313200, 313230, 313260, 
-313280, 313290, 313360, 313370, 313400, 313410, 313450, 313480, 313500, 313507, 313530, 
-313535, 313545, 313560, 313570, 313590, 313610, 313640, 313650, 313652, 313655, 313657, 
-313680, 313690, 313695, 313700, 313710, 313730, 313740, 313753, 313790, 313800, 313810, 
-313830, 313835, 313850, 313865, 313867, 313868, 313870, 313910, 313925, 313970, 313990, 
-314010, 314020, 314030, 314040, 314053, 314055, 314060, 317150, 314085, 314120, 314130, 
-314150, 314160, 314170, 314190, 314200, 314225, 314230, 314240, 314250, 314260, 314300, 
-314315, 314345, 314360, 314370, 314380, 314420, 314435, 314437, 314440, 314465, 314467, 
-314490, 313660, 314535, 314537, 314540, 314545, 314550, 314570, 314580, 314585, 314587, 
-314620, 314625, 314655, 314640, 314650, 314660, 314670, 314675, 314770, 314780, 314750, 
-314795, 314820, 314830, 314840, 314850, 314875, 314880, 314890, 314900, 314915, 314920, 
-314940, 314950, 314960, 314995, 315000, 315010, 315015, 315020, 315030, 315040, 315050, 
-315053, 315057, 315060, 315070, 315090, 315100, 315130, 315190, 315213, 315217, 315230, 
-315240, 315260, 315290, 315300, 315310, 315320, 315330, 315370, 315380, 315410, 315415, 
-315445, 315450, 315470, 315480, 315510, 315500, 315520, 315530, 315610, 315620, 315630, 
-315640, 315645, 315650, 315660, 315710, 315725, 315727, 315730, 315737, 315740, 315750, 
-315760, 315765, 315790, 315810, 315920, 315930, 315935, 315940, 315950, 315970, 315830, 
-315840, 315850, 315860, 315870, 315880, 315890, 315910, 316000, 316010, 316020, 316030, 
-316045, 316050, 316060, 316080, 316090, 316095, 316105, 316120, 316130, 316140, 316150, 
-316160, 316165, 316170, 316180, 312550, 316220, 316225, 316230, 316245, 316255, 316257, 
-316260, 316265, 316294, 316300, 316310, 316320, 316330, 316340, 316350, 316360, 316380, 
-316390, 316410, 316400, 316430, 316440, 316443, 316447, 316450, 316460, 316480, 316490, 
-316500, 316510, 316530, 316540, 316550, 316556, 316557, 316560, 316580, 316590, 316600, 
-316610, 316620, 316620, 316630, 316640, 316650, 316660, 316670, 316690, 316695, 316700, 
-316555, 316730, 316750, 316770, 316780, 316790, 316805, 316810, 316820, 316830, 316890, 
-316905, 316910, 316950, 316980, 317000, 317030, 317043, 317047, 317050, 317052, 317057, 
-317060, 317065, 317075, 317090, 317103, 317107, 317110, 317115, 317140, 317160, 317170, 
-317190, 317210, 317220
-) THEN 'Destacamento'
-END AS CATEGORIA,
-CASE WHEN OCO.codigo_municipio IN (310620) THEN '1° CIA IND PVD'
-WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553
-) THEN '2° CIA IND PVD'
-WHEN OCO.codigo_municipio IN (
-310020, 310030, 310150, 310260, 310280, 310290, 310420, 310540, 310710, 310730,
-310840, 310930, 310940, 311000, 311060, 311160, 311320, 311430, 311510, 311550,
-311730, 311910, 311930, 312430, 312670, 312950, 313090, 313190, 313270, 313330,
-313505, 313580, 313720, 313900, 313930, 313950, 314000, 314080, 314530, 314560,
-314590, 314600, 314730, 314740, 314760, 314860, 314870, 314980, 314990, 315150,
-315200, 315220, 315280, 315690, 315960, 315895, 316200, 316210, 316290, 316710,
-316880, 316935, 316940, 316960, 317080, 317200, 314310) THEN '3° CIA IND PVD'
-ELSE 'OUTRAS' END AS CIA_PVD,
-ROW_NUMBER() OVER (
-            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento
-            ORDER BY OCO.data_hora_fato DESC
-        ) AS ULTIMA_REVITIMIZACAO -- Ordena as ocorrências de revitimização em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
-    FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV           -- Tabela contendo dados dos envolvidos nas ocorrências
-    JOIN db_bisp_reds_reporting.tb_ocorrencia OCO                     -- Tabela principal de ocorrências
-        ON ENV.numero_ocorrencia = OCO.numero_ocorrencia              -- Relacionamento entre envolvido e ocorrência pela chave primária
+	END AS UEOP_2025
+    FROM 
+        db_bisp_reds_reporting.tb_ocorrencia OCO
+    INNER JOIN 
+        db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
+        ON OCO.numero_ocorrencia = ENV.numero_ocorrencia
     WHERE 
-        ENV.id_envolvimento IN (25, 26, 27, 28, 32, 872, 1097)        -- Considera apenas tipos de envolvimento classificados como "vítima"
-        AND (ENV.codigo_sexo = 'F'  OR ENV.identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600')) -- Inclui envolvidas do sexo feminino ou com identidades de gênero compatíveis
-        AND ENV.id_relacao_vitima_autor IN (3,4,5,6,7,9,15,16,18,19,20,21,22)  -- Restringe a vínculos típicos de violência doméstica
-        AND OCO.ocorrencia_uf = 'MG'                                  -- Filtro geográfico: somente ocorrências em Minas Gerais
-        AND YEAR(OCO.data_hora_fato) >= 2024                          -- Limita o período para ocorrências a partir do ano de 2024
-        AND (                                                      
-            OCO.natureza_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')  
-            OR OCO.natureza_secundaria1_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
-            OR OCO.natureza_secundaria2_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
-            OR OCO.natureza_secundaria3_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
-            )   -- Filtra naturezas de Homicídio, Tortura, Lesão Corporal, Sequestro e Cárcere Privado, Feminicídio, Estupro
-), 
-CASOS_PRIMEIRA_VISITA AS (                 -- CTE que identifica ocorrências de primeira resposta da PPVD
+        OCO.natureza_codigo     IN ('A20003','A20005')  -- Naturezas de início de Terceira Resposta
+        AND YEAR(OCO.data_hora_fato) >= 2025          -- Data do fato a partir de 2024
+        AND ( ENV.codigo_sexo = 'F'  OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600') AND id_envolvimento IN(28,27,26,25,32,1097,872,1094)) -- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
+       AND OCO.ocorrencia_uf = 'MG'      -- Restrito ao estado de Minas Gerais
+   	   AND OCO.digitador_sigla_orgao ='PM'         -- Registros digitados por PM 
+),
+-- CTE PrimeiroAtendimento: isola o primeiro atendimento por vítima
+PrimeiroAtendimento AS (
+    SELECT * 
+    FROM Atendimento
+    WHERE rn = 1                                    -- Seleciona somente o primeiro registro de atendimento
+),
+-- CTE RegistroUnico: une o registro inicial ao primeiro atendimento subsequente
+RegistroUnico AS (
     SELECT 
-        ENV.nome_completo_envolvido AS nome_vitima,                   -- Nome completo da vítima
-        ENV.data_nascimento AS data_nascimento_vitima,                -- Data de nascimento da vítima
-        OCO.numero_ocorrencia AS registro_visita,                     -- Número da ocorrência da visita
-        OCO.data_hora_fato AS data_visita,                            -- Data e hora em que foi realizada a visita
-        OCO.natureza_codigo AS natureza_visita,                       -- Código da natureza da ocorrência de visita (deve ser A20002, A20003 ou A20005)
-        OCO.natureza_secundaria1_codigo,                              -- Código da primeira natureza secundária
-        OCO.natureza_secundaria2_codigo,							  -- Código da segunda natureza secundária
-        OCO.natureza_secundaria3_codigo,								  -- Código da terceira natureza secundária
-        ROW_NUMBER() OVER (
-            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento
-            ORDER BY OCO.data_hora_fato DESC
-        ) AS ULTIMA_PRIMEIRA_VISITA  							-- Ordena as ocorrências de primeira visita em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
-    FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
-    JOIN db_bisp_reds_reporting.tb_ocorrencia OCO 
-        ON ENV.numero_ocorrencia = OCO.numero_ocorrencia              -- Relacionamento padrão entre envolvidos e ocorrência
-    WHERE 
-        ENV.id_envolvimento IN (25, 26, 27, 28, 32, 872, 1097)        -- Considera apenas vítimas
-        AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600'))  -- Filtro de sexo ou identidade de gênero correspondentes
-        AND OCO.ocorrencia_uf = 'MG'                                   -- Filtro geográfico: somente ocorrências em Minas Gerais
-        AND OCO.natureza_codigo IN ('A20002', 'A20003', 'A20005')     -- Filtra ocorrências que representem a primeira visita da PPVD
+        R.nome_completo_envolvido,                   -- Nome da vítima 
+        R.data_nascimento,                           -- Data de nascimento
+        A.codigo_municipio,                          -- Município de ocorrência
+        R.data_registro,                             -- Data do registro de Primeira Resposta
+        R.numero_ocorrencia_primeira_resposta,           -- Número da ocorrência da Primeira Resposta
+        A.data_atendimento,                          -- Data do atendimento (Terceira Resposta)
+        A.ano_atendimento,                           -- Ano do atendimento (Terceira Resposta)
+        A.mes_atendimento,                           -- Mês do atendimento (Terceira Resposta)
+        A.numero_ocorrencia_atendimento_terceira_resposta,             -- Número da ocorrência da Terceira Resposta
+        A.RPM_2025,
+        A.UEOP_2025,
+        ROW_NUMBER() OVER (                          -- Numera pares registro-atendimento para escolher o mais recente (Terceira Resposta)
+            PARTITION BY R.nome_completo_envolvido, R.data_nascimento
+            ORDER BY R.data_registro DESC
+        ) AS row_num
+    FROM 
+        Registro R
+    JOIN 
+        PrimeiroAtendimento A
+        ON R.nome_completo_envolvido = A.nome_completo_envolvido
+       AND R.data_nascimento        = A.data_nascimento
+       AND R.data_registro < A.data_atendimento   -- Garante que o atendimento (Terceira Resposta) seja posterior ao registro (Primeira Resposta)
 )
-SELECT 
-	CONCAT(UPPER(V.nome_vitima),'-',CAST(CAST(V.data_nascimento_vitima AS DATE) AS STRING)) AS chave_nome_nascimento,-- Chave única do envolvido, composta pelo nome da vitima e sua data de nascimento
-    V.nome_vitima,                                                    -- Nome da vítima revitimizada
-    V.data_nascimento_vitima,                                         -- Data de nascimento da vítima
-    V.numero_ocorrencia,                                              -- Número da ocorrência da revitimização
-    V.natureza_codigo,                                                -- Código da natureza da nova ocorrência
-    V.data_hora_fato,                                                 -- Data do fato da revitimização
-    C.registro_visita,                                                -- Número da ocorrência da visita PPVD
-    C.natureza_visita,                                                -- Código da natureza da ocorrência de visita
-    C.data_visita,                                                    -- Data em que ocorreu a visita anterior
-    V.natureza_secundaria1_codigo,                                    -- Código da primeira natureza secundária da revitimização
-    V.natureza_secundaria2_codigo,									  -- Código da segunda natureza secundária da revitimização
-    V.natureza_secundaria3_codigo,									  -- Código da terceira natureza secundária da revitimização
-    V.nome_municipio,                                                 -- Nome do município da nova ocorrência de revitimização
-    V.codigo_municipio,                                               -- Código do município (revitimização)
-    V.RPM_2025,                                                       -- RPM
-    V.UEOP_2025,                                                      -- UEOP 
-    V.CIA_PVD,                                                        -- CIA PPVD
-    V.CATEGORIA,                                                       -- CATEGORIA
-    FLOOR(MONTHS_BETWEEN(V.data_hora_fato, C.data_visita) / 12) AS anos_decorridos -- Anos decorridos desde a primeira visita até a revitimização
-   FROM VITIMAS V
-JOIN CASOS_PRIMEIRA_VISITA C 
-    ON UPPER(V.nome_vitima) = UPPER(C.nome_vitima)                     -- Junta registros da mesma vítima por nome
-    AND V.data_nascimento_vitima = C.data_nascimento_vitima           -- Garante correspondência por data de nascimento (evita falsos positivos)
-    AND C.data_visita < V.data_hora_fato                              -- Considera apenas revitimizações posteriores à visita
-    AND C.data_visita >= DATE_ADD(V.data_hora_fato, INTERVAL -3 YEAR) -- Considera revitimizações em até 3 anos após a visita
- WHERE V.ULTIMA_REVITIMIZACAO = 1  
- AND C.ULTIMA_PRIMEIRA_VISITA = 1;
+-- Seleciona o tempo em dias entre registro e início da Terceira Resposta
+SELECT DISTINCT
+	CONCAT(UPPER(I.nome_completo_envolvido),'-',I.numero_ocorrencia_atendimento_terceira_resposta) AS chave_nome_bo, -- Concatena o nome completo do envolvido e o número do registro, criando uma chave única para cada um dos envolvidos no registro
+    I.nome_completo_envolvido,                       -- Nome da vítima
+    I.data_registro,								-- Data do registro(data do fato)
+    I.data_atendimento,								--Data do segundo antendimento (data fato)
+    DATEDIFF(I.data_atendimento, I.data_registro) AS dias_atendimento_ter_resposta,  -- Dias de espera entre a Primeira Resposta e a Terceira Resposta
+    I.ano_atendimento,                               -- Ano de início da Terceira Resposta
+    I.mes_atendimento,                               -- Mês de início da Terceira Resposta
+    I.numero_ocorrencia_primeira_resposta,  -- Número da ocorrência da Primeira resposta
+    I.numero_ocorrencia_atendimento_terceira_resposta,      -- Número da ocorrência da Terceira resposta
+    I.RPM_2025, 
+    I.UEOP_2025, 
+    I.codigo_municipio
+FROM 
+    RegistroUnico I
+WHERE 
+    I.row_num = 1                                    -- Apenas o valor mais recente por vítima
+ORDER BY 
+    I.ano_atendimento, 
+    I.mes_atendimento, 
+    I.nome_completo_envolvido;

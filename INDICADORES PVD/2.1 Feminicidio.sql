@@ -1,25 +1,16 @@
-
-/* -------------------------------------------------------------------------------------------------------------------------------------------------------
+/* ----------------------------------------------------------------------------------------------------------------------------------------------------
  *  ================================================================================================================================================
- *  =============================================== 2.3 REVITIMIZAÇÃO MULHERES NO ÂMBITO DOMÉSTICO =================================================
+ *  ============================================================= 2.1 FEMINICÍDIO  =================================================================
  *  ================================================================================================================================================
  * 
- * O Indicador tem por finalidade avaliar a revitimização de mulheres em âmbito doméstico com relação a Crimes com Violência Física ou Sexual em 
- * ambiente doméstico após primeiro contato da segunda resposta da PPVD (A 20.002, A 20.003 ou A 20.005).
- *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
-WITH VITIMAS AS (                                                      -- CTE que isola vítimas de crimes com violência física ou sexual em âmbito doméstico
-    SELECT 
-        ENV.nome_completo_envolvido AS nome_vitima,                   -- Nome completo da vítima envolvida
-        ENV.data_nascimento AS data_nascimento_vitima,                -- Data de nascimento da vítima
-        OCO.numero_ocorrencia,                                        -- Número da ocorrência de revitimização
-        OCO.data_hora_fato,                                           -- Data e hora do fato da ocorrência
-        OCO.natureza_codigo,                                          -- Código da natureza principal 
-        OCO.nome_municipio,                                           -- Nome do município onde ocorreu o fato
-        OCO.codigo_municipio,                                         -- Código do município
-        OCO.natureza_secundaria1_codigo,                              -- Código da primeira natureza secundária
-        OCO.natureza_secundaria2_codigo,                              -- Código da segunda natureza secundária
-        OCO.natureza_secundaria3_codigo,                               -- Código da terceira natureza secundária
-        CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
+ * O Indicador tem por finalidade aferir a taxa de feminicídios em Minas Gerais, tendo como parâmetro as naturezas de feminicídio e homicídio, que 
+ * estejam com o marcador U33004 - Atendimento de Denúncia de Infrações Contra a Mulher (Violência Doméstica), em relação à população feminina 
+ * no Estado de Minas Gerais.
+ *-----------------------------------------------------------------------------------------------------------------------------------------------------*/
+SELECT
+   OCO.numero_ocorrencia, 
+   CONCAT(UPPER(ENV.nome_completo_envolvido),'-',OCO.numero_ocorrencia) AS chave_nome_bo,-- Identificador único da ocorrência
+CASE WHEN OCO.codigo_municipio IN (310620) THEN '01 RPM'
    		WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553) THEN '02 RPM'	
 		WHEN OCO.codigo_municipio IN (311000 , 311787 , 312170 , 313190 , 313460 , 313660 , 313760 , 314000 , 314480 , 314610 , 315390 , 315480 , 315670 , 315780 , 315900 , 316295 , 316830 , 317120) THEN '03 RPM'
     	WHEN OCO.codigo_municipio IN (310150 , 310310 , 310370 , 310440 , 310460 , 310550 , 310610 , 310690 , 310870 , 311020 , 311170 , 311330 , 311530 , 311590 , 311620 , 311670 , 311960 , 312130 , 312190 , 312200 , 312290 , 312330 , 312400 , 312460 , 312490 , 312530 , 312595 , 312738 , 312840 , 312850 , 312880 , 312900 , 313260 , 313670 , 313800 , 313840 , 313860 , 313980 , 314020 , 314080 , 314160 , 314210 , 314220 , 314390 , 314540 , 314587 , 314670 , 314820 , 314830 , 314880 , 314900 , 314940 , 314950 , 315010 , 315110 , 315130 , 315410 , 315540 , 315580 , 315590 , 315620 , 315630 , 315645 , 315727 , 315840 , 315860 , 315930 , 316000 , 316140 , 316150 , 316290 , 316380 , 316443 , 316560 , 316570 , 316730 , 316750 , 316790 , 316850 , 316900 , 316920 , 316990 , 317130 , 317140 , 317200 , 317210) THEN '04 RPM'	
@@ -137,8 +128,8 @@ CASE WHEN OCO.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
 		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '31 BPM%' or OCO.unidade_area_militar_nome like '%/31 BPM%') THEN '31 BPM'
 		WHEN OCO.codigo_municipio =316620 AND (OCO.unidade_area_militar_nome like '9 BPM%' or OCO.unidade_area_militar_nome like '%/9 BPM%') THEN '9 BPM'
 		ELSE 'OUTROS' 
-	END AS UEOP_2025,
-	CASE WHEN OCO.codigo_municipio IN (
+	END AS UEOP_2025,		
+   	CASE WHEN OCO.codigo_municipio IN (
 310110,310160,310170,310340,310350,310400,310560,310620,310620,310620,310620,
 310620,310620,310620,310620,310670,310670,310740,310900,311120,311230,311330,
 311340,311530,311800,311830,311860,311860,311940,312090,312160,312230,312410,
@@ -230,86 +221,53 @@ WHEN OCO.codigo_municipio IN (
 317190, 317210, 317220
 ) THEN 'Destacamento'
 END AS CATEGORIA,
-CASE WHEN OCO.codigo_municipio IN (310620) THEN '1° CIA IND PVD'
-WHEN OCO.codigo_municipio IN (310670 , 310810 , 310900 , 311860 , 312060 , 312410 , 312600 , 312980 , 313010 , 313220 , 313665 , 314015 , 314070 , 315040 , 315460 , 315530 , 316292 , 316553
-) THEN '2° CIA IND PVD'
-WHEN OCO.codigo_municipio IN (
-310020, 310030, 310150, 310260, 310280, 310290, 310420, 310540, 310710, 310730,
-310840, 310930, 310940, 311000, 311060, 311160, 311320, 311430, 311510, 311550,
-311730, 311910, 311930, 312430, 312670, 312950, 313090, 313190, 313270, 313330,
-313505, 313580, 313720, 313900, 313930, 313950, 314000, 314080, 314530, 314560,
-314590, 314600, 314730, 314740, 314760, 314860, 314870, 314980, 314990, 315150,
-315200, 315220, 315280, 315690, 315960, 315895, 316200, 316210, 316290, 316710,
-316880, 316935, 316940, 316960, 317080, 317200, 314310) THEN '3° CIA IND PVD'
-ELSE 'OUTRAS' END AS CIA_PVD,
-ROW_NUMBER() OVER (
-            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento
-            ORDER BY OCO.data_hora_fato DESC
-        ) AS ULTIMA_REVITIMIZACAO -- Ordena as ocorrências de revitimização em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
-    FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV           -- Tabela contendo dados dos envolvidos nas ocorrências
-    JOIN db_bisp_reds_reporting.tb_ocorrencia OCO                     -- Tabela principal de ocorrências
-        ON ENV.numero_ocorrencia = OCO.numero_ocorrencia              -- Relacionamento entre envolvido e ocorrência pela chave primária
-    WHERE 
-        ENV.id_envolvimento IN (25, 26, 27, 28, 32, 872, 1097)        -- Considera apenas tipos de envolvimento classificados como "vítima"
-        AND (ENV.codigo_sexo = 'F'  OR ENV.identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600')) -- Inclui envolvidas do sexo feminino ou com identidades de gênero compatíveis
-        AND ENV.id_relacao_vitima_autor IN (3,4,5,6,7,9,15,16,18,19,20,21,22)  -- Restringe a vínculos típicos de violência doméstica
-        AND OCO.ocorrencia_uf = 'MG'                                  -- Filtro geográfico: somente ocorrências em Minas Gerais
-        AND YEAR(OCO.data_hora_fato) >= 2024                          -- Limita o período para ocorrências a partir do ano de 2024
-        AND (                                                      
-            OCO.natureza_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')  
-            OR OCO.natureza_secundaria1_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
-            OR OCO.natureza_secundaria2_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
-            OR OCO.natureza_secundaria3_codigo IN ('B01121', 'B02001', 'B01129', 'B01148', 'B01504', 'D01213')
-            )   -- Filtra naturezas de Homicídio, Tortura, Lesão Corporal, Sequestro e Cárcere Privado, Feminicídio, Estupro
-), 
-CASOS_PRIMEIRA_VISITA AS (                 -- CTE que identifica ocorrências de primeira resposta da PPVD
-    SELECT 
-        ENV.nome_completo_envolvido AS nome_vitima,                   -- Nome completo da vítima
-        ENV.data_nascimento AS data_nascimento_vitima,                -- Data de nascimento da vítima
-        OCO.numero_ocorrencia AS registro_visita,                     -- Número da ocorrência da visita
-        OCO.data_hora_fato AS data_visita,                            -- Data e hora em que foi realizada a visita
-        OCO.natureza_codigo AS natureza_visita,                       -- Código da natureza da ocorrência de visita (deve ser A20002, A20003 ou A20005)
-        OCO.natureza_secundaria1_codigo,                              -- Código da primeira natureza secundária
-        OCO.natureza_secundaria2_codigo,							  -- Código da segunda natureza secundária
-        OCO.natureza_secundaria3_codigo,								  -- Código da terceira natureza secundária
-        ROW_NUMBER() OVER (
-            PARTITION BY ENV.nome_completo_envolvido, ENV.data_nascimento
-            ORDER BY OCO.data_hora_fato DESC
-        ) AS ULTIMA_PRIMEIRA_VISITA  							-- Ordena as ocorrências de primeira visita em ordem decrescente pela data/hora do fato - considerando o nome da vitima e sua data de nascimento, atribuindo valor 1 para o último registro
-    FROM db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV
-    JOIN db_bisp_reds_reporting.tb_ocorrencia OCO 
-        ON ENV.numero_ocorrencia = OCO.numero_ocorrencia              -- Relacionamento padrão entre envolvidos e ocorrência
-    WHERE 
-        ENV.id_envolvimento IN (25, 26, 27, 28, 32, 872, 1097)        -- Considera apenas vítimas
-        AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400', '0200', '0700', '0100', '0600'))  -- Filtro de sexo ou identidade de gênero correspondentes
-        AND OCO.ocorrencia_uf = 'MG'                                   -- Filtro geográfico: somente ocorrências em Minas Gerais
-        AND OCO.natureza_codigo IN ('A20002', 'A20003', 'A20005')     -- Filtra ocorrências que representem a primeira visita da PPVD
-)
-SELECT 
-	CONCAT(UPPER(V.nome_vitima),'-',CAST(CAST(V.data_nascimento_vitima AS DATE) AS STRING)) AS chave_nome_nascimento,-- Chave única do envolvido, composta pelo nome da vitima e sua data de nascimento
-    V.nome_vitima,                                                    -- Nome da vítima revitimizada
-    V.data_nascimento_vitima,                                         -- Data de nascimento da vítima
-    V.numero_ocorrencia,                                              -- Número da ocorrência da revitimização
-    V.natureza_codigo,                                                -- Código da natureza da nova ocorrência
-    V.data_hora_fato,                                                 -- Data do fato da revitimização
-    C.registro_visita,                                                -- Número da ocorrência da visita PPVD
-    C.natureza_visita,                                                -- Código da natureza da ocorrência de visita
-    C.data_visita,                                                    -- Data em que ocorreu a visita anterior
-    V.natureza_secundaria1_codigo,                                    -- Código da primeira natureza secundária da revitimização
-    V.natureza_secundaria2_codigo,									  -- Código da segunda natureza secundária da revitimização
-    V.natureza_secundaria3_codigo,									  -- Código da terceira natureza secundária da revitimização
-    V.nome_municipio,                                                 -- Nome do município da nova ocorrência de revitimização
-    V.codigo_municipio,                                               -- Código do município (revitimização)
-    V.RPM_2025,                                                       -- RPM
-    V.UEOP_2025,                                                      -- UEOP 
-    V.CIA_PVD,                                                        -- CIA PPVD
-    V.CATEGORIA,                                                       -- CATEGORIA
-    FLOOR(MONTHS_BETWEEN(V.data_hora_fato, C.data_visita) / 12) AS anos_decorridos -- Anos decorridos desde a primeira visita até a revitimização
-   FROM VITIMAS V
-JOIN CASOS_PRIMEIRA_VISITA C 
-    ON UPPER(V.nome_vitima) = UPPER(C.nome_vitima)                     -- Junta registros da mesma vítima por nome
-    AND V.data_nascimento_vitima = C.data_nascimento_vitima           -- Garante correspondência por data de nascimento (evita falsos positivos)
-    AND C.data_visita < V.data_hora_fato                              -- Considera apenas revitimizações posteriores à visita
-    AND C.data_visita >= DATE_ADD(V.data_hora_fato, INTERVAL -3 YEAR) -- Considera revitimizações em até 3 anos após a visita
- WHERE V.ULTIMA_REVITIMIZACAO = 1  
- AND C.ULTIMA_PRIMEIRA_VISITA = 1;
+   OCO.natureza_codigo,                                    -- Código da natureza principal da ocorrência
+   ENV.condicao_fisica_descricao,                          -- Descrição da condição física do envolvido
+   ENV.codigo_sexo,                                        -- Código do sexo do envolvido
+   OCO.natureza_secundaria1_codigo,                        -- Código da primeira natureza secundária do crime
+   OCO.natureza_consumado,                                 -- Indicador se o crime foi consumado ou tentado
+   ENV.nome_completo_envolvido,                            -- Nome completo do envolvido na ocorrência
+   ENV.identidade_genero_descricao,                        -- Descrição da identidade de gênero do envolvido
+   ENV.relacao_vitima_autor_descricao,                     -- Descrição da relação entre vítima e autor
+   OCO.codigo_municipio,                                   -- Código do município onde ocorreu o fato
+   OCO.nome_municipio,                                     -- Nome do município onde ocorreu o fato
+   OCO.data_hora_fato,                                     -- Data e hora em que o fato ocorreu
+   YEAR(OCO.data_hora_fato) AS ano_fato                    -- Ano extraído da data do fato
+FROM 
+   db_bisp_reds_reporting.tb_ocorrencia AS OCO             -- Tabela de ocorrências, apelidada como OCO
+LEFT JOIN 
+   db_bisp_reds_reporting.tb_envolvido_ocorrencia AS ENV  -- Tabela de envolvidos, apelidada como ENV
+   ON OCO.numero_ocorrencia = ENV.numero_ocorrencia        -- Junção pela chave de ocorrência
+WHERE 1 = 1
+   AND YEAR(OCO.data_hora_fato) >= 2024                    -- Apenas fatos ocorridos a partir de 2024
+   AND OCO.ocorrencia_uf = 'MG'                            -- Restrito ao estado de Minas Gerais
+   AND OCO.digitador_sigla_orgao IN ('PM', 'PC')           -- Registros digitados por PM ou PC
+   AND OCO.nome_tipo_relatorio IN ('POLICIAL', 'REFAP')    -- Tipos de relatório Polical e Refap
+   AND (
+        (
+            -- Femicídio simples contra mulher
+            ( 
+              OCO.natureza_codigo  = 'B01504' OR     -- Natureza principal: código de femicídio 
+              OCO.natureza_secundaria1_codigo = 'B01504' OR
+              OCO.natureza_secundaria2_codigo = 'B01504' OR
+              OCO.natureza_secundaria3_codigo = 'B01504'
+            )
+            AND OCO.natureza_consumado = 'CONSUMADO'     -- Aplica-se apenas a casos consumados
+            AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600'))-- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
+            AND ENV.envolvimento_codigo IN ('1300','1399','1301','1302','1303','1304','1305')   -- Papel do envolvido como vítima
+        )
+        OR
+        (
+            -- Homicídio com contexto de violência doméstica
+            (
+              OCO.natureza_codigo       IN ('B01121','B02001','B01129','B01148','D01213') OR
+              OCO.natureza_secundaria1_codigo IN ('B01121','B02001','B01129','B01148','D01213') OR
+              OCO.natureza_secundaria2_codigo IN ('B01121','B02001','B01129','B01148','D01213') OR
+              OCO.natureza_secundaria3_codigo IN ('B01121','B02001','B01129','B01148','D01213')
+            )
+            AND (ENV.codigo_sexo = 'F' OR identidade_genero_codigo IN ('0400','0200','0700','0100','0600'))-- Apenas vítimas do sexo feminino ou com outras identidades de gênero especificadas
+            AND ENV.condicao_fisica_descricao = 'FATAL'     -- Aplica-se apenas a casos com desfecho fatal
+            AND ENV.envolvimento_codigo IN ('1300','1399','1301','1302','1303','1304','1305')   -- Papel do envolvido como vítima
+            AND ENV.id_relacao_vitima_autor IN (3,4,9,15,16,18,22)     -- Relações no âmbito doméstico e familiar
+        )
+    );
