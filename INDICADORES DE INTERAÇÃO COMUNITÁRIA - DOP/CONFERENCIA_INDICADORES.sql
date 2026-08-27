@@ -126,12 +126,10 @@ AND (oco.codigo_municipio = ENV.codigo_municipio OR ENV.codigo_municipio IS NULL
    	WHEN natureza_codigo IN ('B01121','B01148','B02001','C01157','C01158','C01159','B01504') 
    	 AND VCV.VITIMA_VALIDA = 1
    	THEN 'VALIDO' ELSE 'INVALIDO'
-   	END AS VALIDO_CV   
+   	END AS VALIDO_CV
    FROM db_bisp_reds_reporting.tb_ocorrencia oco
    LEFT JOIN VITIMA_CV VCV ON oco.numero_ocorrencia = VCV.numero_ocorrencia
-   INNER  JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON 
-   ENV.numero_ocorrencia = oco.numero_ocorrencia   AND ((oco.codigo_municipio = ENV.codigo_municipio) OR ENV.codigo_municipio IS NULL)
-  INNER JOIN (
+    INNER JOIN (
 			    			SELECT numero_ocorrencia as REDS, 
 			           		       REGEXP_EXTRACT(oco.historico_ocorrencia, '([0-9]{4}-[0-9]{9}-[0-9]{3})', 0) AS BO_HISTORICO
 						 	FROM db_bisp_reds_reporting.tb_ocorrencia oco
@@ -150,7 +148,7 @@ ON oco.numero_ocorrencia = tb.BO_HISTORICO
 ),
 FILTRO AS (
 SELECT OCO.numero_ocorrencia, 
-oco.natureza_codigo,
+OCO.natureza_codigo,
 COUNT(
     CASE 
       WHEN ENV.numero_cpf_cnpj IS NOT NULL 
