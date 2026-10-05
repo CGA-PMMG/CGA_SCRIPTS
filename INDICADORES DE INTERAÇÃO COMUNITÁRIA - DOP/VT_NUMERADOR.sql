@@ -90,7 +90,7 @@ FURTOS AS (                                            -- CTE que define ocorrê
 		    AND OCO.complemento_natureza_codigo IN ('2002', '2004', '2005', '2015')
 	   )
     AND oco.ocorrencia_uf = 'MG'          -- Filtra apenas ocorrências do estado de Minas Gerais                                         
-    AND oco.digitador_sigla_orgao IN ('PM', 'PC') -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
+    AND oco.digitador_id_orgao IN (0,1) -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
     AND oco.ind_estado = 'F'                                                         -- Filtra apenas ocorrências fechadas
 ),
 VISITAS_TRANQUILIZADORAS AS (
@@ -130,7 +130,7 @@ OCO.pais_codigo
 		    OR OCO.natureza_codigo = 'A20028'
 		)  -- Considera ocorrências com natureza A20028 em qualquer data, e A20000 apenas se estiver no intervalo entre 01/01/2025 e 31/07/2025
     AND OCO.ocorrencia_uf = 'MG'                                
-    AND OCO.digitador_sigla_orgao = 'PM'
+    AND OCO.digitador_id_orgao = 0
     AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')
     AND OCO.historico_ocorrencia LIKE '%20__-%-00%'
     AND OCO.unidade_responsavel_registro_nome NOT LIKE '%IND PE%'
@@ -283,9 +283,9 @@ CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN VT.pais_codigo <> 1 AND VT.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN VT.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
     	WHEN VT.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
-    	ELSE geo.situacao_zona
+        WHEN geo.ibge_situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.ibge_situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.ibge_situacao_zona
 END AS situacao_zona,   
   VT.codigo_municipio,   								-- Código do município
   VT.nome_municipio,                                    -- Nome do município
@@ -311,8 +311,8 @@ END AS situacao_zona,
 FROM VISITAS_TRANQUILIZADORAS VT                        -- Tabela base da consulta (visitas)
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON VT.numero_ocorrencia = ENV.numero_ocorrencia  -- Junta com envolvidos
 INNER JOIN FURTOS F ON F.numero_ocorrencia = VT.numero_reds_furto AND F.data_hora_fato < VT.data_hora_fato  -- Junta com furtos e garante que a visita ocorreu após o furto
-LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON VT.numero_ocorrencia = geo.numero_ocorrencia AND VT.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
-LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
+LEFT JOIN db_bisp_reds_reporting.vw_ocorrencia_setores_geodata AS geo ON VT.numero_ocorrencia = geo.numero_ocorrencia AND VT.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN AGUAS AG ON geo.ibge_setor_codigo = AG.setor_codigo
 WHERE 1 = 1
 AND EXISTS (                            
     SELECT 1                                                                           -- Seleciona apenas um valor constante (otimização de performance)

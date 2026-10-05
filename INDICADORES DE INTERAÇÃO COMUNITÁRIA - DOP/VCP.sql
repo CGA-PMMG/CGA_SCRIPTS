@@ -204,9 +204,9 @@ CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
     	WHEN oco.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
-    	ELSE geo.situacao_zona
+        WHEN geo.ibge_situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.ibge_situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.ibge_situacao_zona
 END AS situacao_zona,            
 CAST(OCO.codigo_municipio AS INTEGER) AS COD_MUNICIPIO,                        -- Converte o código do município para número inteiro
 OCO.nome_municipio,                                           -- Nome do município da ocorrência
@@ -231,11 +231,11 @@ geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
 geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO -- Tabela principal ( tabela ocorrencia)
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
-LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
-LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
+LEFT JOIN db_bisp_reds_reporting.vw_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN AGUAS AG ON geo.ibge_setor_codigo = AG.setor_codigo
 WHERE 1 = 1   -- Condição sempre verdadeira que facilita adicionar ou remover condições durante o desenvolvimento
 AND OCO.ocorrencia_uf = 'MG'                                                           -- Filtra ocorrências do estado de Minas Gerais
-AND OCO.digitador_sigla_orgao = 'PM'                                                   -- Filtra ocorrências registradas pela Polícia Militar
+AND OCO.digitador_id_orgao = 0                                                   -- Filtra ocorrências registradas pela Polícia Militar
 AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                                    -- Filtra ocorrências cujo tipo de relatório é BOS ou BOS AMPLO
 AND OCO.ind_estado IN ('F','R') 
 AND (

@@ -6,9 +6,46 @@ FROM
 	db_bisp_reds_reporting.tb_ocorrencia
 WHERE
 numero_ocorrencia in (
-'2029-000001111-001',
-'2029-001100110-001',
-'2029-010101010-001'
+'2019-020958456-001',
+    '2019-020958506-001',
+    '2019-020958638-001',
+    '2019-020958744-001',
+    '2019-020958807-001',
+    '2019-020958848-001',
+    '2019-020958850-001',
+    '2019-020958970-001',
+    '2019-020958995-001',
+    '2019-020959134-001',
+    '2019-020959238-001',
+    '2019-020959294-001',
+    '2019-020959329-001',
+    '2019-020959407-001',
+    '2019-020959422-001',
+    '2019-020968793-001',
+    '2019-020976759-001',
+    '2019-020976761-001',
+    '2019-020976774-001',
+    '2019-020976837-001',
+    '2019-020976902-001',
+    '2019-020976915-001',
+    '2019-020976930-001',
+    '2019-020976969-001',
+    '2019-020976984-001',
+    '2019-020557484-001',
+    '2019-020562916-001',
+    '2019-020564300-001',
+    '2019-020564370-001',
+    '2019-020564395-001',
+    '2019-020564473-001',
+    '2019-020564577-001',
+    '2019-020564627-001',
+    '2019-020565318-001',
+    '2019-020566037-001',
+    '2019-020566143-001',
+    '2019-020566156-001',
+    '2019-020723034-001',
+    '2019-020723047-001',
+    '2019-020723050-001'
 )-- COLOQUE AQUI OS NÚMEROS DE REDS A SEREM TESTADOS
  ),
 /*------------------------------------
@@ -164,7 +201,7 @@ CASE
 	WHEN OCO.natureza_codigo in ('A19000', 'A19001','A19004','A19099') THEN 'RC / RCR'
 	WHEN OCO.natureza_codigo in ('A19006', 'A19007','A19008','A19009', 'A19010', 'A19011') THEN 'MRPP'
 ELSE 'Natureza Invalida'
-END AS 'QUAL_INDICADOR',
+END AS QUAL_INDICADOR,
 CASE 
 	WHEN
 OCO.data_hora_fato >= '2025-01-01 00:00:00.000'
@@ -193,9 +230,9 @@ CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
     	WHEN oco.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
-    	ELSE geo.situacao_zona
+        WHEN geo.ibge_situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.ibge_situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.ibge_situacao_zona
     END AS RURAL_URBANO,
 CASE
 	WHEN
@@ -224,20 +261,17 @@ OCO.ind_estado IN ('F','R')
 THEN 'Estado Valido (Fechado/Pendente)'
 ELSE 'Estado Invalido (Não Fechado/Pendente)'
 END as ESTADO,
-MUB.udi as RPM_AREA,								-- articulação RPM conforme Setor IBGE
-    MUB.ueop as UEOP_AREA,								-- articulação BPM conforme Setor IBGE
-    MUB.cia as CIA_AREA,								-- articulação CIA conforme Setor IBGE
-    MUB.codigo_espacial_pm AS SETOR_PM
+geo.udi as RPM_AREA,								-- articulação RPM conforme Setor IBGE
+    geo.ueop as UEOP_AREA,								-- articulação BPM conforme Setor IBGE
+    geo.cia as CIA_AREA,								-- articulação CIA conforme Setor IBGE
+    geo.codigo_setor_pm AS SETOR_PM
   FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 LEFT JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV  ON OCO.numero_ocorrencia = ENV.numero_ocorrencia
   LEFT JOIN
-    db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo -- Tabela de apoio que compara as lat/long com os setores IBGE
+    db_bisp_reds_reporting.vw_ocorrencia_setores_geodata AS geo -- Tabela de apoio que compara as lat/long com os setores IBGE
     ON oco.numero_ocorrencia = geo.numero_ocorrencia
     AND oco.ocorrencia_uf = 'MG'
-LEFT JOIN
-    db_bisp_shared.tb_pmmg_setores_geodata AS MUB			-- Tabela de secundaria com dados do GeoPM MUB compatilizados com a malha censitária
-    ON geo.setor_codigo = MUB.setor_codigo
-LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
+LEFT JOIN AGUAS AG ON geo.ibge_setor_codigo = AG.setor_codigo
 WHERE 1=1
 AND oco.numero_ocorrencia in (SELECT numero_ocorrencia from OCORRENCIAS)
 GROUP BY 1,2,4,5,6,7,8,9,10,11,12,13,14,15,16

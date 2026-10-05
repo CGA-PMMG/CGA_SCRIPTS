@@ -206,9 +206,9 @@ CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
     	WHEN oco.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
-    	ELSE geo.situacao_zona
+        WHEN geo.ibge_situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.ibge_situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.ibge_situacao_zona
 END AS situacao_zona,      
 CAST(OCO.codigo_municipio AS INTEGER) codigo_municipio,                        -- Converte o código do município para número inteiro
 OCO.nome_municipio,                                           -- Nome do município da ocorrência
@@ -234,8 +234,8 @@ geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS200
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 INNER JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia ENV ON OCO.numero_ocorrencia = ENV.numero_ocorrencia AND ((OCO.codigo_municipio = ENV.codigo_municipio) OR ENV.codigo_municipio IS NULL)
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
-LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
-LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
+LEFT JOIN db_bisp_reds_reporting.vw_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN AGUAS AG ON geo.ibge_setor_codigo = AG.setor_codigo
 WHERE 1 = 1      -- Condição sempre verdadeira que serve como ponto inicial para facilitar manutenção da query
 AND (
 EXISTS (                                                           
@@ -250,7 +250,7 @@ EXISTS (
 )                                                                        -- Fim da subconsulta EXISTS - exclui vítima fatal
 AND OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'  -- Filtra ocorrências por período específico (jan/2025 até ago/2025)
 AND OCO.ocorrencia_uf = 'MG'                                                     -- Filtra apenas ocorrências do estado de Minas Gerais
-AND OCO.digitador_sigla_orgao IN ('PM','PC')                              -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
+AND OCO.digitador_id_orgao IN (0,1)                              -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
 AND OCO.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas do CV
 AND OCO.ind_estado = 'F'                                                         -- Filtra apenas ocorrências fechadas
 --AND OCO.unidade_area_militar_nome LIKE '%X BPM/X RPM%'   -- FILTRE PELO NOME DA UNIDADE AREA MILITAR

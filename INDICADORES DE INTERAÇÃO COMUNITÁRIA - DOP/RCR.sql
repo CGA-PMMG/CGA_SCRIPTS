@@ -71,16 +71,17 @@ SELECT '310800810000009' AS setor_codigo, 'Rural'  AS zona_agua UNION ALL
     SELECT '315050505000027', 'Rural'  UNION ALL
     SELECT '315160205000036', 'Rural'  UNION ALL
     SELECT '317010705000100', 'Rural'
-) -- !!!!!  ESTA CTE NÃO DEVE SER ALTERADA !!!!!
+), -- !!!!!  ESTA CTE NÃO DEVE SER ALTERADA !!!!!
+BASE AS (
 SELECT 
 OCO.numero_ocorrencia, -- Número da ocorrência
 CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
     	WHEN oco.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
-    	ELSE geo.situacao_zona
+        WHEN geo.ibge_situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.ibge_situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.ibge_situacao_zona
  END AS situacao_zona,                      							
 OCO.natureza_codigo,      -- Código da natureza da ocorrência
 OCO.natureza_descricao,   -- Descrição da natureza da ocorrência
@@ -229,8 +230,8 @@ geo.latitude_sirgas2000,				-- reprojeção da latitude de SAD69 para SIRGAS2000
 geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM db_bisp_reds_reporting.tb_ocorrencia OCO
 LEFT JOIN db_bisp_reds_master.tb_local_unidade_area_pmmg LO ON OCO.id_local = LO.id_local
-LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
-LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
+LEFT JOIN db_bisp_reds_reporting.vw_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN AGUAS AG ON geo.ibge_setor_codigo = AG.setor_codigo
 WHERE 1 = 1         -- Condição sempre verdadeira que facilita o desenvolvimento da query, permitindo adicionar/remover condições sem preocupação com a sintaxe
 AND (                                                                            
     SELECT COUNT(DISTINCT envolvido.numero_envolvido)                           -- Conta o número de envolvidos distintos (evitando duplicatas)
@@ -245,10 +246,9 @@ AND (
     )
 ) >= 3                                                                           -- Exige que existam pelo menos 3 envolvidos identificados na ocorrência
 AND OCO.data_hora_fato  BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'  -- Filtra ocorrências por período específico (jan/2025 até ago/2025)
-AND UPPER(situacao_zona) = 'RURAL' 												-- Filtra ocorrências de RC realizadas em zona rural
 AND OCO.natureza_codigo IN ('A19000', 'A19001','A19004','A19099')               -- Filtra ocorrências de naturezas A19000 - Reunião Comunitária ou com entidades diversas, A19001 - Reunião com CONSEP ,A19004 -Reunião com associação de moradores ,A19099 - Reunião com outros tipos de entidades.
 AND OCO.ocorrencia_uf = 'MG'                                                     -- Filtra apenas ocorrências do estado de Minas Gerais
-AND OCO.digitador_sigla_orgao = 'PM'                                            -- Filtra ocorrências registradas pela Polícia Militar
+AND OCO.digitador_id_orgao = 0                                           -- Filtra ocorrências registradas pela Polícia Militar
 AND OCO.unidade_responsavel_registro_nome NOT LIKE '%IND PE%'
 AND OCO.unidade_responsavel_registro_nome NOT LIKE '%PVD%'
 AND (
@@ -262,5 +262,9 @@ AND (
 AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')                             -- Filtra por tipos específicos de relatórios BOS e BOS AMPLO
 AND OCO.ind_estado IN ('F','R')                                                               -- Filtra ocorrências com indicador de estado 'F' (Fechado) e R(Pendente de Recibo)
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
-order by OCO.numero_ocorrencia
-
+)
+SELECT *
+FROM BASE
+WHERE 1=1
+AND UPPER (situacao_zona) = 'RURAL' 											-- Filtra ocorrências de RC realizadas em zona rural
+ORDER BY numero_ocorrencia

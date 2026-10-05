@@ -83,7 +83,7 @@ CRIME_VIOLENTO AS (
   WHERE oco.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'-- Filtra ocorrências por período específico (todo o ano de 2024 até fevereiro/2025)
     AND oco.natureza_codigo IN('B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Seleção de naturezas especifícas do CV
     AND oco.ocorrencia_uf = 'MG'         -- Filtra apenas ocorrências do estado de Minas Gerais                        
-    AND oco.digitador_sigla_orgao IN ('PM', 'PC')  -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
+    AND oco.digitador_id_orgao IN (0,1)  -- Filtro por ocorrências, Polícia Militar ou Polícia Civil
     AND oco.ind_estado = 'F'        -- Filtra apenas ocorrências fechadas
 ),
 VISITAS_TRANQUILIZADORAS AS (
@@ -117,7 +117,7 @@ SELECT
   WHERE OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00.000' AND '2025-08-05 23:59:59.000'
     AND OCO.natureza_codigo = 'A20001'
     AND OCO.ocorrencia_uf = 'MG'                                
-    AND OCO.digitador_sigla_orgao = 'PM'
+    AND OCO.digitador_id_orgao = 0
     AND OCO.ind_estado IN ('F','R')
     AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')
     AND OCO.historico_ocorrencia LIKE '%20__-%-00%'
@@ -266,9 +266,9 @@ CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN VT.pais_codigo <> 1 AND VT.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN VT.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
     	WHEN VT.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
-    	ELSE geo.situacao_zona
+        WHEN geo.ibge_situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.ibge_situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.ibge_situacao_zona
 END AS situacao_zona,  
   VT.codigo_municipio,   								-- Código do município
   VT.nome_municipio,                                    -- Nome do município
@@ -293,8 +293,8 @@ END AS situacao_zona,
   geo.longitude_sirgas2000				-- reprojeção da longitude de SAD69 para SIRGAS2000
 FROM VISITAS_TRANQUILIZADORAS VT                        -- Tabela base da consulta (visitas)
 INNER JOIN CRIME_VIOLENTO CV ON CV.numero_ocorrencia = VT.numero_reds_cv AND CV.data_hora_fato < VT.data_hora_fato  -- Junta com CV e garante que a visita ocorreu após o CV
-LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON VT.numero_ocorrencia = geo.numero_ocorrencia AND VT.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
-LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
+LEFT JOIN db_bisp_reds_reporting.vw_ocorrencia_setores_geodata AS geo ON VT.numero_ocorrencia = geo.numero_ocorrencia AND VT.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+LEFT JOIN AGUAS AG ON geo.ibge_setor_codigo = AG.setor_codigo
 WHERE 1 =1 
 AND EXISTS (                            
     SELECT 1                                                                           -- Seleciona apenas um valor constante (otimização de performance)

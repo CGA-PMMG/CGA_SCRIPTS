@@ -1,3 +1,4 @@
+EXPLAIN
 /* ----------------------------------------------------------------------------------------------------------------------------------------------------=
  *  ====================================================================================================================================================
  *  ============================================================== INDICADORES IC  =====================================================================
@@ -93,7 +94,7 @@ BASE AS (  -- Define a CTE para extrair informações de ocorrências com númer
 ),
 NATUREZAS AS (
   SELECT 
-  numero_ocorrencia,                              -- Seleciona o número da ocorrência
+  	numero_ocorrencia,                              -- Seleciona o número da ocorrência
     natureza_codigo,                                -- Seleciona o código da natureza da ocorrência
     complemento_natureza_descricao,                 -- Seleciona a descrição do complemento da natureza 
     complemento_natureza_codigo,                    -- Seleciona o código do complemento da natureza
@@ -112,7 +113,7 @@ END AS VALIDO_FURTO_RESIDCOM,
    END AS VALIDO_CV   
   FROM db_bisp_reds_reporting.tb_ocorrencia OCO
   WHERE natureza_codigo IN('C01155','B01121','B01148','B02001','C01157','C01158','C01159','B01504') -- Filtra apenas naturezas de Furto e CV  
-    AND digitador_sigla_orgao IN ('PM','PC')       -- Filtra registros digitados pela Polícia Militar ('PM') ou Polícia Civil ('PC')
+    AND digitador_id_orgao IN (0,1)       -- Filtra registros digitados pela Polícia Militar ('PM') ou Polícia Civil ('PC')
     AND ocorrencia_uf = 'MG'                       -- Filtra ocorrências no estado de Minas Gerais
     AND ind_estado = 'F'                           -- Filtra apenas ocorrências fechadas
     AND data_hora_fato >= '2024-06-01'             -- Filtra ocorrências a partir de 1º de junho de 2023
@@ -136,7 +137,7 @@ WHERE 1=1
 AND OCO.data_hora_fato >= '2025-01-01 00:00:00.000' -- Filtra ocorrências a partir de 1º de janeiro de 2025
 AND OCO.natureza_codigo IN ('A21000','A19000', 'A19001','A19004','A19099','A19006', 'A19007','A19008','A19009', 'A19010', 'A19011','A20000','A20001','A20028','A21007') -- Filtra por conjunto de naturezas específicas do IC : MRPP-> 'A19006', 'A19007','A19008','A19009', 'A19010', 'A19011'; RC -> 'A19000', 'A19001','A19004','A19099'; VCP -> 'A21000'; VT -> 'A20000'; VT CV -> 'A20001'.
 AND OCO.ocorrencia_uf = 'MG'      -- Filtra ocorrências no estado de Minas Gerais                           
-AND OCO.digitador_sigla_orgao  ='PM' -- Filtra ocorrências digitadas pela Polícia Militar
+AND OCO.digitador_id_orgao  = 0 -- Filtra ocorrências digitadas pela Polícia Militar
 AND OCO.nome_tipo_relatorio IN ('BOS', 'BOS AMPLO')  -- Filtra apenas relatórios BOS e BOS AMPLO
 AND OCO.unidade_responsavel_registro_nome NOT LIKE '%IND PE%'  -- Exclui unidades com 'IND PE' no nome
 AND OCO.unidade_responsavel_registro_nome NOT LIKE '%PVD%'  -- Exclui unidades com 'PVD' no nome
@@ -258,7 +259,7 @@ CASE WHEN oco.codigo_municipio in (310690,311590,311960,312130,312738,312850,314
         WHEN oco.codigo_municipio in (310810,312060,312600,313010,313220,313665,314070,315040,315530,316292) THEN '7 CIA PM IND'
         WHEN oco.codigo_municipio in (310440,310460,311530,312290,313260,313840,314220,315410,315840,316443,315110,317210,310150,316000,312460) THEN '68 BPM'
         WHEN oco.codigo_municipio in (313370,313380) THEN '9 CIA PM IND'
-       WHEN oco.codigo_municipio =317020 AND (L.nome_unidade_area like '32 BPM%' or L.nome_unidade_area like '%/32 BPM%') THEN '32 BPM'
+        WHEN oco.codigo_municipio =317020 AND (L.nome_unidade_area like '32 BPM%' or L.nome_unidade_area like '%/32 BPM%') THEN '32 BPM'
         WHEN oco.codigo_municipio =317020 AND (L.nome_unidade_area like '17 BPM%' or L.nome_unidade_area like '%/17 BPM%') THEN '17 BPM'
         WHEN oco.codigo_municipio =317010 AND (L.nome_unidade_area like '4 BPM%' or L.nome_unidade_area like '%/4 BPM%') THEN '04 BPM'
         WHEN oco.codigo_municipio =317010 AND (L.nome_unidade_area like '67 BPM%' or L.nome_unidade_area like '%/67 BPM%') THEN '67 BPM'
@@ -299,22 +300,21 @@ CONCAT (CAST(OCO.numero_latitude as STRING),
     geo.longitude_sirgas2000,				-- reprojeção da longitude de SAD69 para SIRGAS2000
     CASE 													-- codigo do Setor Censitário no IBGE
     	WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF' 		-- ignora ocorrencias de fora de MG
-    	ELSE geo.setor_codigo
+    	ELSE geo.ibge_setor_codigo
 	END AS setor_codigo,						 
 	CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
     	WHEN oco.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
-    	ELSE geo.situacao_zona
+        WHEN geo.ibge_situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.ibge_situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.ibge_situacao_zona
     END AS situacao_zona,                							
-    ibge.tipo_descricao, 					-- se o território é Favela segundo o IBGE
     oco.unidade_area_militar_nome,			-- artigulação PMMG conforme GeoMUB
-    MUB.udi,								-- articulação RPM conforme Setor IBGE
-    MUB.ueop,								-- articulação BPM conforme Setor IBGE
-    MUB.cia,								-- articulação CIA conforme Setor IBGE
-    MUB.codigo_espacial_pm AS setor_PM,
+    geo.udi,								-- articulação RPM conforme Setor IBGE
+    geo.ueop,								-- articulação BPM conforme Setor IBGE
+    geo.cia,								-- articulação CIA conforme Setor IBGE
+    geo.codigo_setor_pm AS setor_PM,
    OCO.data_hora_fato,                               -- Data e hora do fato 
    YEAR(OCO.data_hora_fato) AS ano,                  -- Extrai o ano da data do fato
    MONTH(OCO.data_hora_fato) AS mes,                 -- Extrai o mês da data do fato
@@ -345,21 +345,18 @@ CASE
 	WHEN OCO.natureza_codigo = 'A20001' AND qtd_envolvidos_identificados >= 1  AND VALIDO_CV = 'VALIDO' THEN 1 ELSE 0
 END AS VTCV_TOTAL   -- Atribui 1 se condição atendida, caso contrário 0
 FROM FILTRO F
-INNER JOIN db_bisp_reds_reporting.tb_ocorrencia OCO ON F.numero_ocorrencia = OCO.numero_ocorrencia
-LEFT JOIN db_bisp_reds_master.vw_local_unidade_area_pmmg L on OCO.id_local = L.id_local
-LEFT JOIN BASE ON BASE.numero_ocorrencia = F.numero_ocorrencia
-LEFT JOIN NATUREZAS N ON N.numero_ocorrencia = BASE.BO_HISTORICO
-LEFT JOIN
-    db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo -- Tabela de apoio que compara as lat/long com os setores IBGE
+INNER JOIN db_bisp_reds_reporting.tb_ocorrencia OCO 
+	ON F.numero_ocorrencia = OCO.numero_ocorrencia
+LEFT JOIN db_bisp_reds_master.vw_local_unidade_area_pmmg L 
+	ON oco.id_local = L.id_local
+LEFT JOIN BASE 
+	ON BASE.numero_ocorrencia = F.numero_ocorrencia
+LEFT JOIN NATUREZAS N 
+	ON N.numero_ocorrencia = BASE.BO_HISTORICO
+LEFT JOIN db_bisp_reds_reporting.vw_ocorrencia_setores_geodata AS geo -- Tabela de apoio que compara as lat/long com os setores IBGE
     ON oco.numero_ocorrencia = geo.numero_ocorrencia
     AND oco.ocorrencia_uf = 'MG'							-- ignora os registros de fora de MG, para evitar erro
-LEFT JOIN
-    db_bisp_shared.tb_ibge_setores_geodata AS ibge			-- Tabela de secundaria com dados gerais do IBGE inclusive se o território é Favela
-    ON geo.setor_codigo = ibge.setor_codigo
-LEFT JOIN
-    db_bisp_shared.tb_pmmg_setores_geodata AS MUB			-- Tabela de secundaria com dados do GeoPM MUB compatilizados com a malha censitária
-    ON geo.setor_codigo = MUB.setor_codigo
-LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
+LEFT JOIN AGUAS AG ON geo.ibge_setor_codigo = AG.setor_codigo
 --WHERE 1 = 1
 --AND OCO.unidade_responsavel_registro_nome LIKE '%x BPM/x RPM%'   -- FILTRE PELO NOME DA UNIDADE RESPONSÁVEL PELO REGISTRO 
 ;
