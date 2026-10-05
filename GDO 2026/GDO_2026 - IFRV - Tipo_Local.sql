@@ -1,3 +1,4 @@
+EXPLAIN
 /*------------------------------------------------------------------------------------------------------------------------------
  * *****************************************************************************************************************************
  * **************************************************  GDO 2026- IFVR  *********************************************************
@@ -230,27 +231,23 @@ CASE 																			-- se o território é Urbano ou Rural segundo o IBGE
     	WHEN OCO.pais_codigo <> 1 AND OCO.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN OCO.ocorrencia_uf <> 'MG' THEN 'Outra_UF'								-- trata erro - ocorrencia de fora de MG
     	WHEN OCO.numero_latitude IS NULL THEN 'Invalido'							-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
-    	ELSE geo.situacao_zona
+        WHEN geo.ibge_situacao_codigo = 9 THEN AG.zona_agua									-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.ibge_situacao_zona IS NULL THEN 'Erro_Processamento'					-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.ibge_situacao_zona
 END AS situacao_zona,   
-    ibge.tipo_descricao,                              -- Informações adicionais do IBGE 
     CAST(OCO.codigo_municipio AS INTEGER),                        -- Converte o código do município para número inteiro
     OCO.nome_municipio                                           -- Nome do município da ocorrência
     FROM db_bisp_reds_reporting.tb_ocorrencia OCO
     INNER JOIN db_bisp_reds_reporting.tb_veiculo_ocorrencia VEI ON OCO.numero_ocorrencia = VEI.numero_ocorrencia
-    LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia 	-- Tabela de apoio que compara as lat/long com os setores IBGE		
-	LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
-	LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
- 	LEFT JOIN AGUAS AG ON geo.setor_codigo = AG.setor_codigo
+    LEFT JOIN db_bisp_reds_reporting.vw_ocorrencia_setores_geodata AS geo ON OCO.numero_ocorrencia = geo.numero_ocorrencia 	-- Tabela de apoio que compara as lat/long com os setores IBGE		
+ 	LEFT JOIN AGUAS AG ON geo.ibge_setor_codigo = AG.setor_codigo
     WHERE OCO.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-12-31 23:59:59'   -----  ALTERAR AQUI --------
     AND OCO.natureza_codigo IN ('C01157', 'C01155')
     AND VEI.situacao_placa_codigo IN ('0300', '1000')
     AND VEI.ind_recuperado = 'N'
     AND VEI.tipo_veiculo_codigo NOT IN ('0400','0500','0900','1000','1200','1400','3100','3200') -- BICICLETA(0400) - BONDE	(0500) - CARRO DE MÃO(0900) - CARROCA (1000) - CHARRETE(1200) - COMPOSICAO FERREA ( TREM, METRO) (1400) - ARADO (3100) - PULVERIZADOR(3200)
-    AND OCO.digitador_sigla_orgao IN  ('PM','PC')
+    AND OCO.digitador_id_orgao IN  (0,1)
     AND OCO.tipo_local_codigo IN ('0100', '0200', '0300') -- Estadual - Federal - Municipal
     AND OCO.ocorrencia_uf = 'MG'
     AND OCO.ind_estado ='F'
    -- AND OCO.codigo_municipio IN (123456,456789,987654,......) -- PARA RESGATAR APENAS OS DADOS DOS MUNICÍPIOS SOB SUA RESPONSABILIDADE, REMOVA O COMENTÁRIO E ADICIONE O CÓDIGO DE MUNICIPIO DA SUA RESPONSABILIDADE. NO INÍCIO DO SCRIPT, É POSSÍVEL VERIFICAR ESSES CÓDIGOS, POR RPM E UEOP.
-   -- AND OCO.unidade_area_militar_nome LIKE '%x BPM/x RPM%' -- Filtra pelo nome da unidade área militar

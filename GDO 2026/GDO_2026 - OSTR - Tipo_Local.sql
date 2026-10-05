@@ -157,28 +157,25 @@ CASE WHEN oco.codigo_municipio IN (310690,311590,311960,312130,312738,312850,314
  WHEN oco.codigo_municipio IN (312350,	310380,	317047,	315640,	312070,	314437,	312247,	314120,	310820,	310010,	313710,	312860,	310945,	315445,	317075,	313160,	316170,	312620,	316890,	312890,	313753,	316680,	311615,	315550,	310855,	310450,	317052,	315340,	313750,	317100,	310930,	311430,	311930,	316210,	313630,	314310,	317040,	314810,	314700,	314800) THEN '7 CIA PM RV' 
 ELSE 'OUTROS' 
 END AS CIA_RV_2025, 
- 	ibge.tipo_descricao,                              -- Informações adicionais do IBGE 
 	  oco.unidade_area_militar_nome,                    -- Nome da unidade da área militar 
-	  MUB.udi,                                          
-	  MUB.ueop,                                         
-	  MUB.cia,                                          
-	  MUB.codigo_espacial_pm AS setor_PM,              
+	  geo.udi,                                          
+	  geo.ueop,                                         
+	  geo.cia,                                          
+	  geo.codigo_setor_pm AS setor_PM,              
     CASE 	
     	WHEN oco.pais_codigo <> 1 AND oco.ocorrencia_uf IS NULL THEN 'Outro_Pais'  	-- trata erro - ocorrencia de fora do Brasil
 		WHEN oco.ocorrencia_uf <> 'MG' THEN 'Outra_UF'		-- trata erro - ocorrencia de fora de MG
     	WHEN oco.numero_latitude IS NULL THEN 'Invalido'		-- trata erro - ocorrencia sem latitude
-        WHEN geo.situacao_codigo = 9 THEN 'Agua'			-- trata erro - ocorrencia dentro de curso d'água
-       	WHEN geo.situacao_zona IS NULL THEN 'Erro_Processamento'	-- checa se restou alguma ocorrencia com erro
-    	ELSE geo.situacao_zona
+        WHEN geo.ibge_situacao_codigo = 9 THEN 'Agua'			-- trata erro - ocorrencia dentro de curso d'água
+       	WHEN geo.ibge_situacao_zona IS NULL THEN 'Erro_Processamento'	-- checa se restou alguma ocorrencia com erro
+    	ELSE geo.ibge_situacao_zona
 	END AS situacao_zona      -- se o território é Urbano ou Rural segundo o IBGE      
 	FROM db_bisp_reds_reporting.tb_ocorrencia AS oco -- TABELA DE OCORRÊNCIAS
 	LEFT JOIN db_bisp_reds_reporting.tb_envolvido_ocorrencia AS env -- TABELA DE ENVOLVIDOS
     ON oco.numero_ocorrencia = env.numero_ocorrencia -- JUNÇÃO PELO NÚMERO DA OCORRÊNCIA
-    LEFT JOIN db_bisp_reds_master.tb_ocorrencia_setores_geodata AS geo ON oco.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
-	LEFT JOIN db_bisp_shared.tb_ibge_setores_geodata AS ibge ON geo.setor_codigo = ibge.setor_codigo  -- Join esquerdo com tabela de dados IBGE enriquecidos 
-	LEFT JOIN db_bisp_shared.tb_pmmg_setores_geodata AS MUB  ON geo.setor_codigo = MUB.setor_codigo -- Join esquerdo com tabela MUB 
+    LEFT JOIN db_bisp_reds_reporting.vw_ocorrencia_setores_geodata AS geo ON oco.numero_ocorrencia = geo.numero_ocorrencia AND OCO.ocorrencia_uf = 'MG'	-- Tabela de apoio que compara as lat/long com os setores IBGE		
 WHERE 1=1 -- CONDIÇÃO SEMPRE VERDADEIRA PARA FACILITAR A ADIÇÃO DE OUTRAS CONDIÇÕES
-    AND oco.digitador_sigla_orgao IN ('PM','PC') -- FILTRA ÓRGÃO DIGITADOR PM OU PC
+    AND oco.digitador_id_orgao IN (0,1) -- FILTRA ÓRGÃO DIGITADOR PM OU PC
     AND oco.ocorrencia_uf IN ('MG') -- FILTRA UF DA OCORRÊNCIA MG
     --AND env.id_envolvimento IN (25,32,1097,26,27,28,872) -- VÍTIMAS
     AND env.envolvimento_codigo IN ('1300','1301','1302','1303','1304','1305','1399')
@@ -188,5 +185,3 @@ WHERE 1=1 -- CONDIÇÃO SEMPRE VERDADEIRA PARA FACILITAR A ADIÇÃO DE OUTRAS CO
     AND oco.data_hora_fato BETWEEN '2025-01-01 00:00:00' AND '2025-12-31 23:59:59' 
     AND oco.ind_estado IN ('F') -- FILTRA OCORRÊNCIAS COM ESTADO FECHADO
     --AND oco.numero_ocorrencia ='2026-003824699-001'
-GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28 -- AGRUPA OS RESULTADOS POR ESTES CAMPOS, O NÚMERO CORRESPONDE A POSIÇÃO NA ORDENAÇÃO DO 'SELECT' 
-ORDER BY 1 DESC -- ORDENA OS RESULTADOS POR ESTE CAMPO, QUE O NÚMERO CORRESPONDE A POSIÇÃO NA ORDENAÇÃO DO 'SELECT' ; 
